@@ -99,6 +99,10 @@ function SOAPNoteSection() {
             <Clock className="h-3 w-3 mr-1" />
             Auto-saved 2 min ago
           </Badge>
+          <Button size="sm">
+            <Save className="h-4 w-4 mr-2" />
+            Save
+          </Button>
         </div>
       </div>
 

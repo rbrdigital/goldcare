@@ -17,48 +17,48 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 225 15% 15%;
 
-    --primary: 36 59% 36%;
+    --primary: 217 91% 60%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 43 90% 96%;
-    --secondary-foreground: 36 59% 20%;
+    --secondary: 220 13% 96%;
+    --secondary-foreground: 225 15% 15%;
 
-    --muted: 43 90% 96%;
-    --muted-foreground: 43 30% 46%;
+    --muted: 220 13% 96%;
+    --muted-foreground: 220 9% 46%;
 
-    --accent: 43 90% 66%;
-    --accent-foreground: 36 59% 20%;
+    --accent: 212 100% 47%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
     --border: 220 13% 91%;
     --input: 220 13% 91%;
-    --ring: 36 59% 36%;
+    --ring: 217 91% 60%;
 
     /* Medical interface specific tokens */
-    --medical-blue: 36 59% 36%;
-    --medical-blue-light: 43 90% 95%;
+    --medical-blue: 217 91% 60%;
+    --medical-blue-light: 217 91% 95%;
     --medical-green: 142 71% 45%;
     --medical-green-light: 142 71% 95%;
-    --medical-amber: 43 90% 66%;
-    --medical-amber-light: 43 90% 95%;
+    --medical-amber: 43 96% 56%;
+    --medical-amber-light: 43 96% 95%;
     --medical-red: 0 84% 60%;
     --medical-red-light: 0 84% 95%;
     
     /* Sidebar specific */
     --sidebar-bg: 0 0% 100%;
-    --sidebar-hover: 43 90% 97%;
-    --sidebar-active: 43 90% 95%;
-    --sidebar-rail-active: 36 59% 36%;
+    --sidebar-hover: 220 13% 97%;
+    --sidebar-active: 217 91% 95%;
+    --sidebar-rail-active: 217 91% 60%;
     --sidebar-text: 225 15% 15%;
     --sidebar-text-muted: 220 15% 65%;
     
     /* Status badges */
-    --badge-dirty: 36 59% 36%;
-    --badge-attention: 43 90% 66%;
+    --badge-dirty: 217 91% 60%;
+    --badge-attention: 43 96% 56%;
     --badge-new: 142 71% 45%;
-    --badge-count: 43 30% 85%;
+    --badge-count: 220 13% 85%;
 
     --radius: 0.5rem;
 
@@ -76,7 +76,7 @@ All colors MUST be HSL.
 
     --sidebar-border: 220 13% 91%;
 
-    --sidebar-ring: 36 59% 36%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
   .dark {
@@ -114,7 +114,7 @@ All colors MUST be HSL.
     --sidebar-accent: 240 3.7% 15.9%;
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 36 59% 36%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
 
