@@ -2,6 +2,7 @@ import { useState } from "react";
 import { AppSidebar } from "@/components/AppSidebar";
 import { PatientMiniCard } from "@/components/PatientMiniCard";
 import { MainContent } from "@/components/MainContent";
+import { PatientProfileDrawer } from "@/components/PatientProfileDrawer";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Minimize2, Maximize2 } from "lucide-react";
 
@@ -16,6 +17,7 @@ const mockPatient = {
 export function Dashboard() {
   const [activeSection, setActiveSection] = useState("soap");
   const [sidebarMini, setSidebarMini] = useState(false);
+  const [patientProfileDrawerOpen, setPatientProfileDrawerOpen] = useState(false);
 
   const handleJoinMeeting = () => {
     console.log("Joining meeting...");
@@ -26,7 +28,11 @@ export function Dashboard() {
   };
 
   const handleItemClick = (itemId: string) => {
-    setActiveSection(itemId);
+    if (itemId === "profile") {
+      setPatientProfileDrawerOpen(true);
+    } else {
+      setActiveSection(itemId);
+    }
   };
 
   return (
@@ -65,6 +71,12 @@ export function Dashboard() {
         />
         <MainContent activeSection={activeSection} />
       </div>
+
+      {/* Patient Profile Drawer */}
+      <PatientProfileDrawer 
+        isOpen={patientProfileDrawerOpen}
+        onClose={() => setPatientProfileDrawerOpen(false)}
+      />
     </div>
   );
 }
