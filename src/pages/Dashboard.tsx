@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AppSidebar } from "@/components/AppSidebar";
 import { PatientMiniCard } from "@/components/PatientMiniCard";
 import { MainContent } from "@/components/MainContent";
 import { PatientProfileDrawer } from "@/components/PatientProfileDrawer";
+import { LabsImagingSideSheet } from "@/components/LabsImagingSideSheet";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Minimize2, Maximize2 } from "lucide-react";
 
@@ -18,6 +19,7 @@ export function Dashboard() {
   const [activeSection, setActiveSection] = useState("soap");
   const [sidebarMini, setSidebarMini] = useState(false);
   const [patientProfileDrawerOpen, setPatientProfileDrawerOpen] = useState(false);
+  const [labsImagingSideSheetOpen, setLabsImagingSideSheetOpen] = useState(false);
 
   const handleJoinMeeting = () => {
     console.log("Joining meeting...");
@@ -30,10 +32,30 @@ export function Dashboard() {
   const handleItemClick = (itemId: string) => {
     if (itemId === "profile") {
       setPatientProfileDrawerOpen(true);
+    } else if (itemId === "previous-results") {
+      setLabsImagingSideSheetOpen(true);
     } else {
       setActiveSection(itemId);
     }
   };
+
+  // Handle keyboard shortcuts and URL hash
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.altKey || e.metaKey) && e.key === "l") {
+        e.preventDefault();
+        setLabsImagingSideSheetOpen(!labsImagingSideSheetOpen);
+      }
+    };
+
+    // Handle URL hash
+    if (window.location.hash === "#prev-labs") {
+      setLabsImagingSideSheetOpen(true);
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [labsImagingSideSheetOpen]);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -76,6 +98,12 @@ export function Dashboard() {
       <PatientProfileDrawer 
         isOpen={patientProfileDrawerOpen}
         onClose={() => setPatientProfileDrawerOpen(false)}
+      />
+
+      {/* Labs & Imaging Side Sheet */}
+      <LabsImagingSideSheet
+        isOpen={labsImagingSideSheetOpen}
+        onClose={() => setLabsImagingSideSheetOpen(false)}
       />
     </div>
   );
