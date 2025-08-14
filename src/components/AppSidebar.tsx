@@ -54,7 +54,7 @@ const clinicalItems: SidebarItem[] = [
 
 const patientDataItems: SidebarItem[] = [
   { id: "intake", label: "Intake Form", icon: <ClipboardList className="h-4 w-4" />, href: "#intake", attention: true },
-  { id: "diagnoses", label: "Diagnoses, Meds, Allergies", icon: <Stethoscope className="h-4 w-4" />, href: "#diagnoses" },
+  { id: "diagnoses-meds-allergies", label: "Diagnoses, Meds, Allergies", icon: <Stethoscope className="h-4 w-4" />, href: "#diagnoses" },
   { id: "previous-results", label: "Previous Labs & Imaging Results", icon: <Activity className="h-4 w-4" />, href: "#previous-results", count: 3, isNew: true },
   { id: "history", label: "Family & Surgical History", icon: <Users className="h-4 w-4" />, href: "#history" },
   { id: "profile", label: "Patient Profile", icon: <User className="h-4 w-4" />, href: "#profile" },
@@ -233,8 +233,8 @@ interface SidebarItemProps {
 }
 
 function SidebarItem({ item, isActive, onClick }: SidebarItemProps) {
-  // Don't show active state for drawer items like patient profile
-  const showActive = item.id !== "profile" && isActive;
+  // Don't show active state for drawer items like patient profile, labs & imaging, diagnoses
+  const showActive = !["profile", "previous-results", "diagnoses-meds-allergies"].includes(item.id) && isActive;
   
   return (
     <button

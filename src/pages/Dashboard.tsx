@@ -4,6 +4,7 @@ import { PatientMiniCard } from "@/components/PatientMiniCard";
 import { MainContent } from "@/components/MainContent";
 import { PatientProfileDrawer } from "@/components/PatientProfileDrawer";
 import { LabsImagingSideSheet } from "@/components/LabsImagingSideSheet";
+import { DiagnosesMedsAllergiesSideSheet } from "@/components/DiagnosesMedsAllergiesSideSheet";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Minimize2, Maximize2 } from "lucide-react";
 
@@ -20,6 +21,7 @@ export function Dashboard() {
   const [sidebarMini, setSidebarMini] = useState(false);
   const [patientProfileDrawerOpen, setPatientProfileDrawerOpen] = useState(false);
   const [labsImagingSideSheetOpen, setLabsImagingSideSheetOpen] = useState(false);
+  const [diagnosesMedsAllergiesSideSheetOpen, setDiagnosesMedsAllergiesSideSheetOpen] = useState(false);
 
   const handleJoinMeeting = () => {
     console.log("Joining meeting...");
@@ -34,6 +36,8 @@ export function Dashboard() {
       setPatientProfileDrawerOpen(true);
     } else if (itemId === "previous-results") {
       setLabsImagingSideSheetOpen(true);
+    } else if (itemId === "diagnoses-meds-allergies") {
+      setDiagnosesMedsAllergiesSideSheetOpen(true);
     } else {
       setActiveSection(itemId);
     }
@@ -46,16 +50,23 @@ export function Dashboard() {
         e.preventDefault();
         setLabsImagingSideSheetOpen(!labsImagingSideSheetOpen);
       }
+      if ((e.altKey || e.metaKey) && e.key === "d") {
+        e.preventDefault();
+        setDiagnosesMedsAllergiesSideSheetOpen(!diagnosesMedsAllergiesSideSheetOpen);
+      }
     };
 
     // Handle URL hash
     if (window.location.hash === "#prev-labs") {
       setLabsImagingSideSheetOpen(true);
     }
+    if (window.location.hash === "#dma") {
+      setDiagnosesMedsAllergiesSideSheetOpen(true);
+    }
 
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [labsImagingSideSheetOpen]);
+  }, [labsImagingSideSheetOpen, diagnosesMedsAllergiesSideSheetOpen]);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -104,6 +115,12 @@ export function Dashboard() {
       <LabsImagingSideSheet
         isOpen={labsImagingSideSheetOpen}
         onClose={() => setLabsImagingSideSheetOpen(false)}
+      />
+
+      {/* Diagnoses, Meds, Allergies Side Sheet */}
+      <DiagnosesMedsAllergiesSideSheet
+        isOpen={diagnosesMedsAllergiesSideSheetOpen}
+        onClose={() => setDiagnosesMedsAllergiesSideSheetOpen(false)}
       />
     </div>
   );
