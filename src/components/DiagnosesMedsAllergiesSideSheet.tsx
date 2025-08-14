@@ -141,7 +141,7 @@ export function DiagnosesMedsAllergiesSideSheet({ isOpen, onClose }: DiagnosesMe
   if (!isOpen) return null;
 
   return (
-    <div className="fixed right-0 top-0 h-full w-full md:w-[480px] bg-white border-l border-border z-40 flex flex-col">
+    <div className="fixed right-0 top-0 h-full w-full md:w-[480px] bg-white border-l border-border z-50 flex flex-col shadow-lg">
       {/* Header */}
       <div className="flex items-center justify-between p-6 border-b border-border">
         <div>
