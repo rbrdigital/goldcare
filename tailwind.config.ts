@@ -1,106 +1,96 @@
 import type { Config } from "tailwindcss";
 
-export default {
-	darkMode: ["class"],
-	content: [
-		"./pages/**/*.{ts,tsx}",
-		"./components/**/*.{ts,tsx}",
-		"./app/**/*.{ts,tsx}",
-		"./src/**/*.{ts,tsx}",
-	],
-	prefix: "",
-	theme: {
-		container: {
-			center: true,
-			padding: '2rem',
-			screens: {
-				'2xl': '1400px'
-			}
-		},
-		extend: {
-			colors: {
-				border: 'hsl(var(--border))',
-				input: 'hsl(var(--input))',
-				ring: 'hsl(var(--ring))',
-				background: 'hsl(var(--background))',
-				foreground: 'hsl(var(--foreground))',
-				primary: {
-					DEFAULT: 'hsl(var(--primary))',
-					foreground: 'hsl(var(--primary-foreground))'
-				},
-				secondary: {
-					DEFAULT: 'hsl(var(--secondary))',
-					foreground: 'hsl(var(--secondary-foreground))'
-				},
-				destructive: {
-					DEFAULT: 'hsl(var(--destructive))',
-					foreground: 'hsl(var(--destructive-foreground))'
-				},
-				muted: {
-					DEFAULT: 'hsl(var(--muted))',
-					foreground: 'hsl(var(--muted-foreground))'
-				},
-				accent: {
-					DEFAULT: 'hsl(var(--accent))',
-					foreground: 'hsl(var(--accent-foreground))'
-				},
-				popover: {
-					DEFAULT: 'hsl(var(--popover))',
-					foreground: 'hsl(var(--popover-foreground))'
-				},
-				card: {
-					DEFAULT: 'hsl(var(--card))',
-					foreground: 'hsl(var(--card-foreground))'
-				},
-				medical: {
-					blue: 'hsl(var(--medical-blue))',
-					'blue-light': 'hsl(var(--medical-blue-light))',
-					green: 'hsl(var(--medical-green))',
-					'green-light': 'hsl(var(--medical-green-light))',
-					amber: 'hsl(var(--medical-amber))',
-					'amber-light': 'hsl(var(--medical-amber-light))',
-					red: 'hsl(var(--medical-red))',
-					'red-light': 'hsl(var(--medical-red-light))'
-				},
-				sidebar: {
-					DEFAULT: 'hsl(var(--sidebar-background))',
-					foreground: 'hsl(var(--sidebar-foreground))',
-					primary: 'hsl(var(--sidebar-primary))',
-					'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
-					accent: 'hsl(var(--sidebar-accent))',
-					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
-					border: 'hsl(var(--sidebar-border))',
-					ring: 'hsl(var(--sidebar-ring))'
-				}
-			},
-			borderRadius: {
-				lg: 'var(--radius)',
-				md: 'calc(var(--radius) - 2px)',
-				sm: 'calc(var(--radius) - 4px)'
-			},
-			keyframes: {
-				'accordion-down': {
-					from: {
-						height: '0'
-					},
-					to: {
-						height: 'var(--radix-accordion-content-height)'
-					}
-				},
-				'accordion-up': {
-					from: {
-						height: 'var(--radix-accordion-content-height)'
-					},
-					to: {
-						height: '0'
-					}
-				}
-			},
-			animation: {
-				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
-			}
-		}
-	},
-	plugins: [require("tailwindcss-animate")],
-} satisfies Config;
+const config: Config = {
+  darkMode: ["class", '[data-theme="dark"]'],
+  content: [
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+  ],
+  theme: {
+    container: {
+      center: true,
+      padding: '2rem',
+      screens: {
+        '2xl': '1400px'
+      }
+    },
+    extend: {
+      colors: {
+        bg: "var(--color-bg)",
+        surface: "var(--color-surface)",
+        border: "var(--color-border)",
+        fg: "var(--color-fg)",
+        "fg-muted": "var(--color-fg-muted)",
+        primary: "var(--color-primary)",
+        "primary-fg": "var(--color-primary-fg)",
+        secondary: "var(--color-secondary)",
+        "secondary-fg": "var(--color-secondary-fg)",
+        success: "var(--color-success)",
+        "success-fg": "var(--color-success-fg)",
+        danger: "var(--color-danger)",
+        "danger-fg": "var(--color-danger-fg)",
+        warning: "var(--color-warning)",
+        "warning-fg": "var(--color-warning-fg)",
+        "medical-blue": "var(--color-medical-blue)",
+        "medical-blue-light": "var(--color-medical-blue-light)",
+        "medical-green": "var(--color-medical-green)",
+        "medical-green-light": "var(--color-medical-green-light)",
+        "medical-amber": "var(--color-medical-amber)",
+        "medical-amber-light": "var(--color-medical-amber-light)",
+        "medical-red": "var(--color-medical-red)",
+        "medical-red-light": "var(--color-medical-red-light)",
+        muted: "var(--color-muted)",
+        "muted-fg": "var(--color-muted-fg)",
+        accent: "var(--color-accent)",
+        "accent-fg": "var(--color-accent-fg)",
+        popover: "var(--color-popover)",
+        "popover-fg": "var(--color-popover-fg)",
+        card: "var(--color-card)",
+        "card-fg": "var(--color-card-fg)",
+        input: "var(--color-input)",
+        "input-border": "var(--color-input-border)",
+        ring: "var(--color-ring)",
+        "sidebar-bg": "var(--color-sidebar-bg)",
+        "sidebar-fg": "var(--color-sidebar-fg)",
+        "sidebar-primary": "var(--color-sidebar-primary)",
+        "sidebar-primary-fg": "var(--color-sidebar-primary-fg)",
+        "sidebar-accent": "var(--color-sidebar-accent)",
+        "sidebar-accent-fg": "var(--color-sidebar-accent-fg)",
+        "sidebar-border": "var(--color-sidebar-border)",
+        "sidebar-ring": "var(--color-sidebar-ring)",
+      },
+      borderRadius: {
+        sm: "var(--radius-sm)",
+        DEFAULT: "var(--radius-md)",
+        lg: "var(--radius-lg)",
+      },
+      keyframes: {
+        'accordion-down': {
+          from: {
+            height: '0'
+          },
+          to: {
+            height: 'var(--radix-accordion-content-height)'
+          }
+        },
+        'accordion-up': {
+          from: {
+            height: 'var(--radix-accordion-content-height)'
+          },
+          to: {
+            height: '0'
+          }
+        }
+      },
+      animation: {
+        'accordion-down': 'accordion-down 0.2s ease-out',
+        'accordion-up': 'accordion-up 0.2s ease-out'
+      }
+    }
+  },
+  plugins: [require("tailwindcss-animate")],
+};
+
+export default config;

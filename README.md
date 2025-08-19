@@ -1,5 +1,22 @@
 # Welcome to your Lovable project
 
+## Design System Lock
+
+**Do not use raw color values. Tokens only. CI rejects raw colors and arbitrary Tailwind color values.**
+
+This project enforces a strict design system where all colors must be defined as semantic tokens in `styles/tokens.css` and mapped in `tailwind.config.ts`. This ensures consistency, maintainability, and proper theming support.
+
+### Rules:
+- ✅ Use semantic classes: `bg-bg`, `text-fg`, `border-border`, `bg-primary`, etc.
+- ❌ Never use raw hex colors, rgb/rgba/hsl functions, or Tailwind arbitrary color values
+- ❌ Never use inline `style` props for colors
+- ✅ All colors are defined in `styles/tokens.css` with light/dark mode variants
+- ✅ Run `npm run check:colors` to validate compliance
+
+### Available Scripts:
+- `npm run check:colors` - Validates no raw colors are used
+- `npm run verify` - Runs linting, color checks, and tests
+
 ## Project info
 
 **URL**: https://lovable.dev/projects/0a9ca50d-b357-4f93-86d4-460f80c5ef40

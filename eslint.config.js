@@ -16,6 +16,7 @@ export default tseslint.config(
     plugins: {
       "react-hooks": reactHooks,
       "react-refresh": reactRefresh,
+      "react": { rules: { "forbid-component-props": ["error", { "forbid": [{ "propName": "style" }] }] } }
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
@@ -24,6 +25,12 @@ export default tseslint.config(
         { allowConstantExport: true },
       ],
       "@typescript-eslint/no-unused-vars": "off",
+      "react/forbid-component-props": ["error", { 
+        "forbid": [{ 
+          "propName": "style",
+          "message": "Use semantic design tokens instead of inline styles for colors"
+        }] 
+      }]
     },
   }
 );
