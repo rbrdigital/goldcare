@@ -110,7 +110,7 @@ function SOAPNoteSection() {
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">What brings you here today?</label>
               <textarea 
-                className="w-full h-32 p-3 border border-input rounded-md resize-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                className="w-full h-32 p-3 border border-border rounded-md resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
                 placeholder="Describe the main concern or reason for today's visit..."
               />
               <AIsuggestion 
