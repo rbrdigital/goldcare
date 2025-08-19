@@ -397,7 +397,7 @@ function AddDiagnosisForm({ onSubmit, onCancel }: { onSubmit: (data: any) => voi
         <Button type="button" variant="ghost" size="sm" onClick={onCancel}>
           Cancel
         </Button>
-        <Button type="submit" size="sm">
+        <Button type="submit" variant="primary" size="sm">
           Save
         </Button>
       </div>
@@ -468,7 +468,7 @@ function AddMedicationForm({ onSubmit, onCancel }: { onSubmit: (data: any) => vo
         <Button type="button" variant="ghost" size="sm" onClick={onCancel}>
           Cancel
         </Button>
-        <Button type="submit" size="sm">
+        <Button type="submit" variant="primary" size="sm">
           Save
         </Button>
       </div>
@@ -531,7 +531,7 @@ function AddAllergyForm({ onSubmit, onCancel }: { onSubmit: (data: any) => void;
         <Button type="button" variant="ghost" size="sm" onClick={onCancel}>
           Cancel
         </Button>
-        <Button type="submit" size="sm">
+        <Button type="submit" variant="primary" size="sm">
           Save
         </Button>
       </div>
