@@ -1,6 +1,5 @@
 import { Clock, Users, MapPin, Shield } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 
 interface PatientMiniCardProps {
   patient: {
@@ -59,14 +58,12 @@ export function PatientMiniCard({
           >
             Join Meeting
           </button>
-          <Button 
+          <button 
             onClick={onFinishAppointment}
-            variant="primary"
-            size="default"
-            className="text-sm font-medium"
+            className="px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-md text-sm font-medium transition-colors"
           >
             Finish Appointment
-          </Button>
+          </button>
         </div>
       </div>
     </div>
