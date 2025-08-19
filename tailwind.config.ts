@@ -25,6 +25,7 @@ const config: Config = {
         "fg-muted": "var(--color-fg-muted)",
         primary: "var(--color-primary)",
         "primary-fg": "var(--color-primary-fg)",
+        "on-primary": "var(--color-on-primary)",
         secondary: "var(--color-secondary)",
         "secondary-fg": "var(--color-secondary-fg)",
         success: "var(--color-success)",

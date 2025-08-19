@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { AppSidebar } from "@/components/AppSidebar";
-import { PatientMiniCard } from "@/components/PatientMiniCard";
 import { MainContent } from "@/components/MainContent";
 import { PatientProfileDrawer } from "@/components/PatientProfileDrawer";
 import { LabsImagingSideSheet } from "@/components/LabsImagingSideSheet";
 import { DiagnosesMedsAllergiesSideSheet } from "@/components/DiagnosesMedsAllergiesSideSheet";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft, Minimize2, Maximize2 } from "lucide-react";
+import { TopBar } from "@/components/layout/TopBar";
+import { RightPanel } from "@/components/layout/RightPanel";
+import { cn } from "@/lib/utils";
 
 const mockPatient = {
   name: "Sarah Johnson",
@@ -68,59 +68,58 @@ export function Dashboard() {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [labsImagingSideSheetOpen, diagnosesMedsAllergiesSideSheetOpen]);
 
-  return (
-    <div className="min-h-screen bg-background flex flex-col">
-      {/* Top Bar */}
-      <div className="sticky top-0 z-50 bg-background border-b">
-        <div className="flex items-center justify-between px-4 py-2">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="sm">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Queue
-            </Button>
-            <Button 
-              variant="ghost" 
-              size="sm"
-              onClick={() => setSidebarMini(!sidebarMini)}
-            >
-              {sidebarMini ? <Maximize2 className="h-4 w-4" /> : <Minimize2 className="h-4 w-4" />}
-            </Button>
-          </div>
-        </div>
-        <PatientMiniCard
-          patient={mockPatient}
-          timeLeft="45 minutes"
-          onJoinMeeting={handleJoinMeeting}
-          onFinishAppointment={handleFinishAppointment}
-        />
-      </div>
+  const hasRightSheet = labsImagingSideSheetOpen || diagnosesMedsAllergiesSideSheetOpen;
 
-      {/* Main Layout */}
-      <div className="flex flex-1">
+  return (
+    <div className={cn("min-h-screen bg-bg flex flex-col", hasRightSheet && "has-rightsheet")}>
+      {/* Top Bar */}
+      <TopBar
+        sidebarMini={sidebarMini}
+        onToggleSidebar={() => setSidebarMini(!sidebarMini)}
+        patient={mockPatient}
+        timeLeft="45 minutes"
+        onJoinMeeting={handleJoinMeeting}
+        onFinishAppointment={handleFinishAppointment}
+      />
+
+      {/* Main Layout - CSS Grid */}
+      <div className={cn(
+        "flex-1 grid transition-all duration-200",
+        hasRightSheet 
+          ? "grid-cols-[280px_minmax(0,1fr)_auto] lg:grid-cols-[280px_minmax(0,1fr)_auto]" 
+          : "grid-cols-[280px_minmax(0,1fr)] lg:grid-cols-[280px_minmax(0,1fr)]"
+      )}>
+        {/* Left Sidebar */}
         <AppSidebar 
           mini={sidebarMini}
           activeItem={activeSection}
           onItemClick={handleItemClick}
         />
+
+        {/* Main Content */}
         <MainContent activeSection={activeSection} />
+
+        {/* Right Panel */}
+        <RightPanel isOpen={hasRightSheet}>
+          {labsImagingSideSheetOpen && (
+            <LabsImagingSideSheet
+              isOpen={true}
+              onClose={() => setLabsImagingSideSheetOpen(false)}
+            />
+          )}
+          {diagnosesMedsAllergiesSideSheetOpen && (
+            <DiagnosesMedsAllergiesSideSheet
+              isOpen={true}
+              onClose={() => setDiagnosesMedsAllergiesSideSheetOpen(false)}
+            />
+          )}
+        </RightPanel>
       </div>
 
-      {/* Patient Profile Drawer */}
+      {/* Patient Profile Drawer - Keep as overlay for now */}
       <PatientProfileDrawer 
         isOpen={patientProfileDrawerOpen}
         onClose={() => setPatientProfileDrawerOpen(false)}
-      />
-
-      {/* Labs & Imaging Side Sheet */}
-      <LabsImagingSideSheet
-        isOpen={labsImagingSideSheetOpen}
-        onClose={() => setLabsImagingSideSheetOpen(false)}
-      />
-
-      {/* Diagnoses, Meds, Allergies Side Sheet */}
-      <DiagnosesMedsAllergiesSideSheet
-        isOpen={diagnosesMedsAllergiesSideSheetOpen}
-        onClose={() => setDiagnosesMedsAllergiesSideSheetOpen(false)}
       />
     </div>
   );

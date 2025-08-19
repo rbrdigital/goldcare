@@ -138,12 +138,11 @@ export function DiagnosesMedsAllergiesSideSheet({ isOpen, onClose }: DiagnosesMe
     setShowAddAllergy(false);
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed right-0 top-0 h-full w-full md:w-[480px] bg-white border-l border-border z-50 flex flex-col shadow-lg">
-      {/* Header */}
-      <div className="flex items-center justify-between p-6 border-b border-border">
+    <div className="h-full flex flex-col bg-surface">
+      {/* Sticky Header */}
+      <div className="sticky top-0 bg-bg border-b border-border z-10">
+        <div className="flex items-center justify-between p-6">
         <div>
           <h2 className="text-lg font-semibold text-foreground">Diagnoses, Meds, Allergies</h2>
           <p className="text-sm text-muted-foreground mt-1">Clinical summary</p>
@@ -151,10 +150,11 @@ export function DiagnosesMedsAllergiesSideSheet({ isOpen, onClose }: DiagnosesMe
         <Button variant="ghost" size="sm" onClick={onClose}>
           <X className="h-4 w-4" />
         </Button>
+        </div>
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto p-6 space-y-8">
+      <div className="flex-1 overflow-y-auto p-6 space-y-8 bg-surface">
         {/* Diagnoses Section */}
         <div className="space-y-4">
           <Collapsible open={diagnosesOpen} onOpenChange={setDiagnosesOpen}>

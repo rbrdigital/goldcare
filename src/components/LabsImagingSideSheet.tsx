@@ -152,15 +152,11 @@ export function LabsImagingSideSheet({ isOpen, onClose }: LabsImagingSideSheetPr
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedData = currentData.slice(startIndex, startIndex + itemsPerPage);
 
-  if (!isOpen) return null;
-
   return (
-    <div 
-      className="fixed inset-y-0 right-0 z-50 w-full max-w-[520px] bg-background border-l border-border shadow-none transform transition-transform duration-200 ease-out"
-      style={{ minWidth: "440px" }}
-    >
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-border">
+    <div className="h-full flex flex-col bg-surface">
+      {/* Sticky Header */}
+      <div className="sticky top-0 bg-bg border-b border-border z-10">
+        <div className="flex items-center justify-between p-4">
         <div>
           <h2 className="text-lg font-semibold text-foreground">Previous Labs & Imaging</h2>
           <p className="text-xs text-muted-foreground">Historical results for this patient</p>
@@ -173,6 +169,7 @@ export function LabsImagingSideSheet({ isOpen, onClose }: LabsImagingSideSheetPr
         >
           <X className="h-4 w-4" />
         </Button>
+        </div>
       </div>
 
       {/* Tabs */}
@@ -202,7 +199,7 @@ export function LabsImagingSideSheet({ isOpen, onClose }: LabsImagingSideSheetPr
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto p-4">
+      <div className="flex-1 overflow-y-auto p-4 bg-surface">
         {paginatedData.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 text-center">
             <FileText className="h-8 w-8 text-muted-foreground mb-3" />
@@ -214,7 +211,7 @@ export function LabsImagingSideSheet({ isOpen, onClose }: LabsImagingSideSheetPr
         ) : (
           <div className="space-y-4">
             {paginatedData.map((item, index) => (
-              <div key={item.id} className={cn("space-y-3", index > 0 && "pt-4 border-t border-border")}>
+              <div key={item.id} className={cn("space-y-3 hover:bg-bg rounded-md p-2 -m-2 transition-colors", index > 0 && "pt-4 border-t border-border")}>
                 <div className="flex items-start gap-3">
                   {/* Dot indicator */}
                   <div className="w-2 h-2 rounded-full bg-primary mt-2 flex-shrink-0" />

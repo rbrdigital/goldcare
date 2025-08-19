@@ -9,6 +9,7 @@
   /* Brand colors */
   --color-primary: #3b82f6;
   --color-primary-fg: #ffffff;
+  --color-on-primary: #ffffff;
   --color-secondary: #f1f5f9;
   --color-secondary-fg: #0f172a;
 
@@ -72,6 +73,7 @@
   /* Brand colors */
   --color-primary: #3b82f6;
   --color-primary-fg: #ffffff;
+  --color-on-primary: #ffffff;
   --color-secondary: #1e293b;
   --color-secondary-fg: #f1f5f9;
 

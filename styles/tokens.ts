@@ -7,6 +7,7 @@ export const tokens = {
     fgMuted: "var(--color-fg-muted)",
     primary: "var(--color-primary)",
     primaryFg: "var(--color-primary-fg)",
+    onPrimary: "var(--color-on-primary)",
     secondary: "var(--color-secondary)",
     secondaryFg: "var(--color-secondary-fg)",
     success: "var(--color-success)",
