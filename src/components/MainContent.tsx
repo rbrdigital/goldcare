@@ -123,7 +123,7 @@ function SOAPNoteSection() {
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">What medication(s) are you taking?</label>
               <textarea 
-                className="w-full h-24 p-3 border border-input rounded-md resize-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                className="w-full h-24 p-3 border border-border rounded-md resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
                 placeholder="List current medications, dosages, and frequency..."
               />
               <AIsuggestion 
@@ -132,17 +132,17 @@ function SOAPNoteSection() {
                 onDismiss={() => {}}
               />
               <div className="flex gap-2 mt-3 flex-wrap">
-                <button className="px-3 py-1 text-xs bg-slate-100 text-slate-700 rounded-full hover:bg-slate-200">Suggestion 1</button>
-                <button className="px-3 py-1 text-xs bg-slate-100 text-slate-700 rounded-full hover:bg-slate-200">Suggestion 2</button>
-                <button className="px-3 py-1 text-xs bg-slate-100 text-slate-700 rounded-full hover:bg-slate-200">Suggestion 3</button>
-                <button className="px-3 py-1 text-xs bg-slate-100 text-slate-700 rounded-full hover:bg-slate-200">Suggestion 4</button>
+                <button className="px-3 py-1 text-xs bg-surface text-fg border border-border rounded-full hover:bg-bg">Suggestion 1</button>
+                <button className="px-3 py-1 text-xs bg-surface text-fg border border-border rounded-full hover:bg-bg">Suggestion 2</button>
+                <button className="px-3 py-1 text-xs bg-surface text-fg border border-border rounded-full hover:bg-bg">Suggestion 3</button>
+                <button className="px-3 py-1 text-xs bg-surface text-fg border border-border rounded-full hover:bg-bg">Suggestion 4</button>
               </div>
             </div>
 
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">What supplements/OTC are you taking?</label>
               <textarea 
-                className="w-full h-24 p-3 border border-input rounded-md resize-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                className="w-full h-24 p-3 border border-border rounded-md resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
                 placeholder="List over-the-counter medications and supplements..."
               />
               <AIsuggestion 
@@ -151,17 +151,17 @@ function SOAPNoteSection() {
                 onDismiss={() => {}}
               />
               <div className="flex gap-2 mt-3 flex-wrap">
-                <button className="px-3 py-1 text-xs bg-slate-100 text-slate-700 rounded-full hover:bg-slate-200">Suggestion 1</button>
-                <button className="px-3 py-1 text-xs bg-slate-100 text-slate-700 rounded-full hover:bg-slate-200">Suggestion 2</button>
-                <button className="px-3 py-1 text-xs bg-slate-100 text-slate-700 rounded-full hover:bg-slate-200">Suggestion 3</button>
-                <button className="px-3 py-1 text-xs bg-slate-100 text-slate-700 rounded-full hover:bg-slate-200">Suggestion 4</button>
+                <button className="px-3 py-1 text-xs bg-surface text-fg border border-border rounded-full hover:bg-bg">Suggestion 1</button>
+                <button className="px-3 py-1 text-xs bg-surface text-fg border border-border rounded-full hover:bg-bg">Suggestion 2</button>
+                <button className="px-3 py-1 text-xs bg-surface text-fg border border-border rounded-full hover:bg-bg">Suggestion 3</button>
+                <button className="px-3 py-1 text-xs bg-surface text-fg border border-border rounded-full hover:bg-bg">Suggestion 4</button>
               </div>
             </div>
 
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">Do you have any drug allergies?</label>
               <textarea 
-                className="w-full h-20 p-3 border border-input rounded-md resize-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                className="w-full h-20 p-3 border border-border rounded-md resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
                 placeholder="List any known drug allergies and reactions..."
               />
               <AIsuggestion 
@@ -170,11 +170,11 @@ function SOAPNoteSection() {
                 onDismiss={() => {}}
               />
               <div className="flex gap-2 mt-3 flex-wrap">
-                <button className="px-3 py-1 text-xs bg-slate-100 text-slate-700 rounded-full hover:bg-slate-200">Suggestion 1</button>
-                <button className="px-3 py-1 text-xs bg-slate-100 text-slate-700 rounded-full hover:bg-slate-200">Suggestion 2</button>
-                <button className="px-3 py-1 text-xs bg-slate-100 text-slate-700 rounded-full hover:bg-slate-200">Suggestion 3</button>
-                <button className="px-3 py-1 text-xs bg-slate-100 text-slate-700 rounded-full hover:bg-slate-200">Suggestion 4</button>
-                <button className="px-3 py-1 text-xs bg-slate-100 text-slate-700 rounded-full hover:bg-slate-200">Suggestion 5</button>
+                <button className="px-3 py-1 text-xs bg-surface text-fg border border-border rounded-full hover:bg-bg">Suggestion 1</button>
+                <button className="px-3 py-1 text-xs bg-surface text-fg border border-border rounded-full hover:bg-bg">Suggestion 2</button>
+                <button className="px-3 py-1 text-xs bg-surface text-fg border border-border rounded-full hover:bg-bg">Suggestion 3</button>
+                <button className="px-3 py-1 text-xs bg-surface text-fg border border-border rounded-full hover:bg-bg">Suggestion 4</button>
+                <button className="px-3 py-1 text-xs bg-surface text-fg border border-border rounded-full hover:bg-bg">Suggestion 5</button>
               </div>
             </div>
           </div>
@@ -190,17 +190,17 @@ function SOAPNoteSection() {
                 <input 
                   type="number" 
                   step="0.1" 
-                  className="w-full p-3 border border-input rounded-md focus:ring-2 focus:ring-primary/20 focus:border-primary" 
+                  className="w-full p-3 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent" 
                 />
-                <div className="mt-2 flex items-center gap-2 text-sm text-slate-600">
-                  <div className="flex-shrink-0 w-4 h-4 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 flex items-center justify-center">
-                    <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <div className="mt-2 flex items-center gap-2 text-sm text-fg-muted">
+                  <div className="flex-shrink-0 w-4 h-4 rounded-full bg-primary flex items-center justify-center">
+                    <svg className="w-2 h-2 text-on-primary" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                     </svg>
                   </div>
                   <span className="font-medium">GoldCare AI:</span>
                   <span>xx lbs</span>
-                  <button className="ml-auto text-blue-600 hover:text-blue-800 underline text-xs">Add</button>
+                  <button className="ml-auto text-primary hover:opacity-80 underline text-xs">Add</button>
                 </div>
               </div>
               <div>
@@ -208,17 +208,17 @@ function SOAPNoteSection() {
                 <input 
                   type="number" 
                   step="0.1" 
-                  className="w-full p-3 border border-input rounded-md focus:ring-2 focus:ring-primary/20 focus:border-primary" 
+                  className="w-full p-3 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent" 
                 />
-                <div className="mt-2 flex items-center gap-2 text-sm text-slate-600">
-                  <div className="flex-shrink-0 w-4 h-4 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 flex items-center justify-center">
-                    <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <div className="mt-2 flex items-center gap-2 text-sm text-fg-muted">
+                  <div className="flex-shrink-0 w-4 h-4 rounded-full bg-primary flex items-center justify-center">
+                    <svg className="w-2 h-2 text-on-primary" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                     </svg>
                   </div>
                   <span className="font-medium">GoldCare AI:</span>
                   <span>xx inches</span>
-                  <button className="ml-auto text-blue-600 hover:text-blue-800 underline text-xs">Add</button>
+                  <button className="ml-auto text-primary hover:opacity-80 underline text-xs">Add</button>
                 </div>
               </div>
             </div>
@@ -229,17 +229,17 @@ function SOAPNoteSection() {
                 <input 
                   type="number" 
                   step="0.1" 
-                  className="w-full p-3 border border-input rounded-md focus:ring-2 focus:ring-primary/20 focus:border-primary" 
+                  className="w-full p-3 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent" 
                 />
-                <div className="mt-2 flex items-center gap-2 text-sm text-slate-600">
-                  <div className="flex-shrink-0 w-4 h-4 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 flex items-center justify-center">
-                    <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <div className="mt-2 flex items-center gap-2 text-sm text-fg-muted">
+                  <div className="flex-shrink-0 w-4 h-4 rounded-full bg-primary flex items-center justify-center">
+                    <svg className="w-2 h-2 text-on-primary" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                     </svg>
                   </div>
                   <span className="font-medium">GoldCare AI:</span>
                   <span>xx inches</span>
-                  <button className="ml-auto text-blue-600 hover:text-blue-800 underline text-xs">Add</button>
+                  <button className="ml-auto text-primary hover:opacity-80 underline text-xs">Add</button>
                 </div>
               </div>
               <div>
@@ -247,7 +247,7 @@ function SOAPNoteSection() {
                 <input 
                   type="number" 
                   step="0.1" 
-                  className="w-full p-3 border border-input rounded-md focus:ring-2 focus:ring-primary/20 focus:border-primary" 
+                  className="w-full p-3 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent" 
                   readOnly
                 />
               </div>
@@ -256,7 +256,7 @@ function SOAPNoteSection() {
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">Observations</label>
               <textarea 
-                className="w-full h-32 p-3 border border-input rounded-md resize-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                className="w-full h-32 p-3 border border-border rounded-md resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
                 placeholder="Clinical observations and physical examination findings..."
               />
               <AIsuggestion 
@@ -275,7 +275,7 @@ function SOAPNoteSection() {
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">Problem</label>
               <textarea 
-                className="w-full h-32 p-3 border border-input rounded-md resize-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                className="w-full h-32 p-3 border border-border rounded-md resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
                 placeholder="Primary medical problem or diagnosis..."
               />
               <AIsuggestion 
@@ -288,7 +288,7 @@ function SOAPNoteSection() {
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">Differential Diagnosis</label>
               <textarea 
-                className="w-full h-32 p-3 border border-input rounded-md resize-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                className="w-full h-32 p-3 border border-border rounded-md resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
                 placeholder="List potential diagnoses to consider..."
               />
               <AIsuggestion 
@@ -307,28 +307,28 @@ function SOAPNoteSection() {
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">Acute Diagnosis</label>
               <textarea 
-                className="w-full h-24 p-3 border border-input rounded-md resize-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                className="w-full h-24 p-3 border border-border rounded-md resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
                 placeholder="ICD-10 codes and acute diagnoses..."
               />
               <div className="mt-3 flex items-center gap-2">
-                <div className="flex-shrink-0 w-4 h-4 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 flex items-center justify-center">
-                  <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <div className="flex-shrink-0 w-4 h-4 rounded-full bg-primary flex items-center justify-center">
+                  <svg className="w-2 h-2 text-on-primary" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                   </svg>
                 </div>
-                <span className="text-sm font-medium text-slate-700">GoldCare AI</span>
+                <span className="text-sm font-medium text-fg">GoldCare AI</span>
               </div>
               <div className="flex gap-2 mt-2 flex-wrap">
-                <button className="px-3 py-1 text-xs bg-blue-50 text-blue-700 border border-blue-200 rounded-full hover:bg-blue-100">Z32.00- Encounter for pregnancy test, result unknow</button>
-                <button className="px-3 py-1 text-xs bg-blue-50 text-blue-700 border border-blue-200 rounded-full hover:bg-blue-100">Z32.01- Encounter for pregnancy test, result positive</button>
-                <button className="px-3 py-1 text-xs bg-blue-50 text-blue-700 border border-blue-200 rounded-full hover:bg-blue-100">Z32.02- Encounter for pregnancy test, result negative</button>
+                <button className="px-3 py-1 text-xs bg-surface text-fg border border-border rounded-full hover:bg-bg">Z32.00- Encounter for pregnancy test, result unknow</button>
+                <button className="px-3 py-1 text-xs bg-surface text-fg border border-border rounded-full hover:bg-bg">Z32.01- Encounter for pregnancy test, result positive</button>
+                <button className="px-3 py-1 text-xs bg-surface text-fg border border-border rounded-full hover:bg-bg">Z32.02- Encounter for pregnancy test, result negative</button>
               </div>
             </div>
 
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">Patient Education and Discharge Instructions</label>
               <textarea 
-                className="w-full h-32 p-3 border border-input rounded-md resize-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                className="w-full h-32 p-3 border border-border rounded-md resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
                 placeholder="Instructions for patient care and follow-up..."
               />
               <AIsuggestion 
@@ -341,22 +341,22 @@ function SOAPNoteSection() {
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">Comorbidities/Contributing Conditions</label>
               <textarea 
-                className="w-full h-24 p-3 border border-input rounded-md resize-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                className="w-full h-24 p-3 border border-border rounded-md resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
                 placeholder="Related conditions that may impact treatment..."
               />
               <div className="mt-3 flex items-center gap-2">
-                <div className="flex-shrink-0 w-4 h-4 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 flex items-center justify-center">
-                  <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <div className="flex-shrink-0 w-4 h-4 rounded-full bg-primary flex items-center justify-center">
+                  <svg className="w-2 h-2 text-on-primary" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                   </svg>
                 </div>
-                <span className="text-sm font-medium text-slate-700">GoldCare AI</span>
+                <span className="text-sm font-medium text-fg">GoldCare AI</span>
               </div>
               <div className="flex gap-2 mt-2 flex-wrap">
-                <button className="px-3 py-1 text-xs bg-slate-100 text-slate-700 rounded-full hover:bg-slate-200">Suggestion 1</button>
-                <button className="px-3 py-1 text-xs bg-slate-100 text-slate-700 rounded-full hover:bg-slate-200">Suggestion 2</button>
-                <button className="px-3 py-1 text-xs bg-slate-100 text-slate-700 rounded-full hover:bg-slate-200">Suggestion 3</button>
-                <button className="px-3 py-1 text-xs bg-slate-100 text-slate-700 rounded-full hover:bg-slate-200">Suggestion 4</button>
+                <button className="px-3 py-1 text-xs bg-surface text-fg border border-border rounded-full hover:bg-bg">Suggestion 1</button>
+                <button className="px-3 py-1 text-xs bg-surface text-fg border border-border rounded-full hover:bg-bg">Suggestion 2</button>
+                <button className="px-3 py-1 text-xs bg-surface text-fg border border-border rounded-full hover:bg-bg">Suggestion 3</button>
+                <button className="px-3 py-1 text-xs bg-surface text-fg border border-border rounded-full hover:bg-bg">Suggestion 4</button>
               </div>
             </div>
           </div>
