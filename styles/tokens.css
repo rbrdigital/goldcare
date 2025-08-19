@@ -7,7 +7,7 @@
   --color-fg-muted: #4b5563;
 
   /* Brand colors */
-  --color-primary: #3b82f6;
+  --color-primary: #000000;
   --color-primary-fg: #ffffff;
   --color-on-primary: #ffffff;
   --color-secondary: #f1f5f9;
@@ -71,7 +71,7 @@
   --color-fg-muted: #9ca3af;
 
   /* Brand colors */
-  --color-primary: #3b82f6;
+  --color-primary: #000000;
   --color-primary-fg: #ffffff;
   --color-on-primary: #ffffff;
   --color-secondary: #1e293b;
