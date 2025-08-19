@@ -52,31 +52,31 @@ export function MainContent({ activeSection }: MainContentProps) {
 
 function SOAPNoteSection() {
   const AIsuggestion = ({ text, onInsert, onDismiss }: { text: string; onInsert: () => void; onDismiss: () => void }) => (
-    <div className="mt-3 p-4 rounded-lg bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/50 shadow-sm">
+    <div className="mt-3 p-4 rounded-lg bg-surface border border-border shadow-sm">
       <div className="flex items-start gap-3">
-        <div className="flex-shrink-0 w-6 h-6 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 flex items-center justify-center">
-          <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+        <div className="flex-shrink-0 w-6 h-6 rounded-full bg-primary flex items-center justify-center">
+          <svg className="w-3 h-3 text-on-primary" fill="currentColor" viewBox="0 0 20 20">
             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
           </svg>
         </div>
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-2">
-            <span className="text-sm font-semibold text-slate-800">GoldCare AI</span>
-            <span className="text-xs text-slate-500">Suggestion</span>
+            <span className="text-sm font-semibold text-fg">GoldCare AI</span>
+            <span className="text-xs text-fg-muted">Suggestion</span>
           </div>
-          <p className="text-sm text-slate-700 leading-relaxed">{text}</p>
+          <p className="text-sm text-fg leading-relaxed">{text}</p>
         </div>
       </div>
       <div className="flex gap-2 mt-3">
         <button 
           onClick={onInsert}
-          className="px-4 py-2 text-sm font-medium text-blue-700 bg-white border border-blue-300 rounded-md hover:bg-blue-50 transition-colors"
+          className="px-4 py-2 text-sm font-medium bg-bg text-primary border border-border rounded-md hover:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
         >
           Insert above
         </button>
         <button 
           onClick={onDismiss}
-          className="px-4 py-2 text-sm font-medium text-slate-600 bg-slate-100 border border-slate-300 rounded-md hover:bg-slate-200 transition-colors"
+          className="px-4 py-2 text-sm font-medium bg-surface text-fg border border-border rounded-md hover:bg-bg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
         >
           Dismiss
         </button>
