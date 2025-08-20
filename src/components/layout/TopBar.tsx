@@ -30,8 +30,7 @@ export function TopBar({
       <div className="flex items-center justify-between px-4 py-2">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="sm">
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Queue
+            <ArrowLeft className="h-4 w-4" />
           </Button>
           <Button 
             variant="ghost" 

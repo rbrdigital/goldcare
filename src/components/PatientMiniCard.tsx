@@ -1,4 +1,4 @@
-import { Clock, Users, MapPin, Shield } from "lucide-react";
+import { Clock, Users, MapPin, Shield, ArrowLeft } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 interface PatientMiniCardProps {
@@ -23,6 +23,11 @@ export function PatientMiniCard({
   return (
     <div className="flex h-16 items-center justify-between bg-background border-b px-6">
       <div className="flex items-center gap-4">
+        <button className="flex items-center gap-2 text-sm text-fg-muted hover:text-fg transition-colors">
+          <ArrowLeft className="h-4 w-4" />
+          <span>Back to Queue</span>
+        </button>
+        <div className="h-4 w-px bg-border" />
         <div className="flex items-center gap-3">
           <div className="h-10 w-10 rounded-full bg-medical-blue text-white flex items-center justify-center font-semibold">
             {patient.name.split(' ').map(n => n[0]).join('')}
