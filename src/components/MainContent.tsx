@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { 
   AlertTriangle, 
   Calendar, 
@@ -54,6 +54,24 @@ export function MainContent({ activeSection }: MainContentProps) {
 function SOAPNoteSection() {
   const AIsuggestion = ({ text, onInsert, onDismiss }: { text: string; onInsert: () => void; onDismiss: () => void }) => {
     const [isExpanded, setIsExpanded] = useState(false);
+    const [hasOverflow, setHasOverflow] = useState(false);
+    const textRef = useRef<HTMLParagraphElement>(null);
+
+    useEffect(() => {
+      const checkOverflow = () => {
+        if (textRef.current) {
+          const { scrollHeight, clientHeight } = textRef.current;
+          setHasOverflow(scrollHeight > clientHeight);
+        }
+      };
+
+      checkOverflow();
+      window.addEventListener('resize', checkOverflow);
+
+      return () => {
+        window.removeEventListener('resize', checkOverflow);
+      };
+    }, [text, isExpanded]);
     
     return (
       <div className="mt-3 p-4 rounded-lg bg-surface shadow-sm">
@@ -81,10 +99,13 @@ function SOAPNoteSection() {
         </div>
         
         <div className="relative">
-          <p className={`text-sm text-fg leading-relaxed ${!isExpanded ? 'line-clamp-2' : ''}`}>
+          <p 
+            ref={textRef}
+            className={`text-sm text-fg leading-relaxed ${!isExpanded ? 'line-clamp-2' : ''}`}
+          >
             {text}
           </p>
-          {(text.length > 150 || text.split(' ').length > 25) && (
+          {hasOverflow && (
             <button
               type="button"
               onClick={() => setIsExpanded(!isExpanded)}
