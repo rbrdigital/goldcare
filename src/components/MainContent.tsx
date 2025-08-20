@@ -52,7 +52,7 @@ export function MainContent({ activeSection }: MainContentProps) {
 
 function SOAPNoteSection() {
   const AIsuggestion = ({ text, onInsert, onDismiss }: { text: string; onInsert: () => void; onDismiss: () => void }) => (
-    <div className="mt-3 p-4 rounded-lg bg-surface border border-border shadow-sm">
+    <div className="mt-3 p-4 rounded-lg bg-surface shadow-sm">
       <div className="mb-3 flex items-start justify-between gap-2">
         <div className="flex items-center gap-2">
           <div className="flex-shrink-0 w-6 h-6 rounded-full bg-primary flex items-center justify-center">
