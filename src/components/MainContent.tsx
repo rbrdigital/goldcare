@@ -84,7 +84,7 @@ function SOAPNoteSection() {
           <p className={`text-sm text-fg leading-relaxed ${!isExpanded ? 'line-clamp-2' : ''}`}>
             {text}
           </p>
-          {text.length > 100 && (
+          {(text.length > 150 || text.split(' ').length > 25) && (
             <button
               type="button"
               onClick={() => setIsExpanded(!isExpanded)}
