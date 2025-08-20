@@ -68,7 +68,7 @@ export function Dashboard() {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [labsImagingSideSheetOpen, diagnosesMedsAllergiesSideSheetOpen]);
 
-  const hasRightSheet = labsImagingSideSheetOpen || diagnosesMedsAllergiesSideSheetOpen;
+  const hasRightSheet = labsImagingSideSheetOpen || diagnosesMedsAllergiesSideSheetOpen || patientProfileDrawerOpen;
 
   return (
     <div className={cn("min-h-screen bg-bg flex flex-col", hasRightSheet && "has-rightsheet")}>
@@ -101,6 +101,12 @@ export function Dashboard() {
 
         {/* Right Panel */}
         <RightPanel isOpen={hasRightSheet}>
+          {patientProfileDrawerOpen && (
+            <PatientProfileDrawer
+              isOpen={true}
+              onClose={() => setPatientProfileDrawerOpen(false)}
+            />
+          )}
           {labsImagingSideSheetOpen && (
             <LabsImagingSideSheet
               isOpen={true}
@@ -115,12 +121,6 @@ export function Dashboard() {
           )}
         </RightPanel>
       </div>
-
-      {/* Patient Profile Drawer - Keep as overlay for now */}
-      <PatientProfileDrawer 
-        isOpen={patientProfileDrawerOpen}
-        onClose={() => setPatientProfileDrawerOpen(false)}
-      />
     </div>
   );
 }
