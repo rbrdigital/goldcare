@@ -43,7 +43,7 @@ export function MainContent({ activeSection }: MainContentProps) {
 
   return (
     <main className="flex-1 overflow-y-auto">
-      <div className="p-6 max-w-4xl mx-auto">
+      <div className="p-4 sm:p-6 max-w-4xl mx-auto">
         {renderSection()}
       </div>
     </main>
@@ -233,9 +233,9 @@ function SOAPNoteSection() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
               <div>
-                <label className="block text-sm font-medium text-foreground mb-2">Hip Measurement (inches)</label>
+                <label className="block text-sm font-medium text-fg mb-2">Hip Measurement (inches)</label>
                 <input 
                   type="number" 
                   step="0.1" 

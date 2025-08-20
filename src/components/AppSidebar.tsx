@@ -78,9 +78,10 @@ interface AppSidebarProps {
   mini?: boolean;
   activeItem?: string;
   onItemClick?: (itemId: string) => void;
+  isMobile?: boolean;
 }
 
-export function AppSidebar({ mini = false, activeItem = "soap", onItemClick }: AppSidebarProps) {
+export function AppSidebar({ mini = false, activeItem = "soap", onItemClick, isMobile = false }: AppSidebarProps) {
   const [openSections, setOpenSections] = useState<Set<string>>(
     new Set(sections.filter(s => s.defaultOpen).map(s => s.id))
   );
@@ -144,16 +145,19 @@ export function AppSidebar({ mini = false, activeItem = "soap", onItemClick }: A
   }
 
   return (
-    <aside className="w-80 border-r bg-background flex flex-col">
+    <aside className={cn(
+      "border-r bg-surface flex flex-col",
+      isMobile ? "w-full h-full" : "w-80"
+    )}>
       <div className="p-4">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-fg-muted" />
           <input
             type="text"
-            placeholder="Search chart (⌘K)"
+            placeholder={isMobile ? "Search chart" : "Search chart (⌘K)"}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-muted rounded-md text-sm border-0 focus:ring-2 focus:ring-primary focus:outline-none"
+            className="w-full pl-10 pr-4 py-3 bg-bg text-fg placeholder:text-fg-muted border border-border rounded-md text-sm focus:ring-2 focus:ring-primary focus:border-transparent"
           />
         </div>
       </div>

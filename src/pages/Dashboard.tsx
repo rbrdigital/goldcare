@@ -6,6 +6,8 @@ import { LabsImagingSideSheet } from "@/components/LabsImagingSideSheet";
 import { DiagnosesMedsAllergiesSideSheet } from "@/components/DiagnosesMedsAllergiesSideSheet";
 import { PatientMiniCard } from "@/components/PatientMiniCard";
 import { RightPanel } from "@/components/layout/RightPanel";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 
 const mockPatient = {
@@ -19,9 +21,11 @@ const mockPatient = {
 export function Dashboard() {
   const [activeSection, setActiveSection] = useState("soap");
   const [sidebarMini, setSidebarMini] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [patientProfileDrawerOpen, setPatientProfileDrawerOpen] = useState(false);
   const [labsImagingSideSheetOpen, setLabsImagingSideSheetOpen] = useState(false);
   const [diagnosesMedsAllergiesSideSheetOpen, setDiagnosesMedsAllergiesSideSheetOpen] = useState(false);
+  const isMobile = useIsMobile();
 
   const handleJoinMeeting = () => {
     console.log("Joining meeting...");
@@ -32,6 +36,11 @@ export function Dashboard() {
   };
 
   const handleItemClick = (itemId: string) => {
+    // Close sidebar on mobile when navigating
+    if (isMobile) {
+      setSidebarOpen(false);
+    }
+    
     // Close all panels first
     setPatientProfileDrawerOpen(false);
     setLabsImagingSideSheetOpen(false);
@@ -77,11 +86,12 @@ export function Dashboard() {
   const hasRightSheet = labsImagingSideSheetOpen || diagnosesMedsAllergiesSideSheetOpen || patientProfileDrawerOpen;
 
   return (
-    <div className={cn("min-h-screen bg-bg flex flex-col", hasRightSheet && "has-rightsheet")}>
+    <div className="min-h-screen bg-bg flex flex-col">
       {/* Patient Mini Card */}
       <PatientMiniCard
         sidebarMini={sidebarMini}
-        onToggleSidebar={() => setSidebarMini(!sidebarMini)}
+        sidebarOpen={sidebarOpen}
+        onToggleSidebar={() => isMobile ? setSidebarOpen(!sidebarOpen) : setSidebarMini(!sidebarMini)}
         patient={mockPatient}
         timeLeft="45 minutes"
         onJoinMeeting={handleJoinMeeting}
@@ -89,45 +99,93 @@ export function Dashboard() {
         onProfileClick={() => handleItemClick("profile")}
       />
 
-      {/* Main Layout - CSS Grid */}
-      <div className={cn(
-        "flex-1 grid transition-all duration-200",
-        hasRightSheet 
-          ? "grid-cols-[280px_minmax(0,1fr)_auto] lg:grid-cols-[280px_minmax(0,1fr)_auto]" 
-          : "grid-cols-[280px_minmax(0,1fr)] lg:grid-cols-[280px_minmax(0,1fr)]"
-      )}>
-        {/* Left Sidebar */}
-        <AppSidebar 
-          mini={sidebarMini}
-          activeItem={activeSection}
-          onItemClick={handleItemClick}
-        />
+      {/* Mobile Layout */}
+      {isMobile ? (
+        <div className="flex-1 flex flex-col">
+          {/* Mobile Sidebar Sheet */}
+          <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
+            <SheetContent side="left" className="w-80 p-0">
+              <AppSidebar 
+                mini={false}
+                activeItem={activeSection}
+                onItemClick={handleItemClick}
+                isMobile={true}
+              />
+            </SheetContent>
+          </Sheet>
 
-        {/* Main Content */}
-        <MainContent activeSection={activeSection} />
+          {/* Main Content */}
+          <MainContent activeSection={activeSection} />
 
-        {/* Right Panel */}
-        <RightPanel isOpen={hasRightSheet}>
-          {patientProfileDrawerOpen && (
-            <PatientProfileDrawer
-              isOpen={true}
-              onClose={() => setPatientProfileDrawerOpen(false)}
-            />
-          )}
-          {labsImagingSideSheetOpen && (
-            <LabsImagingSideSheet
-              isOpen={true}
-              onClose={() => setLabsImagingSideSheetOpen(false)}
-            />
-          )}
-          {diagnosesMedsAllergiesSideSheetOpen && (
-            <DiagnosesMedsAllergiesSideSheet
-              isOpen={true}
-              onClose={() => setDiagnosesMedsAllergiesSideSheetOpen(false)}
-            />
-          )}
-        </RightPanel>
-      </div>
+          {/* Mobile Right Panels as Full Screen Sheets */}
+          <Sheet open={patientProfileDrawerOpen} onOpenChange={setPatientProfileDrawerOpen}>
+            <SheetContent side="right" className="w-full sm:max-w-lg p-0">
+              <PatientProfileDrawer
+                isOpen={true}
+                onClose={() => setPatientProfileDrawerOpen(false)}
+              />
+            </SheetContent>
+          </Sheet>
+
+          <Sheet open={labsImagingSideSheetOpen} onOpenChange={setLabsImagingSideSheetOpen}>
+            <SheetContent side="right" className="w-full sm:max-w-lg p-0">
+              <LabsImagingSideSheet
+                isOpen={true}
+                onClose={() => setLabsImagingSideSheetOpen(false)}
+              />
+            </SheetContent>
+          </Sheet>
+
+          <Sheet open={diagnosesMedsAllergiesSideSheetOpen} onOpenChange={setDiagnosesMedsAllergiesSideSheetOpen}>
+            <SheetContent side="right" className="w-full sm:max-w-lg p-0">
+              <DiagnosesMedsAllergiesSideSheet
+                isOpen={true}
+                onClose={() => setDiagnosesMedsAllergiesSideSheetOpen(false)}
+              />
+            </SheetContent>
+          </Sheet>
+        </div>
+      ) : (
+        /* Desktop Layout - CSS Grid */
+        <div className={cn(
+          "flex-1 grid transition-all duration-200",
+          hasRightSheet 
+            ? "grid-cols-[280px_minmax(0,1fr)_auto]" 
+            : "grid-cols-[280px_minmax(0,1fr)]"
+        )}>
+          {/* Left Sidebar */}
+          <AppSidebar 
+            mini={sidebarMini}
+            activeItem={activeSection}
+            onItemClick={handleItemClick}
+          />
+
+          {/* Main Content */}
+          <MainContent activeSection={activeSection} />
+
+          {/* Right Panel */}
+          <RightPanel isOpen={hasRightSheet}>
+            {patientProfileDrawerOpen && (
+              <PatientProfileDrawer
+                isOpen={true}
+                onClose={() => setPatientProfileDrawerOpen(false)}
+              />
+            )}
+            {labsImagingSideSheetOpen && (
+              <LabsImagingSideSheet
+                isOpen={true}
+                onClose={() => setLabsImagingSideSheetOpen(false)}
+              />
+            )}
+            {diagnosesMedsAllergiesSideSheetOpen && (
+              <DiagnosesMedsAllergiesSideSheet
+                isOpen={true}
+                onClose={() => setDiagnosesMedsAllergiesSideSheetOpen(false)}
+              />
+            )}
+          </RightPanel>
+        </div>
+      )}
     </div>
   );
 }
