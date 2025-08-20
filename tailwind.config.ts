@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 const config: Config = {
@@ -28,6 +29,8 @@ const config: Config = {
         "on-primary": "var(--color-on-primary)",
         secondary: "var(--color-secondary)",
         "secondary-fg": "var(--color-secondary-fg)",
+        "button-primary": "var(--color-button-primary)",
+        "button-primary-text": "var(--color-button-primary-text)",
         success: "var(--color-success)",
         "success-fg": "var(--color-success-fg)",
         danger: "var(--color-danger)",

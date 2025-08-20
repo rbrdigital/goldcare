@@ -1,3 +1,4 @@
+
 :root {
   /* Base colors */
   --color-bg: #ffffff;
@@ -6,12 +7,16 @@
   --color-fg: #0b0f14;
   --color-fg-muted: #4b5563;
 
-  /* Brand colors */
+  /* Brand colors - restored original blue */
   --color-primary: #3b82f6;
   --color-primary-fg: #ffffff;
   --color-on-primary: #ffffff;
   --color-secondary: #f1f5f9;
   --color-secondary-fg: #0f172a;
+
+  /* Button-specific colors */
+  --color-button-primary: #000000;
+  --color-button-primary-text: #ffffff;
 
   /* Status colors */
   --color-success: #10b981;
@@ -70,12 +75,16 @@
   --color-fg: #e5e7eb;
   --color-fg-muted: #9ca3af;
 
-  /* Brand colors */
+  /* Brand colors - restored original blue */
   --color-primary: #3b82f6;
   --color-primary-fg: #ffffff;
   --color-on-primary: #ffffff;
   --color-secondary: #1e293b;
   --color-secondary-fg: #f1f5f9;
+
+  /* Button-specific colors */
+  --color-button-primary: #000000;
+  --color-button-primary-text: #ffffff;
 
   /* Status colors remain the same for consistency */
   --color-success: #10b981;
