@@ -4,7 +4,7 @@ import { MainContent } from "@/components/MainContent";
 import { PatientProfileDrawer } from "@/components/PatientProfileDrawer";
 import { LabsImagingSideSheet } from "@/components/LabsImagingSideSheet";
 import { DiagnosesMedsAllergiesSideSheet } from "@/components/DiagnosesMedsAllergiesSideSheet";
-import { TopBar } from "@/components/layout/TopBar";
+import { PatientMiniCard } from "@/components/PatientMiniCard";
 import { RightPanel } from "@/components/layout/RightPanel";
 import { cn } from "@/lib/utils";
 
@@ -72,8 +72,8 @@ export function Dashboard() {
 
   return (
     <div className={cn("min-h-screen bg-bg flex flex-col", hasRightSheet && "has-rightsheet")}>
-      {/* Top Bar */}
-      <TopBar
+      {/* Patient Mini Card */}
+      <PatientMiniCard
         sidebarMini={sidebarMini}
         onToggleSidebar={() => setSidebarMini(!sidebarMini)}
         patient={mockPatient}
