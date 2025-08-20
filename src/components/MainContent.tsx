@@ -88,7 +88,7 @@ function SOAPNoteSection() {
             <FileText className="h-6 w-6 text-medical-blue" />
             SOAP Note
           </h1>
-          <p className="text-muted-foreground">Document subjective, objective, assessment, and plan</p>
+          <p className="text-fg-muted">Document subjective, objective, assessment, and plan</p>
         </div>
         <div className="flex items-center gap-2">
           <Badge variant="secondary" className="bg-medical-blue-light text-medical-blue">
