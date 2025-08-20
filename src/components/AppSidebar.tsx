@@ -87,6 +87,9 @@ export function AppSidebar({ mini = false, activeItem = "soap", onItemClick }: A
   const [searchQuery, setSearchQuery] = useState("");
 
   const toggleSection = (sectionId: string) => {
+    // Don't allow toggling the "chart" section - keep it permanently open
+    if (sectionId === "chart") return;
+    
     const newOpenSections = new Set(openSections);
     if (newOpenSections.has(sectionId)) {
       newOpenSections.delete(sectionId);
@@ -160,19 +163,26 @@ export function AppSidebar({ mini = false, activeItem = "soap", onItemClick }: A
           <div key={section.id} className="border-b last:border-b-0">
             <button
               onClick={() => toggleSection(section.id)}
-              className="w-full flex items-center justify-between p-4 text-left hover:bg-muted/50 transition-colors"
+              className={cn(
+                "w-full flex items-center justify-between p-4 text-left transition-colors",
+                section.id === "chart" ? "cursor-default" : "hover:bg-muted/50"
+              )}
             >
               <h3 className="font-semibold text-sm uppercase tracking-wide text-muted-foreground">
                 {section.title}
               </h3>
-              {openSections.has(section.id) ? (
-                <ChevronDown className="h-4 w-4 text-muted-foreground" />
-              ) : (
-                <ChevronRight className="h-4 w-4 text-muted-foreground" />
+              {section.id !== "chart" && (
+                <>
+                  {openSections.has(section.id) ? (
+                    <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                  ) : (
+                    <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                  )}
+                </>
               )}
             </button>
 
-            {openSections.has(section.id) && (
+            {(openSections.has(section.id) || section.id === "chart") && (
               <div className="pb-2">
                 {section.id === "chart" && (
                   <>
