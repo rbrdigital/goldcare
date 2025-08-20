@@ -32,6 +32,12 @@ export function Dashboard() {
   };
 
   const handleItemClick = (itemId: string) => {
+    // Close all panels first
+    setPatientProfileDrawerOpen(false);
+    setLabsImagingSideSheetOpen(false);
+    setDiagnosesMedsAllergiesSideSheetOpen(false);
+    
+    // Open the selected panel
     if (itemId === "profile") {
       setPatientProfileDrawerOpen(true);
     } else if (itemId === "previous-results") {
@@ -80,6 +86,7 @@ export function Dashboard() {
         timeLeft="45 minutes"
         onJoinMeeting={handleJoinMeeting}
         onFinishAppointment={handleFinishAppointment}
+        onProfileClick={() => handleItemClick("profile")}
       />
 
       {/* Main Layout - CSS Grid */}

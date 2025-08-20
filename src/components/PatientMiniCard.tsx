@@ -15,6 +15,7 @@ interface PatientMiniCardProps {
   onToggleSidebar: () => void;
   onJoinMeeting: () => void;
   onFinishAppointment: () => void;
+  onProfileClick: () => void;
 }
 
 export function PatientMiniCard({ 
@@ -23,7 +24,8 @@ export function PatientMiniCard({
   sidebarMini,
   onToggleSidebar,
   onJoinMeeting, 
-  onFinishAppointment 
+  onFinishAppointment,
+  onProfileClick
 }: PatientMiniCardProps) {
   return (
     <div className="sticky top-0 z-40 bg-bg border-b border-border">
@@ -40,7 +42,7 @@ export function PatientMiniCard({
             {sidebarMini ? <Maximize2 className="h-4 w-4" /> : <Minimize2 className="h-4 w-4" />}
           </Button>
           <div className="h-4 w-px bg-border" />
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity" onClick={onProfileClick}>
             <div className="h-10 w-10 rounded-full bg-medical-blue text-white flex items-center justify-center font-semibold">
               {patient.name.split(' ').map(n => n[0]).join('')}
             </div>
