@@ -74,8 +74,6 @@ export function Dashboard() {
     <div className={cn("min-h-screen bg-bg flex flex-col", hasRightSheet && "has-rightsheet")}>
       {/* Patient Mini Card */}
       <PatientMiniCard
-        sidebarMini={sidebarMini}
-        onToggleSidebar={() => setSidebarMini(!sidebarMini)}
         patient={mockPatient}
         timeLeft="45 minutes"
         onJoinMeeting={handleJoinMeeting}
