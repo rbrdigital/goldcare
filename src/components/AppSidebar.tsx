@@ -21,6 +21,7 @@ import {
   ChevronDown,
   ChevronRight
 } from "lucide-react";
+import { GoldCareAIIcon } from "@/components/icons/GoldCareAIIcon";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 
@@ -53,6 +54,7 @@ const clinicalItems: SidebarItem[] = [
 ];
 
 const patientDataItems: SidebarItem[] = [
+  { id: "goldcare-ai", label: "GoldCare AI", icon: <GoldCareAIIcon className="h-4 w-4" />, href: "#goldcare-ai" },
   { id: "intake", label: "Intake Form", icon: <ClipboardList className="h-4 w-4" />, href: "#intake", attention: true },
   { id: "diagnoses-meds-allergies", label: "Diagnoses, Meds, Allergies", icon: <Stethoscope className="h-4 w-4" />, href: "#diagnoses" },
   { id: "previous-results", label: "Previous Labs & Imaging Results", icon: <Activity className="h-4 w-4" />, href: "#previous-results", count: 3, isNew: true },
@@ -243,8 +245,8 @@ interface SidebarItemProps {
 }
 
 function SidebarItem({ item, isActive, onClick }: SidebarItemProps) {
-  // Don't show active state for drawer items like patient profile, labs & imaging, diagnoses
-  const showActive = !["profile", "previous-results", "diagnoses-meds-allergies"].includes(item.id) && isActive;
+  // Don't show active state for drawer items like patient profile, labs & imaging, diagnoses, goldcare-ai
+  const showActive = !["profile", "previous-results", "diagnoses-meds-allergies", "goldcare-ai"].includes(item.id) && isActive;
   
   return (
     <button

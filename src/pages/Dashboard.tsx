@@ -4,6 +4,7 @@ import { MainContent } from "@/components/MainContent";
 import { PatientProfileDrawer } from "@/components/PatientProfileDrawer";
 import { LabsImagingSideSheet } from "@/components/LabsImagingSideSheet";
 import { DiagnosesMedsAllergiesSideSheet } from "@/components/DiagnosesMedsAllergiesSideSheet";
+import { GoldCareAIPanel } from "@/components/GoldCareAIPanel";
 import { PatientMiniCard } from "@/components/PatientMiniCard";
 import { RightPanel } from "@/components/layout/RightPanel";
 import { cn } from "@/lib/utils";
@@ -22,6 +23,7 @@ export function Dashboard() {
   const [patientProfileDrawerOpen, setPatientProfileDrawerOpen] = useState(false);
   const [labsImagingSideSheetOpen, setLabsImagingSideSheetOpen] = useState(false);
   const [diagnosesMedsAllergiesSideSheetOpen, setDiagnosesMedsAllergiesSideSheetOpen] = useState(false);
+  const [goldcareAIPanelOpen, setGoldcareAIPanelOpen] = useState(false);
 
   const handleJoinMeeting = () => {
     console.log("Joining meeting...");
@@ -36,6 +38,7 @@ export function Dashboard() {
     setPatientProfileDrawerOpen(false);
     setLabsImagingSideSheetOpen(false);
     setDiagnosesMedsAllergiesSideSheetOpen(false);
+    setGoldcareAIPanelOpen(false);
     
     // Open the selected panel
     if (itemId === "profile") {
@@ -44,6 +47,8 @@ export function Dashboard() {
       setLabsImagingSideSheetOpen(true);
     } else if (itemId === "diagnoses-meds-allergies") {
       setDiagnosesMedsAllergiesSideSheetOpen(true);
+    } else if (itemId === "goldcare-ai") {
+      setGoldcareAIPanelOpen(true);
     } else {
       setActiveSection(itemId);
     }
@@ -74,7 +79,7 @@ export function Dashboard() {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [labsImagingSideSheetOpen, diagnosesMedsAllergiesSideSheetOpen]);
 
-  const hasRightSheet = labsImagingSideSheetOpen || diagnosesMedsAllergiesSideSheetOpen || patientProfileDrawerOpen;
+  const hasRightSheet = labsImagingSideSheetOpen || diagnosesMedsAllergiesSideSheetOpen || patientProfileDrawerOpen || goldcareAIPanelOpen;
 
   return (
     <div className={cn("min-h-screen bg-bg flex flex-col", hasRightSheet && "has-rightsheet")}>
@@ -125,6 +130,9 @@ export function Dashboard() {
               isOpen={true}
               onClose={() => setDiagnosesMedsAllergiesSideSheetOpen(false)}
             />
+          )}
+          {goldcareAIPanelOpen && (
+            <GoldCareAIPanel />
           )}
         </RightPanel>
       </div>
