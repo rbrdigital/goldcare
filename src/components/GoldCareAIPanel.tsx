@@ -12,9 +12,6 @@ export function GoldCareAIPanel() {
         <p className="mt-2 text-sm text-fg-muted">
           Automated suggestions based on recent encounters, vitals, and history. Use clinical judgment to confirm.
         </p>
-        <Button variant="ghost" size="sm" onClick={onClose}>
-          <X className="h-4 w-4" />
-        </Button>
       </div>
 
       {/* Scrollable content */}
