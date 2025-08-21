@@ -17,6 +17,7 @@ import {
   User,
   Save
 } from "lucide-react";
+import { RXForm } from "@/components/RXForm";
 
 interface MainContentProps {
   activeSection: string;
@@ -436,40 +437,6 @@ function SOAPNoteSection() {
   );
 }
 
-function RXSection() {
-  return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
-            <Pill className="h-6 w-6 text-medical-blue" />
-            Prescriptions
-          </h1>
-          <p className="text-muted-foreground">Manage patient medications and prescriptions</p>
-        </div>
-        <Button>Add Prescription</Button>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Current Prescriptions</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between p-4 border rounded-lg">
-              <div>
-                <h4 className="font-semibold">Dextromethorphan 15mg</h4>
-                <p className="text-sm text-muted-foreground">Take 1 tablet every 4-6 hours as needed for cough</p>
-                <p className="text-sm text-muted-foreground">Quantity: 30 tablets • Refills: 0</p>
-              </div>
-              <Badge variant="secondary">Active</Badge>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
 
 function LabOrdersSection() {
   return (
@@ -622,6 +589,10 @@ function DiagnosesSection() {
       </div>
     </div>
   );
+}
+
+function RXSection() {
+  return <RXForm />;
 }
 
 function PreviousResultsSection() {
