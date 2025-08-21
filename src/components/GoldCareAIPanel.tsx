@@ -2,16 +2,18 @@ export function GoldCareAIPanel() {
   return (
     <aside className="h-full bg-surface border-l border-border flex flex-col" data-testid="panel-goldcare-ai">
       {/* Sticky header */}
-      <div className="sticky top-0 z-10 bg-bg border-b border-border px-4 py-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <h2 className="text-lg font-semibold text-foreground">GoldCare AI</h2>
-          </div>
+      <div className="sticky top-0 bg-bg border-b border-border z-10">
+        <div className="flex items-center justify-between p-6">
+        <div>
+          <h2 className="text-lg font-semibold text-foreground">GoldCare AI</h2>
+          <p className="text-sm text-muted-foreground mt-1">Automated suggestions based on recent encounters, vitals, and history. Use clinical judgment to confirm.</p>
         </div>
-        <p className="mt-2 text-sm text-fg-muted">
-          Automated suggestions based on recent encounters, vitals, and history. Use clinical judgment to confirm.
-        </p>
+        <Button variant="ghost" size="sm" onClick={onClose}>
+          <X className="h-4 w-4" />
+        </Button>
+        </div>
       </div>
+     
 
       {/* Scrollable content */}
       <div className="flex-1 overflow-auto px-4 py-3 space-y-3">
