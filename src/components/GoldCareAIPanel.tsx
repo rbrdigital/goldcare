@@ -5,7 +5,7 @@ export function GoldCareAIPanel() {
       <div className="sticky top-0 z-10 bg-bg border-b border-border px-4 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-sm font-semibold text-fg">GoldCare AI</span>
+            <h2 className="text-lg font-semibold text-foreground">GoldCare AI</h2>
           </div>
         </div>
         <p className="mt-2 text-sm text-fg-muted">
