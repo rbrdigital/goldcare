@@ -6,7 +6,6 @@ export function GoldCareAIPanel() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-sm font-semibold text-fg">GoldCare AI</span>
-            <span className="text-xs text-fg-muted">Insights</span>
           </div>
         </div>
         <p className="mt-2 text-sm text-fg-muted">
@@ -23,7 +22,6 @@ export function GoldCareAIPanel() {
               <div className="text-sm font-medium text-fg">Dr. Sarah Johnson</div>
               <div className="text-xs text-fg-muted">Annual Wellness Visit · Aug 18, 2025 · 10:15 AM</div>
             </div>
-            <span className="text-xs text-fg-muted">Wellness & Preventive Care</span>
           </div>
           <p className="mt-2 text-sm text-fg">
             AI notes stable vitals and prior borderline LDL. Recommend a fasting lipid panel in 12 weeks,
@@ -39,7 +37,6 @@ export function GoldCareAIPanel() {
               <div className="text-sm font-medium text-fg">Dr. Mark Lee</div>
               <div className="text-xs text-fg-muted">Acute Viral Treatment · Aug 05, 2025 · 09:30 AM</div>
             </div>
-            <span className="text-xs text-fg-muted">Acute Care</span>
           </div>
           <p className="mt-2 text-sm text-fg">
             AI suggests hydration, rest, zinc, vitamin D, and symptom monitoring for 72 hours. Book a follow-up if fever
@@ -55,7 +52,6 @@ export function GoldCareAIPanel() {
               <div className="text-sm font-medium text-fg">Dr. Emily Carter</div>
               <div className="text-xs text-fg-muted">Long COVID Care · Jul 22, 2025 · 11:00 AM</div>
             </div>
-            <span className="text-xs text-fg-muted">Recovery & Rehab</span>
           </div>
           <p className="mt-2 text-sm text-fg">
             AI flags ongoing fatigue and light exertional intolerance. Recommend graded activity, sleep hygiene,
@@ -71,7 +67,6 @@ export function GoldCareAIPanel() {
               <div className="text-sm font-medium text-fg">Dr. Noah Patel</div>
               <div className="text-xs text-fg-muted">Nutritional Counseling · Jul 02, 2025 · 03:45 PM</div>
             </div>
-            <span className="text-xs text-fg-muted">Lifestyle & Nutrition</span>
           </div>
           <p className="mt-2 text-sm text-fg">
             AI recommends a Mediterranean-leaning plan emphasizing fiber, omega-3s, and reduced ultra-processed foods.
