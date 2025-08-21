@@ -124,7 +124,7 @@ function SOAPNoteSection() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2 text-muted-foreground">
+          <h1 className="text-2xl font-bold flex items-center gap-2 text-fg">
             <FileText className="h-6 w-6 text-medical-blue" />
             SOAP Note
           </h1>
@@ -164,6 +164,44 @@ function SOAPNoteSection() {
               />
               <AIsuggestion 
                 text="Current medications include Lisinopril 10mg daily for hypertension, Metformin 500mg twice daily for type 2 diabetes, and Atorvastatin 20mg daily for cholesterol management."
+                onInsert={() => {}}
+                onDismiss={() => {}}
+              />
+              <div className="flex gap-2 mt-3 flex-wrap">
+                <button className="px-3 py-1 text-xs bg-surface text-fg border border-border rounded-full hover:bg-bg">Suggestion 1</button>
+                <button className="px-3 py-1 text-xs bg-surface text-fg border border-border rounded-full hover:bg-bg">Suggestion 2</button>
+                <button className="px-3 py-1 text-xs bg-surface text-fg border border-border rounded-full hover:bg-bg">Suggestion 3</button>
+                <button className="px-3 py-1 text-xs bg-surface text-fg border border-border rounded-full hover:bg-bg">Suggestion 4</button>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">What supplements/OTC are you taking?</label>
+              <textarea 
+                className="w-full h-24 p-3 border border-border rounded-md resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                placeholder="List over-the-counter medications and supplements..."
+              />
+              <AIsuggestion 
+                text="Patient takes Vitamin D3 2000 IU daily, Omega-3 fish oil 1000mg daily, and occasional ibuprofen 400mg as needed for headaches (approximately 2-3 times per week)."
+                onInsert={() => {}}
+                onDismiss={() => {}}
+              />
+              <div className="flex gap-2 mt-3 flex-wrap">
+                <button className="px-3 py-1 text-xs bg-surface text-fg border border-border rounded-full hover:bg-bg">Suggestion 1</button>
+                <button className="px-3 py-1 text-xs bg-surface text-fg border border-border rounded-full hover:bg-bg">Suggestion 2</button>
+                <button className="px-3 py-1 text-xs bg-surface text-fg border border-border rounded-full hover:bg-bg">Suggestion 3</button>
+                <button className="px-3 py-1 text-xs bg-surface text-fg border border-border rounded-full hover:bg-bg">Suggestion 4</button>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">Do you have any drug allergies?</label>
+              <textarea 
+                className="w-full h-20 p-3 border border-border rounded-md resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                placeholder="List any known drug allergies and reactions..."
+              />
+              <AIsuggestion 
+                text="Patient reports no known drug allergies. Previous medical records confirm no adverse reactions to common medications including penicillin, sulfa drugs, or NSAIDs."
                 onInsert={() => {}}
                 onDismiss={() => {}}
               />
