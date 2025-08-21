@@ -37,7 +37,7 @@ export function PatientProfileDrawer({ isOpen, onClose }: PatientProfileDrawerPr
   if (!isOpen) return null;
 
   return (
-    <div className="h-full flex flex-col bg-surface">
+    <div className="h-full flex flex-col bg-bg">
       {/* Sticky Header */}
       <div className="sticky top-0 bg-bg border-b border-border z-10">
         <div className="flex items-center justify-between p-6">
