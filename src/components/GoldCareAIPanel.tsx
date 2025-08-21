@@ -17,7 +17,7 @@ export function GoldCareAIPanel() {
       {/* Scrollable content */}
       <div className="flex-1 overflow-auto px-4 py-3 space-y-3">
         {/* Card 1 */}
-        <div className="rounded-lg border border-border bg-bg p-3">
+        <div className="rounded-md border border-border bg-surface p-3">
           <div className="flex items-center justify-between">
             <div>
               <div className="text-sm font-medium text-fg">Dr. Sarah Johnson</div>
@@ -32,7 +32,7 @@ export function GoldCareAIPanel() {
         </div>
 
         {/* Card 2 */}
-        <div className="rounded-lg border border-border bg-bg p-3">
+        <div className="rounded-md border border-border bg-surface p-3">
           <div className="flex items-center justify-between">
             <div>
               <div className="text-sm font-medium text-fg">Dr. Mark Lee</div>
@@ -47,7 +47,7 @@ export function GoldCareAIPanel() {
         </div>
 
         {/* Card 3 */}
-        <div className="rounded-lg border border-border bg-bg p-3">
+        <div className="rounded-md border border-border bg-surface p-3">
           <div className="flex items-center justify-between">
             <div>
               <div className="text-sm font-medium text-fg">Dr. Emily Carter</div>
@@ -62,7 +62,7 @@ export function GoldCareAIPanel() {
         </div>
 
         {/* Card 4 */}
-        <div className="rounded-lg border border-border bg-bg p-3">
+        <div className="rounded-md border border-border bg-surface p-3">
           <div className="flex items-center justify-between">
             <div>
               <div className="text-sm font-medium text-fg">Dr. Noah Patel</div>

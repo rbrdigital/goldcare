@@ -147,11 +147,11 @@ export function RXForm() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 bg-bg">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2 text-fg">
-            <Pill className="h-6 w-6 text-primary" />
+          <h1 className="text-2xl font-bold flex items-center gap-2 text-muted-foreground">
+            <Pill className="h-6 w-6 text-medical-blue" />
             RX - Prescriptions
           </h1>
           <p className="text-fg-muted">Create and manage prescription orders</p>
@@ -164,7 +164,7 @@ export function RXForm() {
 
       <div className="space-y-6">
         {orders.map((order, index) => (
-          <Card key={order.id} className="bg-bg border border-border" data-testid="rx-form-root">
+          <Card key={order.id} className="rounded-md border border-border bg-surface p-4" data-testid="rx-form-root">
             <CardHeader className="pb-4">
               <CardTitle className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
