@@ -164,7 +164,7 @@ export function RXForm() {
 
       <div className="space-y-6">
         {orders.map((order, index) => (
-          <Card key={order.id} className="bg-surface border border-border">
+          <Card key={order.id} className="bg-bg border border-border" data-testid="rx-form-root">
             <CardHeader className="pb-4">
               <CardTitle className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
