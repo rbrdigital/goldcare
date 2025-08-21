@@ -2,7 +2,7 @@
 :root {
   /* Base colors */
   --color-bg: #ffffff;
-  --color-surface: var(--color-bg);
+  --color-surface: #f8fafc;
   --color-border: #e5e7eb;
   --color-fg: #0b0f14;
   --color-fg-muted: #4b5563;

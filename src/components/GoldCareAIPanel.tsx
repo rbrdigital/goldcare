@@ -1,6 +1,6 @@
 export function GoldCareAIPanel() {
   return (
-    <aside className="h-full bg-bg border-l border-border flex flex-col" data-testid="panel-goldcare-ai">
+    <aside className="h-full bg-surface border-l border-border flex flex-col" data-testid="panel-goldcare-ai">
       {/* Sticky header */}
       
       <div className="sticky top-0 z-10 bg-bg border-b border-border px-4 py-3">

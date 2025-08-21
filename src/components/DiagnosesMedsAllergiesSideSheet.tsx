@@ -139,7 +139,7 @@ export function DiagnosesMedsAllergiesSideSheet({ isOpen, onClose }: DiagnosesMe
   };
 
   return (
-    <div className="h-full flex flex-col bg-bg">
+    <div className="h-full flex flex-col bg-surface">
       {/* Sticky Header */}
       <div className="sticky top-0 bg-bg border-b border-border z-10">
         <div className="flex items-center justify-between p-6">

@@ -13,7 +13,7 @@ export function RightPanel({ isOpen, children, className }: RightPanelProps) {
   return (
     <aside 
       className={cn(
-        "w-[360px] md:w-[420px] lg:w-[480px] bg-bg border-l border-border flex flex-col pt-0",
+        "w-[360px] md:w-[420px] lg:w-[480px] bg-surface border-l border-border flex flex-col pt-0",
         className
       )}
     >
