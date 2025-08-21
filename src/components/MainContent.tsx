@@ -18,7 +18,6 @@ import {
   Save
 } from "lucide-react";
 import { RXForm } from "@/components/RXForm";
-import { SOAPNote } from "@/components/SOAPNote";
 
 interface MainContentProps {
   activeSection: string;
@@ -54,7 +53,179 @@ export function MainContent({ activeSection }: MainContentProps) {
 }
 
 function SOAPNoteSection() {
-  return <SOAPNote />;
+  const AIsuggestion = ({ text, onInsert, onDismiss }: { text: string; onInsert: () => void; onDismiss: () => void }) => {
+    const [isExpanded, setIsExpanded] = useState(false);
+    const [hasOverflow, setHasOverflow] = useState(false);
+    const textRef = useRef<HTMLParagraphElement>(null);
+
+    useEffect(() => {
+      const checkOverflow = () => {
+        if (textRef.current) {
+          const { scrollHeight, clientHeight } = textRef.current;
+          setHasOverflow(scrollHeight > clientHeight);
+        }
+      };
+
+      checkOverflow();
+      window.addEventListener('resize', checkOverflow);
+
+      return () => {
+        window.removeEventListener('resize', checkOverflow);
+      };
+    }, [text, isExpanded]);
+    
+    return (
+      <div className="mt-3 p-4 rounded-lg bg-surface shadow-sm">
+        <div className="mb-3 flex items-start justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
+              <svg className="w-3 h-3 text-primary" fill="currentColor" viewBox="0 0 16 16">
+                <g clipPath="url(#clip0_1036_3138)">
+                  <path d="M13 9C13.0012 9.20386 12.9393 9.40311 12.8227 9.57033C12.7061 9.73754 12.5405 9.86451 12.3487 9.93375L9.12498 11.125L7.93748 14.3512C7.86716 14.5423 7.73992 14.7072 7.57295 14.8236C7.40598 14.9401 7.2073 15.0025 7.00373 15.0025C6.80015 15.0025 6.60147 14.9401 6.4345 14.8236C6.26753 14.7072 6.1403 14.5423 6.06998 14.3512L4.87498 11.125L1.64873 9.9375C1.45768 9.86718 1.29281 9.73995 1.17634 9.57298C1.05988 9.406 0.997437 9.20733 0.997437 9.00375C0.997437 8.80017 1.05988 8.6015 1.17634 8.43452C1.29281 8.26755 1.45768 8.14032 1.64873 8.07L4.87498 6.875L6.06248 3.64875C6.1328 3.45771 6.26003 3.29283 6.427 3.17637C6.59397 3.0599 6.79265 2.99746 6.99623 2.99746C7.1998 2.99746 7.39848 3.0599 7.56545 3.17637C7.73242 3.29283 7.85965 3.45771 7.92998 3.64875L9.12498 6.875L12.3512 8.0625C12.5431 8.13237 12.7086 8.26008 12.8248 8.42801C12.941 8.59594 13.0022 8.7958 13 9ZM9.49998 3H10.5V4C10.5 4.13261 10.5527 4.25979 10.6464 4.35355C10.7402 4.44732 10.8674 4.5 11 4.5C11.1326 4.5 11.2598 4.44732 11.3535 4.35355C11.4473 4.25979 11.5 4.13261 11.5 4V3H12.5C12.6326 3 12.7598 2.94732 12.8535 2.85355C12.9473 2.75979 13 2.63261 13 2.5C13 2.36739 12.9473 2.24021 12.8535 2.14645C12.7598 2.05268 12.6326 2 12.5 2H11.5V1C11.5 0.867392 11.4473 0.740215 11.3535 0.646447C11.2598 0.552678 11.1326 0.5 11 0.5C10.8674 0.5 10.7402 0.552678 10.6464 0.646447C10.5527 0.740215 10.5 0.867392 10.5 1V2H9.49998C9.36737 2 9.24019 2.05268 9.14642 2.14645C9.05266 2.24021 8.99998 2.36739 8.99998 2.5C8.99998 2.63261 9.05266 2.75979 9.14642 2.85355C9.24019 2.94732 9.36737 3 9.49998 3ZM15 5H14.5V4.5C14.5 4.36739 14.4473 4.24021 14.3535 4.14645C14.2598 4.05268 14.1326 4 14 4C13.8674 4 13.7402 4.05268 13.6464 4.14645C13.5527 4.24021 13.5 4.36739 13.5 4.5V5H13C12.8674 5 12.7402 5.05268 12.6464 5.14645C12.5527 5.24021 12.5 5.36739 12.5 5.5C12.5 5.63261 12.5527 5.75979 12.6464 5.85355C12.7402 5.94732 12.8674 6 13 6H13.5V6.5C13.5 6.63261 13.5527 6.75979 13.6464 6.85355C13.7402 6.94732 13.8674 7 14 7C14.1326 7 14.2598 6.94732 14.3535 6.85355C14.4473 6.75979 14.5 6.63261 14.5 6.5V6H15C15.1326 6 15.2598 5.94732 15.3535 5.85355C15.4473 5.75979 15.5 5.63261 15.5 5.5C15.5 5.36739 15.4473 5.24021 15.3535 5.14645C15.2598 5.05268 15.1326 5 15 5Z"/>
+                </g>
+                <defs>
+                  <clipPath id="clip0_1036_3138">
+                    <rect width="16" height="16" fill="white"/>
+                  </clipPath>
+                </defs>
+              </svg>
+            </div>
+            <span className="text-sm font-semibold text-fg">GoldCare AI</span>
+            <span className="text-xs text-fg-muted">Suggestion</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <button type="button" onClick={onInsert} className="text-sm font-medium text-primary underline underline-offset-2 hover:no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">Insert above</button>
+            <button type="button" onClick={onDismiss} className="text-sm font-medium text-fg underline underline-offset-2 hover:no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">Dismiss</button>
+          </div>
+        </div>
+        
+        <div className="relative">
+          <p 
+            ref={textRef}
+            className={`text-sm text-fg leading-relaxed ${!isExpanded ? 'line-clamp-2' : ''}`}
+          >
+            {text}
+          </p>
+          {hasOverflow && (
+            <button
+              type="button"
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="mt-2 text-xs text-primary underline underline-offset-2 hover:no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            >
+              {isExpanded ? 'Show less' : 'Show more'}
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold flex items-center gap-2 text-muted-foreground">
+            <FileText className="h-6 w-6 text-medical-blue" />
+            SOAP Note
+          </h1>
+          <p className="text-fg-muted">Document subjective, objective, assessment, and plan</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <Badge variant="secondary" className="bg-medical-blue-light text-medical-blue">
+            <Clock className="h-3 w-3 mr-1" />
+            Auto-saved 2 min ago
+          </Badge>
+        </div>
+      </div>
+
+      <div className="space-y-8">
+        {/* Subjective Section */}
+        <section>
+          <h3 className="text-lg font-semibold text-primary mb-4">Subjective</h3>
+          <div className="space-y-6">
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">What brings you here today?</label>
+              <textarea 
+                className="w-full h-32 p-3 border border-border rounded-md resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                placeholder="Describe the main concern or reason for today's visit..."
+              />
+              <AIsuggestion 
+                text="Patient reports experiencing persistent headaches for the past 3 days, described as throbbing pain located in the frontal region, rated 7/10 in severity. Pain is worse in the morning and improves slightly with over-the-counter ibuprofen."
+                onInsert={() => {}}
+                onDismiss={() => {}}
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">What medication(s) are you taking?</label>
+              <textarea 
+                className="w-full h-24 p-3 border border-border rounded-md resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                placeholder="List current medications, dosages, and frequency..."
+              />
+              <AIsuggestion 
+                text="Current medications include Lisinopril 10mg daily for hypertension, Metformin 500mg twice daily for type 2 diabetes, and Atorvastatin 20mg daily for cholesterol management."
+                onInsert={() => {}}
+                onDismiss={() => {}}
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* Objective Section */}
+        <section>
+          <h3 className="text-lg font-semibold text-primary mb-4">Objective</h3>
+          <div className="space-y-6">
+            <div className="grid grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">Weight (lbs)</label>
+                <input 
+                  type="number" 
+                  step="0.1" 
+                  className="w-full p-3 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">Height (inches)</label>
+                <input 
+                  type="number" 
+                  step="0.1" 
+                  className="w-full p-3 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent" 
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Assessment Section */}
+        <section>
+          <h3 className="text-lg font-semibold text-primary mb-4">Assessment</h3>
+          <div className="space-y-6">
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">Primary Diagnosis</label>
+              <textarea 
+                className="w-full h-24 p-3 border border-border rounded-md resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                placeholder="Primary diagnosis with ICD-10 code..."
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* Plan Section */}
+        <section>
+          <h3 className="text-lg font-semibold text-primary mb-4">Plan</h3>
+          <div className="space-y-6">
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">Treatment Plan</label>
+              <textarea 
+                className="w-full h-32 p-3 border border-border rounded-md resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                placeholder="Describe the treatment plan and next steps..."
+              />
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  );
 }
 
 function RXSection() {
