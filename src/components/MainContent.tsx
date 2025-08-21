@@ -213,6 +213,42 @@ function SOAPNoteSection() {
         <section>
           <h3 className="text-lg font-semibold text-primary mb-4">Objective</h3>
           <div className="space-y-6">
+            <div className="grid grid-cols-4 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">Blood Pressure</label>
+                <input 
+                  type="text" 
+                  placeholder="120/80"
+                  className="w-full p-3 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">Temperature (°F)</label>
+                <input 
+                  type="number" 
+                  step="0.1" 
+                  placeholder="98.6"
+                  className="w-full p-3 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">Pulse (bpm)</label>
+                <input 
+                  type="number" 
+                  placeholder="72"
+                  className="w-full p-3 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">Respiratory Rate</label>
+                <input 
+                  type="number" 
+                  placeholder="16"
+                  className="w-full p-3 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent" 
+                />
+              </div>
+            </div>
+
             <div className="grid grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-foreground mb-2">Weight (lbs)</label>
@@ -231,6 +267,32 @@ function SOAPNoteSection() {
                 />
               </div>
             </div>
+
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">Physical Examination</label>
+              <textarea 
+                className="w-full h-32 p-3 border border-border rounded-md resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                placeholder="Describe physical examination findings..."
+              />
+              <AIsuggestion 
+                text="Physical examination reveals patient appears well-developed and well-nourished. HEENT: Normocephalic, atraumatic. Pupils equal, round, and reactive to light. No lymphadenopathy. Cardiovascular: Regular rate and rhythm, no murmurs. Lungs: Clear to auscultation bilaterally."
+                onInsert={() => {}}
+                onDismiss={() => {}}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">Relevant Findings</label>
+              <textarea 
+                className="w-full h-24 p-3 border border-border rounded-md resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                placeholder="Document any significant findings or abnormalities..."
+              />
+              <AIsuggestion 
+                text="Patient exhibits mild tenderness in frontal sinus areas. No acute distress noted. Vital signs stable and within normal limits for age and condition."
+                onInsert={() => {}}
+                onDismiss={() => {}}
+              />
+            </div>
           </div>
         </section>
 
@@ -243,6 +305,50 @@ function SOAPNoteSection() {
               <textarea 
                 className="w-full h-24 p-3 border border-border rounded-md resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
                 placeholder="Primary diagnosis with ICD-10 code..."
+              />
+              <AIsuggestion 
+                text="Tension-type headache (G44.209) - Based on patient's description of frontal, throbbing pain lasting 3 days, responding partially to ibuprofen, with no alarming neurological signs on examination."
+                onInsert={() => {}}
+                onDismiss={() => {}}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">Secondary Diagnoses</label>
+              <textarea 
+                className="w-full h-20 p-3 border border-border rounded-md resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                placeholder="Additional diagnoses if applicable..."
+              />
+              <AIsuggestion 
+                text="Hypertension, unspecified (I10) - Patient continues on Lisinopril with good control. Type 2 diabetes mellitus without complications (E11.9) - Well-controlled on Metformin."
+                onInsert={() => {}}
+                onDismiss={() => {}}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">Differential Diagnoses</label>
+              <textarea 
+                className="w-full h-20 p-3 border border-border rounded-md resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                placeholder="Other conditions considered..."
+              />
+              <AIsuggestion 
+                text="Migraine headache, sinusitis, cluster headache. Given the bilateral frontal location, duration, and response to NSAIDs, tension-type headache is most likely."
+                onInsert={() => {}}
+                onDismiss={() => {}}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">Clinical Impression</label>
+              <textarea 
+                className="w-full h-24 p-3 border border-border rounded-md resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                placeholder="Overall clinical impression and reasoning..."
+              />
+              <AIsuggestion 
+                text="Patient presents with classic tension-type headache symptoms. No red flags present. Comorbid conditions (hypertension, diabetes) are well-controlled. Patient would benefit from stress management and lifestyle modifications."
+                onInsert={() => {}}
+                onDismiss={() => {}}
               />
             </div>
           </div>
@@ -257,6 +363,76 @@ function SOAPNoteSection() {
               <textarea 
                 className="w-full h-32 p-3 border border-border rounded-md resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
                 placeholder="Describe the treatment plan and next steps..."
+              />
+              <AIsuggestion 
+                text="Continue current ibuprofen 400mg as needed for headache relief, maximum 3 times daily. Implement stress reduction techniques, ensure adequate sleep (7-8 hours nightly), regular meals, and stay hydrated. Apply heat/cold therapy to affected areas."
+                onInsert={() => {}}
+                onDismiss={() => {}}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">Medications/Prescriptions</label>
+              <textarea 
+                className="w-full h-24 p-3 border border-border rounded-md resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                placeholder="New prescriptions and medication changes..."
+              />
+              <AIsuggestion 
+                text="Continue current medications: Lisinopril 10mg daily, Metformin 500mg twice daily, Atorvastatin 20mg daily. Consider prophylactic medication if headaches become more frequent (>2 episodes per week)."
+                onInsert={() => {}}
+                onDismiss={() => {}}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">Follow-up Instructions</label>
+              <textarea 
+                className="w-full h-20 p-3 border border-border rounded-md resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                placeholder="When and why to return for follow-up..."
+              />
+              <AIsuggestion 
+                text="Return in 2 weeks if headaches persist or worsen. Return immediately if experiencing severe headache, vision changes, fever, neck stiffness, or neurological symptoms. Schedule routine follow-up in 3 months for diabetes and hypertension management."
+                onInsert={() => {}}
+                onDismiss={() => {}}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">Patient Education</label>
+              <textarea 
+                className="w-full h-24 p-3 border border-border rounded-md resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                placeholder="Education provided to patient..."
+              />
+              <AIsuggestion 
+                text="Educated patient on tension headache triggers including stress, poor posture, eye strain, and dehydration. Discussed importance of regular sleep schedule, stress management techniques, and proper ergonomics. Provided headache diary for tracking patterns."
+                onInsert={() => {}}
+                onDismiss={() => {}}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">Diagnostic Orders</label>
+              <textarea 
+                className="w-full h-20 p-3 border border-border rounded-md resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                placeholder="Lab tests, imaging, or other diagnostic orders..."
+              />
+              <AIsuggestion 
+                text="No additional diagnostic testing indicated at this time given typical presentation and normal examination. Consider CT head or MRI if red flags develop or headaches become refractory to treatment."
+                onInsert={() => {}}
+                onDismiss={() => {}}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">Referrals</label>
+              <textarea 
+                className="w-full h-20 p-3 border border-border rounded-md resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                placeholder="Specialist referrals if needed..."
+              />
+              <AIsuggestion 
+                text="No specialist referrals needed at this time. Consider neurology referral if headaches become chronic (>15 days per month) or if medication overuse headache develops."
+                onInsert={() => {}}
+                onDismiss={() => {}}
               />
             </div>
           </div>
