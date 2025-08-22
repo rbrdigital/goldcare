@@ -11,14 +11,41 @@ interface AIChipProps {
 
 // Utility to truncate text at word boundaries
 function truncateAtWord(input: string, max = 140): string {
+  if (!input) return "";
   if (input.length <= max) return input;
   const slice = input.slice(0, max);
   const lastSpace = slice.lastIndexOf(" ");
-  return (lastSpace > 60 ? slice.slice(0, lastSpace) : slice).trimEnd() + "…";
+  return (lastSpace > 40 ? slice.slice(0, lastSpace) : slice).trimEnd() + "…";
 }
 
 export function AIChip({ text, onInsert, onDismiss, className }: AIChipProps) {
   const [isExpanded, setIsExpanded] = React.useState(false);
+  const [isOverflowing, setIsOverflowing] = React.useState(false);
+  const previewRef = React.useRef<HTMLSpanElement>(null);
+
+  const measure = React.useCallback(() => {
+    const el = previewRef.current;
+    if (!el) return;
+    // measure after layout
+    const overflowing = el.scrollWidth > el.clientWidth;
+    setIsOverflowing(overflowing);
+  }, []);
+
+  React.useEffect(() => {
+    measure();
+  }, [text, measure]);
+
+  React.useEffect(() => {
+    const el = previewRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    window.addEventListener("resize", measure);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, [measure]);
 
   const handleInsert = () => {
     onInsert();
@@ -45,13 +72,18 @@ export function AIChip({ text, onInsert, onDismiss, className }: AIChipProps) {
   }, [isExpanded]);
 
   if (!isExpanded) {
-    const preview = truncateAtWord(text, 140);
+    // If overflowing, pre-truncate to a pleasant word boundary
+    const displayText = isOverflowing ? truncateAtWord(text, 140) : text;
     
     return (
-      <div className={cn(
-        "mt-2 w-full flex items-center justify-between rounded-full border border-neutral-200 bg-neutral-50 px-3 py-2 text-[13px] text-neutral-700",
-        className
-      )}>
+      <div 
+        className={cn(
+          "mt-2 w-full flex items-center justify-between rounded-full border border-neutral-200 bg-neutral-50 px-3 py-2 text-[13px] text-neutral-700",
+          className
+        )}
+        role="group"
+        aria-label="GoldCare AI suggestion"
+      >
         <div className="min-w-0 flex items-center gap-2 overflow-hidden">
           <svg 
             xmlns="http://www.w3.org/2000/svg" 
@@ -70,18 +102,35 @@ export function AIChip({ text, onInsert, onDismiss, className }: AIChipProps) {
             </g>
           </svg>
           <strong className="shrink-0">GoldCare&nbsp;AI:</strong>
-          <span className="min-w-0 truncate whitespace-nowrap" data-testid="gcai-preview-text">
-            {preview}
+          <span 
+            ref={previewRef}
+            className="min-w-0 truncate whitespace-nowrap" 
+            data-testid="gcai-preview-text"
+            title={text}
+          >
+            {displayText}
           </span>
         </div>
-        <button
-          type="button"
-          onClick={() => setIsExpanded(true)}
-          className="ml-3 shrink-0 text-[12px] font-medium text-primary hover:underline focus:outline-none"
-          aria-label="Open GoldCare AI preview"
-        >
-          Preview
-        </button>
+
+        {isOverflowing ? (
+          <button
+            type="button"
+            onClick={() => setIsExpanded(true)}
+            className="ml-3 shrink-0 text-[12px] font-medium text-primary hover:underline focus:outline-none"
+            aria-label="Preview GoldCare AI suggestion"
+          >
+            Preview
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={handleInsert}
+            className="ml-3 shrink-0 text-[12px] font-medium text-primary hover:underline focus:outline-none"
+            aria-label="Insert GoldCare AI suggestion"
+          >
+            Insert
+          </button>
+        )}
       </div>
     );
   }
