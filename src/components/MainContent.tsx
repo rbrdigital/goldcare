@@ -207,7 +207,7 @@ function SOAPNoteSection() {
           <h3 className="text-lg font-semibold text-primary mb-4">Objective</h3>
 
           <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label className="text-sm font-medium text-fg mb-1">Waist (in)</Label>
                 <Input type="number" placeholder="34" />
@@ -215,14 +215,6 @@ function SOAPNoteSection() {
               <div>
                 <Label className="text-sm font-medium text-fg mb-1">Hip (in)</Label>
                 <Input type="number" placeholder="40" />
-              </div>
-              <div>
-                <Label className="text-sm font-medium text-fg mb-1">Weight (lbs)</Label>
-                <Input type="number" value={weightLbs} onChange={e=>setWeightLbs(e.target.value)} placeholder="178" />
-              </div>
-              <div>
-                <Label className="text-sm font-medium text-fg mb-1">BMI (auto)</Label>
-                <Input disabled value={bmi} placeholder="—" className="bg-muted text-fg-muted" />
               </div>
             </div>
 
@@ -251,6 +243,17 @@ function SOAPNoteSection() {
                   />
                   <span className="text-xs text-fg-muted mt-1 block">inches</span>
                 </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label className="text-sm font-medium text-fg mb-1">Weight (lbs)</Label>
+                <Input type="number" value={weightLbs} onChange={e=>setWeightLbs(e.target.value)} placeholder="178" />
+              </div>
+              <div>
+                <Label className="text-sm font-medium text-fg mb-1">BMI (auto)</Label>
+                <Input disabled value={bmi} placeholder="—" className="bg-muted text-fg-muted" />
               </div>
             </div>
           </div>
