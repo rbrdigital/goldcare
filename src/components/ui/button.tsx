@@ -6,18 +6,18 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
-        default: "bg-surface text-fg border border-border hover:bg-bg focus-visible:ring-2 focus-visible:ring-primary",
-        primary: "bg-button-primary text-button-primary-text hover:opacity-95 disabled:opacity-60 focus-visible:ring-2 focus-visible:ring-primary",
-        destructive: "bg-danger text-on-primary hover:opacity-95 focus-visible:ring-2 focus-visible:ring-primary",
-        outline: "border border-border bg-surface hover:bg-bg text-fg focus-visible:ring-2 focus-visible:ring-primary",
-        secondary: "bg-secondary text-secondary-fg hover:bg-secondary/80 focus-visible:ring-2 focus-visible:ring-primary",
-        subtle: "bg-bg text-fg border border-border hover:bg-surface focus-visible:ring-2 focus-visible:ring-primary",
-        ghost: "hover:bg-accent hover:text-accent-fg focus-visible:ring-2 focus-visible:ring-primary",
-        link: "text-primary underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:ring-primary",
+        default: "bg-primary text-white hover:opacity-95",
+        primary: "bg-primary text-white hover:opacity-95 focus-visible:ring-primary/30",
+        destructive: "bg-medical-red text-white hover:opacity-95 focus-visible:ring-medical-red/30",
+        outline: "border border-border bg-surface hover:bg-surface-muted text-fg",
+        secondary: "bg-surface border border-border text-fg hover:bg-surface-muted",
+        subtle: "bg-surface-muted text-fg hover:bg-surface",
+        ghost: "hover:bg-surface-muted text-fg",
+        link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
         default: "h-10 px-4 py-2",
