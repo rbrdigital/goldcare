@@ -53,7 +53,12 @@ export function MainContent({ activeSection }: MainContentProps) {
 }
 
 function SOAPNoteSection() {
-  const AIsuggestion = ({ text, onInsert, onDismiss }: { text: string; onInsert: () => void; onDismiss: () => void }) => {
+  // --- Helper: shared AI suggestion card (kept your look-and-feel) ---
+  const AIsuggestion = ({
+    text,
+    onInsert,
+    onDismiss,
+  }: { text: string; onInsert: () => void; onDismiss: () => void }) => {
     const [isExpanded, setIsExpanded] = useState(false);
     const [hasOverflow, setHasOverflow] = useState(false);
     const textRef = useRef<HTMLParagraphElement>(null);
@@ -61,58 +66,50 @@ function SOAPNoteSection() {
     useEffect(() => {
       const checkOverflow = () => {
         if (textRef.current) {
-          const { scrollHeight, clientHeight } = textRef.current;
-          setHasOverflow(scrollHeight > clientHeight);
+          setHasOverflow(textRef.current.scrollHeight > textRef.current.clientHeight);
         }
       };
-
       checkOverflow();
-      window.addEventListener('resize', checkOverflow);
-
-      return () => {
-        window.removeEventListener('resize', checkOverflow);
-      };
+      window.addEventListener("resize", checkOverflow);
+      return () => window.removeEventListener("resize", checkOverflow);
     }, [text, isExpanded]);
-    
+
     return (
       <div className="mt-3 p-4 rounded-lg bg-surface shadow-sm">
         <div className="mb-3 flex items-start justify-between gap-2">
           <div className="flex items-center gap-2">
             <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
+              {/* same icon */}
               <svg className="w-3 h-3 text-primary" fill="currentColor" viewBox="0 0 16 16">
                 <g clipPath="url(#clip0_1036_3138)">
-                  <path d="M13 9C13.0012 9.20386 12.9393 9.40311 12.8227 9.57033C12.7061 9.73754 12.5405 9.86451 12.3487 9.93375L9.12498 11.125L7.93748 14.3512C7.86716 14.5423 7.73992 14.7072 7.57295 14.8236C7.40598 14.9401 7.2073 15.0025 7.00373 15.0025C6.80015 15.0025 6.60147 14.9401 6.4345 14.8236C6.26753 14.7072 6.1403 14.5423 6.06998 14.3512L4.87498 11.125L1.64873 9.9375C1.45768 9.86718 1.29281 9.73995 1.17634 9.57298C1.05988 9.406 0.997437 9.20733 0.997437 9.00375C0.997437 8.80017 1.05988 8.6015 1.17634 8.43452C1.29281 8.26755 1.45768 8.14032 1.64873 8.07L4.87498 6.875L6.06248 3.64875C6.1328 3.45771 6.26003 3.29283 6.427 3.17637C6.59397 3.0599 6.79265 2.99746 6.99623 2.99746C7.1998 2.99746 7.39848 3.0599 7.56545 3.17637C7.73242 3.29283 7.85965 3.45771 7.92998 3.64875L9.12498 6.875L12.3512 8.0625C12.5431 8.13237 12.7086 8.26008 12.8248 8.42801C12.941 8.59594 13.0022 8.7958 13 9ZM9.49998 3H10.5V4C10.5 4.13261 10.5527 4.25979 10.6464 4.35355C10.7402 4.44732 10.8674 4.5 11 4.5C11.1326 4.5 11.2598 4.44732 11.3535 4.35355C11.4473 4.25979 11.5 4.13261 11.5 4V3H12.5C12.6326 3 12.7598 2.94732 12.8535 2.85355C12.9473 2.75979 13 2.63261 13 2.5C13 2.36739 12.9473 2.24021 12.8535 2.14645C12.7598 2.05268 12.6326 2 12.5 2H11.5V1C11.5 0.867392 11.4473 0.740215 11.3535 0.646447C11.2598 0.552678 11.1326 0.5 11 0.5C10.8674 0.5 10.7402 0.552678 10.6464 0.646447C10.5527 0.740215 10.5 0.867392 10.5 1V2H9.49998C9.36737 2 9.24019 2.05268 9.14642 2.14645C9.05266 2.24021 8.99998 2.36739 8.99998 2.5C8.99998 2.63261 9.05266 2.75979 9.14642 2.85355C9.24019 2.94732 9.36737 3 9.49998 3ZM15 5H14.5V4.5C14.5 4.36739 14.4473 4.24021 14.3535 4.14645C14.2598 4.05268 14.1326 4 14 4C13.8674 4 13.7402 4.05268 13.6464 4.14645C13.5527 4.24021 13.5 4.36739 13.5 4.5V5H13C12.8674 5 12.7402 5.05268 12.6464 5.14645C12.5527 5.24021 12.5 5.36739 12.5 5.5C12.5 5.63261 12.5527 5.75979 12.6464 5.85355C12.7402 5.94732 12.8674 6 13 6H13.5V6.5C13.5 6.63261 13.5527 6.75979 13.6464 6.85355C13.7402 6.94732 13.8674 7 14 7C14.1326 7 14.2598 6.94732 14.3535 6.85355C14.4473 6.75979 14.5 6.63261 14.5 6.5V6H15C15.1326 6 15.2598 5.94732 15.3535 5.85355C15.4473 5.75979 15.5 5.63261 15.5 5.5C15.5 5.36739 15.4473 5.24021 15.3535 5.14645C15.2598 5.05268 15.1326 5 15 5Z"/>
+                  <path d="M13 9c.001 0 0 .204-.177.57a1.02 1.02 0 0 1-.474.364l-3.224 1.19-1.188 3.226a1.5 1.5 0 0 1-2.5.472L4.875 11.125l-3.226-1.188A1 1 0 0 1 1 9.004c0-.204.062-.402.178-.57A1.02 1.02 0 0 1 1.65 8.07l3.225-1.195 1.188-3.226a1.5 1.5 0 0 1 2.5-.472l1.225 3.226 3.226 1.188c.192.07.358.197.474.365.117.167.178.367.178.59ZM9.5 3h1V1.5a.5.5 0 0 1 1 0V3h1.5a.5.5 0 0 1 0 1H11.5v1.5a.5.5 0 1 1-1 0V4H9.5a.5.5 0 0 1 0-1Z"/>
                 </g>
-                <defs>
-                  <clipPath id="clip0_1036_3138">
-                    <rect width="16" height="16" fill="white"/>
-                  </clipPath>
-                </defs>
+                <defs><clipPath id="clip0_1036_3138"><rect width="16" height="16" fill="white"/></clipPath></defs>
               </svg>
             </div>
             <span className="text-sm font-semibold text-fg">GoldCare AI</span>
             <span className="text-xs text-fg-muted">Suggestion</span>
           </div>
           <div className="flex items-center gap-4">
-            <button type="button" onClick={onInsert} className="text-sm font-medium text-primary underline underline-offset-2 hover:no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">Insert above</button>
-            <button type="button" onClick={onDismiss} className="text-sm font-medium text-fg underline underline-offset-2 hover:no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">Dismiss</button>
+            <button type="button" onClick={onInsert}
+              className="text-sm font-medium text-primary underline underline-offset-2 hover:no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+              Insert above
+            </button>
+            <button type="button" onClick={onDismiss}
+              className="text-sm font-medium text-fg underline underline-offset-2 hover:no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+              Dismiss
+            </button>
           </div>
         </div>
-        
+
         <div className="relative">
-          <p 
-            ref={textRef}
-            className={`text-sm text-fg leading-relaxed ${!isExpanded ? 'line-clamp-2' : ''}`}
-          >
+          <p ref={textRef} className={`text-sm text-fg leading-relaxed ${!isExpanded ? "line-clamp-2" : ""}`}>
             {text}
           </p>
           {hasOverflow && (
-            <button
-              type="button"
-              onClick={() => setIsExpanded(!isExpanded)}
-              className="mt-2 text-xs text-primary underline underline-offset-2 hover:no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-            >
-              {isExpanded ? 'Show less' : 'Show more'}
+            <button type="button" onClick={() => setIsExpanded(!isExpanded)}
+              className="mt-2 text-xs text-primary underline underline-offset-2 hover:no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+              {isExpanded ? "Show less" : "Show more"}
             </button>
           )}
         </div>
@@ -120,8 +117,18 @@ function SOAPNoteSection() {
     );
   };
 
+  // --- local state for height/weight → BMI demo calc (keeps your style) ---
+  const [heightFt, setHeightFt] = useState<string>("");
+  const [heightIn, setHeightIn] = useState<string>("");
+  const [weightLbs, setWeightLbs] = useState<string>("");
+  const heightMeters =
+    (Number(heightFt || 0) * 12 + Number(heightIn || 0)) * 0.0254;
+  const weightKg = Number(weightLbs || 0) * 0.453592;
+  const bmi = heightMeters > 0 ? (weightKg / (heightMeters * heightMeters)).toFixed(1) : "";
+
   return (
     <div className="space-y-6">
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2 text-fg">
@@ -139,69 +146,54 @@ function SOAPNoteSection() {
       </div>
 
       <div className="space-y-8">
-        {/* Subjective Section */}
+        {/* ========== Subjective ========== */}
         <section>
           <h3 className="text-lg font-semibold text-primary mb-4">Subjective</h3>
           <div className="space-y-6">
+            {/* CC/HPI */}
             <div>
-              <label className="block text-sm font-medium text-foreground mb-2">What brings you here today?</label>
-              <textarea 
+              <label className="block text-sm font-medium text-foreground mb-2">
+                Chief Complaint / History of Present Illness
+              </label>
+              <textarea
                 className="w-full h-32 p-3 border border-border rounded-md resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                placeholder="Describe the main concern or reason for today's visit..."
+                placeholder="Enter patient’s reported concerns, symptom history, and relevant context."
               />
-              <AIsuggestion 
-                text="Patient reports experiencing persistent headaches for the past 3 days, described as throbbing pain located in the frontal region, rated 7/10 in severity. Pain is worse in the morning and improves slightly with over-the-counter ibuprofen."
+              <AIsuggestion
+                text="Patient presents with intermittent chest tightness and shortness of breath for the past 3 weeks, worse at night and after exertion. Denies fever or cough. Reports a history of elevated blood pressure and borderline cholesterol. Notes increased stress at work and poor sleep quality. No prior hospitalizations. Family history includes early coronary artery disease."
                 onInsert={() => {}}
                 onDismiss={() => {}}
               />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-foreground mb-2">What medication(s) are you taking?</label>
-              <textarea 
-                className="w-full h-24 p-3 border border-border rounded-md resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                placeholder="List current medications, dosages, and frequency..."
-              />
-              <AIsuggestion 
-                text="Current medications include Lisinopril 10mg daily for hypertension, Metformin 500mg twice daily for type 2 diabetes, and Atorvastatin 20mg daily for cholesterol management."
-                onInsert={() => {}}
-                onDismiss={() => {}}
-              />
-              <div className="flex gap-2 mt-3 flex-wrap">
-                <button className="px-3 py-1 text-xs bg-surface text-fg border border-border rounded-full hover:bg-bg">Suggestion 1</button>
-                <button className="px-3 py-1 text-xs bg-surface text-fg border border-border rounded-full hover:bg-bg">Suggestion 2</button>
-                <button className="px-3 py-1 text-xs bg-surface text-fg border border-border rounded-full hover:bg-bg">Suggestion 3</button>
-                <button className="px-3 py-1 text-xs bg-surface text-fg border border-border rounded-full hover:bg-bg">Suggestion 4</button>
-              </div>
             </div>
 
+            {/* Current Medications */}
             <div>
-              <label className="block text-sm font-medium text-foreground mb-2">What supplements/OTC are you taking?</label>
-              <textarea 
-                className="w-full h-24 p-3 border border-border rounded-md resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                placeholder="List over-the-counter medications and supplements..."
-              />
-              <AIsuggestion 
-                text="Patient takes Vitamin D3 2000 IU daily, Omega-3 fish oil 1000mg daily, and occasional ibuprofen 400mg as needed for headaches (approximately 2-3 times per week)."
+              <label className="block text-sm font-medium text-foreground mb-2">Current Medications</label>
+              <SearchSelectPills placeholder="List all current prescription medications with dosage and frequency." />
+              <AIsuggestion
+                text="Lisinopril 10 mg once daily • Atorvastatin 20 mg once nightly • Albuterol inhaler PRN, ~2 times per week"
                 onInsert={() => {}}
                 onDismiss={() => {}}
               />
-              <div className="flex gap-2 mt-3 flex-wrap">
-                <button className="px-3 py-1 text-xs bg-surface text-fg border border-border rounded-full hover:bg-bg">Suggestion 1</button>
-                <button className="px-3 py-1 text-xs bg-surface text-fg border border-border rounded-full hover:bg-bg">Suggestion 2</button>
-                <button className="px-3 py-1 text-xs bg-surface text-fg border border-border rounded-full hover:bg-bg">Suggestion 3</button>
-                <button className="px-3 py-1 text-xs bg-surface text-fg border border-border rounded-full hover:bg-bg">Suggestion 4</button>
-              </div>
             </div>
 
+            {/* Supplements & OTC */}
             <div>
-              <label className="block text-sm font-medium text-foreground mb-2">Do you have any drug allergies?</label>
-              <textarea 
-                className="w-full h-20 p-3 border border-border rounded-md resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                placeholder="List any known drug allergies and reactions..."
+              <label className="block text-sm font-medium text-foreground mb-2">Supplements & OTC</label>
+              <SearchSelectPills placeholder="List all supplements, vitamins, or over-the-counter products with dosage and frequency." />
+              <AIsuggestion
+                text="Vitamin D3 2000 IU daily • Magnesium glycinate 400 mg nightly • Ibuprofen 200 mg PRN for headaches"
+                onInsert={() => {}}
+                onDismiss={() => {}}
               />
-              <AIsuggestion 
-                text="Patient reports no known drug allergies. Previous medical records confirm no adverse reactions to common medications including penicillin, sulfa drugs, or NSAIDs."
+            </div>
+
+            {/* Allergies */}
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">Allergies</label>
+              <SearchSelectPills placeholder="Document drug, food, or environmental allergies and reactions. If none, enter NKDA." />
+              <AIsuggestion
+                text="Penicillin — rash • No food or environmental allergies reported"
                 onInsert={() => {}}
                 onDismiss={() => {}}
               />
@@ -209,144 +201,117 @@ function SOAPNoteSection() {
           </div>
         </section>
 
-        {/* Objective Section */}
+        {/* ========== Objective ========== */}
         <section>
           <h3 className="text-lg font-semibold text-primary mb-4">Objective</h3>
-          <div className="space-y-6">
-            <div className="grid grid-cols-4 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">Blood Pressure</label>
-                <input 
-                  type="text" 
-                  placeholder="120/80"
-                  className="w-full p-3 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent" 
-                />
+
+          {/* Measurements */}
+          <div className="grid grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Waist (inches)</label>
+                  <input type="number" className="w-full p-3 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="e.g., 34" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Hip (inches)</label>
+                  <input type="number" className="w-full p-3 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="e.g., 40" />
+                </div>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">Temperature (°F)</label>
-                <input 
-                  type="number" 
-                  step="0.1" 
-                  placeholder="98.6"
-                  className="w-full p-3 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent" 
-                />
+
+              <div className="grid grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Height (ft)</label>
+                  <input type="number" value={heightFt} onChange={e=>setHeightFt(e.target.value)}
+                    className="w-full p-3 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="5" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Height (in)</label>
+                  <input type="number" value={heightIn} onChange={e=>setHeightIn(e.target.value)}
+                    className="w-full p-3 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="7" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Weight (lbs)</label>
+                  <input type="number" value={weightLbs} onChange={e=>setWeightLbs(e.target.value)}
+                    className="w-full p-3 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="178" />
+                </div>
               </div>
+
               <div>
-                <label className="block text-sm font-medium text-foreground mb-2">Pulse (bpm)</label>
-                <input 
-                  type="number" 
-                  placeholder="72"
-                  className="w-full p-3 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent" 
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">Respiratory Rate</label>
-                <input 
-                  type="number" 
-                  placeholder="16"
-                  className="w-full p-3 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent" 
-                />
+                <label className="block text-sm font-medium mb-2">BMI (auto)</label>
+                <input disabled value={bmi} placeholder="—"
+                  className="w-full p-3 border border-border rounded-md bg-muted text-fg-muted" />
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">Weight (lbs)</label>
-                <input 
-                  type="number" 
-                  step="0.1" 
-                  className="w-full p-3 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent" 
-                />
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Blood Pressure</label>
+                  <input type="text" placeholder="120/80"
+                    className="w-full p-3 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Pulse (bpm)</label>
+                  <input type="number" placeholder="72"
+                    className="w-full p-3 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent" />
+                </div>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">Height (inches)</label>
-                <input 
-                  type="number" 
-                  step="0.1" 
-                  className="w-full p-3 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent" 
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Respiratory Rate</label>
+                  <input type="number" placeholder="16"
+                    className="w-full p-3 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Temperature (°F)</label>
+                  <input type="number" step="0.1" placeholder="98.6"
+                    className="w-full p-3 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent" />
+                </div>
               </div>
             </div>
+          </div>
 
-            <div>
-              <label className="block text-sm font-medium text-foreground mb-2">Physical Examination</label>
-              <textarea 
-                className="w-full h-32 p-3 border border-border rounded-md resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                placeholder="Describe physical examination findings..."
-              />
-              <AIsuggestion 
-                text="Physical examination reveals patient appears well-developed and well-nourished. HEENT: Normocephalic, atraumatic. Pupils equal, round, and reactive to light. No lymphadenopathy. Cardiovascular: Regular rate and rhythm, no murmurs. Lungs: Clear to auscultation bilaterally."
-                onInsert={() => {}}
-                onDismiss={() => {}}
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-foreground mb-2">Relevant Findings</label>
-              <textarea 
-                className="w-full h-24 p-3 border border-border rounded-md resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                placeholder="Document any significant findings or abnormalities..."
-              />
-              <AIsuggestion 
-                text="Patient exhibits mild tenderness in frontal sinus areas. No acute distress noted. Vital signs stable and within normal limits for age and condition."
-                onInsert={() => {}}
-                onDismiss={() => {}}
-              />
-            </div>
+          {/* Observations */}
+          <div className="mt-6">
+            <label className="block text-sm font-medium text-foreground mb-2">Clinical Observations</label>
+            <textarea
+              className="w-full h-28 p-3 border border-border rounded-md resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              placeholder="Summarize physical exam and general appearance."
+            />
+            <AIsuggestion
+              text="Patient appears alert and oriented, in no acute distress. Lungs clear to auscultation, regular heart rhythm, no murmurs. Mildly elevated blood pressure noted. No edema in extremities."
+              onInsert={() => {}}
+              onDismiss={() => {}}
+            />
           </div>
         </section>
 
-        {/* Assessment Section */}
+        {/* ========== Assessment ========== */}
         <section>
           <h3 className="text-lg font-semibold text-primary mb-4">Assessment</h3>
           <div className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-foreground mb-2">Primary Diagnosis</label>
-              <textarea 
+              <label className="block text-sm font-medium text-foreground mb-2">Assessment / Problem List</label>
+              <textarea
                 className="w-full h-24 p-3 border border-border rounded-md resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                placeholder="Primary diagnosis with ICD-10 code..."
+                placeholder="Summarize the key clinical issues under consideration."
               />
-              <AIsuggestion 
-                text="Tension-type headache (G44.209) - Based on patient's description of frontal, throbbing pain lasting 3 days, responding partially to ibuprofen, with no alarming neurological signs on examination."
+              <AIsuggestion
+                text="Primary concerns include hypertension, possible early cardiovascular disease, and poor sleep contributing to fatigue."
                 onInsert={() => {}}
                 onDismiss={() => {}}
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-foreground mb-2">Secondary Diagnoses</label>
-              <textarea 
+              <label className="block text-sm font-medium text-foreground mb-2">Differential Diagnosis</label>
+              <textarea
                 className="w-full h-20 p-3 border border-border rounded-md resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                placeholder="Additional diagnoses if applicable..."
+                placeholder="Enter possible alternate explanations."
               />
-              <AIsuggestion 
-                text="Hypertension, unspecified (I10) - Patient continues on Lisinopril with good control. Type 2 diabetes mellitus without complications (E11.9) - Well-controlled on Metformin."
-                onInsert={() => {}}
-                onDismiss={() => {}}
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-foreground mb-2">Differential Diagnoses</label>
-              <textarea 
-                className="w-full h-20 p-3 border border-border rounded-md resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                placeholder="Other conditions considered..."
-              />
-              <AIsuggestion 
-                text="Migraine headache, sinusitis, cluster headache. Given the bilateral frontal location, duration, and response to NSAIDs, tension-type headache is most likely."
-                onInsert={() => {}}
-                onDismiss={() => {}}
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-foreground mb-2">Clinical Impression</label>
-              <textarea 
-                className="w-full h-24 p-3 border border-border rounded-md resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                placeholder="Overall clinical impression and reasoning..."
-              />
-              <AIsuggestion 
-                text="Patient presents with classic tension-type headache symptoms. No red flags present. Comorbid conditions (hypertension, diabetes) are well-controlled. Patient would benefit from stress management and lifestyle modifications."
+              <AIsuggestion
+                text="Hypertension with secondary cardiovascular risk • Obstructive sleep apnea • Anxiety-related chest tightness"
                 onInsert={() => {}}
                 onDismiss={() => {}}
               />
@@ -354,83 +319,38 @@ function SOAPNoteSection() {
           </div>
         </section>
 
-        {/* Plan Section */}
+        {/* ========== Plan ========== */}
         <section>
           <h3 className="text-lg font-semibold text-primary mb-4">Plan</h3>
           <div className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-foreground mb-2">Treatment Plan</label>
-              <textarea 
+              <label className="block text-sm font-medium text-foreground mb-2">Plan / Patient Instructions</label>
+              <textarea
                 className="w-full h-32 p-3 border border-border rounded-md resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                placeholder="Describe the treatment plan and next steps..."
+                placeholder="Enter diagnostic tests, prescriptions, lifestyle guidance, and follow-up instructions."
               />
-              <AIsuggestion 
-                text="Continue current ibuprofen 400mg as needed for headache relief, maximum 3 times daily. Implement stress reduction techniques, ensure adequate sleep (7-8 hours nightly), regular meals, and stay hydrated. Apply heat/cold therapy to affected areas."
+              <AIsuggestion
+                text="1) Order EKG, lipid panel, and basic metabolic panel. 2) Continue lisinopril and atorvastatin as prescribed. 3) Recommend sleep study referral to rule out OSA. 4) Encourage Mediterranean diet, daily walking, and stress-reduction practices. 5) Follow-up in 6 weeks with lab results."
                 onInsert={() => {}}
                 onDismiss={() => {}}
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-foreground mb-2">Medications/Prescriptions</label>
-              <textarea 
-                className="w-full h-24 p-3 border border-border rounded-md resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                placeholder="New prescriptions and medication changes..."
-              />
-              <AIsuggestion 
-                text="Continue current medications: Lisinopril 10mg daily, Metformin 500mg twice daily, Atorvastatin 20mg daily. Consider prophylactic medication if headaches become more frequent (>2 episodes per week)."
+              <label className="block text-sm font-medium text-foreground mb-2">Acute Diagnosis</label>
+              <SearchSelectPills placeholder="Enter confirmed diagnosis with ICD-10 codes." />
+              <AIsuggestion
+                text="I10 — Essential hypertension • E78.5 — Hyperlipidemia, unspecified"
                 onInsert={() => {}}
                 onDismiss={() => {}}
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-foreground mb-2">Follow-up Instructions</label>
-              <textarea 
-                className="w-full h-20 p-3 border border-border rounded-md resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                placeholder="When and why to return for follow-up..."
-              />
-              <AIsuggestion 
-                text="Return in 2 weeks if headaches persist or worsen. Return immediately if experiencing severe headache, vision changes, fever, neck stiffness, or neurological symptoms. Schedule routine follow-up in 3 months for diabetes and hypertension management."
-                onInsert={() => {}}
-                onDismiss={() => {}}
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-foreground mb-2">Patient Education</label>
-              <textarea 
-                className="w-full h-24 p-3 border border-border rounded-md resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                placeholder="Education provided to patient..."
-              />
-              <AIsuggestion 
-                text="Educated patient on tension headache triggers including stress, poor posture, eye strain, and dehydration. Discussed importance of regular sleep schedule, stress management techniques, and proper ergonomics. Provided headache diary for tracking patterns."
-                onInsert={() => {}}
-                onDismiss={() => {}}
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-foreground mb-2">Diagnostic Orders</label>
-              <textarea 
-                className="w-full h-20 p-3 border border-border rounded-md resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                placeholder="Lab tests, imaging, or other diagnostic orders..."
-              />
-              <AIsuggestion 
-                text="No additional diagnostic testing indicated at this time given typical presentation and normal examination. Consider CT head or MRI if red flags develop or headaches become refractory to treatment."
-                onInsert={() => {}}
-                onDismiss={() => {}}
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-foreground mb-2">Referrals</label>
-              <textarea 
-                className="w-full h-20 p-3 border border-border rounded-md resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                placeholder="Specialist referrals if needed..."
-              />
-              <AIsuggestion 
-                text="No specialist referrals needed at this time. Consider neurology referral if headaches become chronic (>15 days per month) or if medication overuse headache develops."
+              <label className="block text-sm font-medium text-foreground mb-2">Comorbidities / Contributing Conditions</label>
+              <SearchSelectPills placeholder="Document chronic or contributing factors." />
+              <AIsuggestion
+                text="Overweight • Family history of premature CAD • Poor sleep hygiene"
                 onInsert={() => {}}
                 onDismiss={() => {}}
               />
@@ -441,6 +361,49 @@ function SOAPNoteSection() {
     </div>
   );
 }
+
+/* ---------- tiny helpers (keep your visual style) ---------- */
+function SearchSelectPills({ placeholder }: { placeholder: string }) {
+  const [query, setQuery] = useState("");
+  const [items, setItems] = useState<string[]>([]);
+  const addItem = () => {
+    const clean = query.trim();
+    if (!clean) return;
+    setItems((prev) => [...prev, clean]);
+    setQuery("");
+  };
+  return (
+    <div>
+      <div className="flex gap-2">
+        <input
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addItem())}
+          className="flex-1 p-3 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
+          placeholder={placeholder}
+        />
+        <Button type="button" variant="secondary" onClick={addItem}>Add</Button>
+      </div>
+      {items.length > 0 && (
+        <div className="flex flex-wrap gap-2 mt-3">
+          {items.map((it, idx) => (
+            <Tag key={idx} text={it} onRemove={() => setItems(items.filter((_, i) => i !== idx))} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function Tag({ text, onRemove }: { text: string; onRemove: () => void }) {
+  return (
+    <span className="px-3 py-1 text-xs bg-surface text-fg border border-border rounded-full inline-flex items-center gap-2">
+      {text}
+      <button onClick={onRemove} className="text-fg-muted hover:text-fg focus-visible:outline-none">×</button>
+    </span>
+  );
+}
+
 
 function RXSection() {
   return <RXForm />;
