@@ -60,6 +60,8 @@ function SOAPNoteSection() {
   const [heightFt, setHeightFt] = useState<string>("");
   const [heightIn, setHeightIn] = useState<string>("");
   const [weightLbs, setWeightLbs] = useState<string>("");
+  const [waist, setWaist] = useState<string>("");
+  const [hip, setHip] = useState<string>("");
   const heightMeters = (Number(heightFt || 0) * 12 + Number(heightIn || 0)) * 0.0254;
   const weightKg = Number(weightLbs || 0) * 0.453592;
   const bmi = heightMeters > 0 ? (weightKg / (heightMeters * heightMeters)).toFixed(1) : "";
@@ -210,11 +212,29 @@ function SOAPNoteSection() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label className="text-sm font-medium text-fg mb-1">Waist (in)</Label>
-                <Input type="number" placeholder="34" />
+                <Input 
+                  type="number" 
+                  value={waist} 
+                  onChange={e=>setWaist(e.target.value)}
+                  placeholder="34" 
+                />
+                <AIChip
+                  text="32"
+                  onInsert={() => setWaist("32")}
+                />
               </div>
               <div>
                 <Label className="text-sm font-medium text-fg mb-1">Hip (in)</Label>
-                <Input type="number" placeholder="40" />
+                <Input 
+                  type="number" 
+                  value={hip} 
+                  onChange={e=>setHip(e.target.value)}
+                  placeholder="40" 
+                />
+                <AIChip
+                  text="38"
+                  onInsert={() => setHip("38")}
+                />
               </div>
             </div>
 
@@ -244,16 +264,31 @@ function SOAPNoteSection() {
                   <span className="text-xs text-fg-muted mt-1 block">inches</span>
                 </div>
               </div>
+              <AIChip
+                text="5 feet 8 inches"
+                onInsert={() => {
+                  setHeightFt("5");
+                  setHeightIn("8");
+                }}
+              />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label className="text-sm font-medium text-fg mb-1">Weight (lbs)</Label>
                 <Input type="number" value={weightLbs} onChange={e=>setWeightLbs(e.target.value)} placeholder="178" />
+                <AIChip
+                  text="165"
+                  onInsert={() => setWeightLbs("165")}
+                />
               </div>
               <div>
                 <Label className="text-sm font-medium text-fg mb-1">BMI (auto)</Label>
                 <Input disabled value={bmi} placeholder="—" className="bg-muted text-fg-muted" />
+                <AIChip
+                  text="BMI will be calculated automatically based on height and weight"
+                  onInsert={() => {}} // BMI is auto-calculated, no insert action
+                />
               </div>
             </div>
           </div>

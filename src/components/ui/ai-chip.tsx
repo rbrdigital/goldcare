@@ -52,9 +52,9 @@ export function AIChip({ text, onInsert, onDismiss, className }: AIChipProps) {
           </g>
           <defs><clipPath id="clip0_1036_3138"><rect width="16" height="16" fill="white"/></clipPath></defs>
         </svg>
-        <span className="font-medium">GoldCare AI Suggestion</span>
+        <span className="font-medium">GoldCare AI</span>
         <span>•</span>
-        <span>Preview</span>
+        <span>Insert</span>
       </button>
     );
   }
