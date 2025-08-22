@@ -1,25 +1,21 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { AIChip } from "@/components/ui/ai-chip";
 import { InlineAddInput } from "@/components/ui/inline-add-input";
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { toast } from "@/hooks/use-toast";
 import { 
-  AlertTriangle, 
-  Calendar, 
-  Clock, 
   FileText, 
-  Pill, 
-  FlaskConical, 
+  Save,
+  FlaskConical,
   Activity,
-  User,
-  Save
+  AlertTriangle
 } from "lucide-react";
+
+// Card components are only used in other sections, not SOAP
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { RXForm } from "@/components/RXForm";
 
 interface MainContentProps {
@@ -60,6 +56,13 @@ function SOAPNoteSection() {
   const [heightFt, setHeightFt] = useState<string>("");
   const [heightIn, setHeightIn] = useState<string>("");
   const [weightLbs, setWeightLbs] = useState<string>("");
+  const [waist, setWaist] = useState<string>("");
+  const [hip, setHip] = useState<string>("");
+  const [bp, setBp] = useState<string>("");
+  const [pulse, setPulse] = useState<string>("");
+  const [respiratoryRate, setRespiratoryRate] = useState<string>("");
+  const [temperature, setTemperature] = useState<string>("");
+  
   const heightMeters = (Number(heightFt || 0) * 12 + Number(heightIn || 0)) * 0.0254;
   const weightKg = Number(weightLbs || 0) * 0.453592;
   const bmi = heightMeters > 0 ? (weightKg / (heightMeters * heightMeters)).toFixed(1) : "";
@@ -80,9 +83,16 @@ function SOAPNoteSection() {
 
   // Auto-save functionality 
   const handleSave = () => {
+    const now = new Date();
+    const timeString = now.toLocaleTimeString('en-US', { 
+      hour: 'numeric', 
+      minute: '2-digit',
+      hour12: true 
+    });
+    
     toast({
-      title: "SOAP Note Saved",
-      description: "Your changes have been automatically saved.",
+      title: `Saved at ${timeString}`,
+      duration: 2000,
     });
   };
 
@@ -92,51 +102,53 @@ function SOAPNoteSection() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="max-w-3xl mx-auto px-6 py-8 bg-neutral-50 min-h-screen">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2 text-fg">
-            <FileText className="h-6 w-6 text-medical-blue" />
+          <h1 className="text-[22px] font-semibold tracking-tight text-neutral-900 flex items-center gap-2">
+            <FileText className="h-5 w-5 text-primary" />
             SOAP Note
           </h1>
-          <p className="text-fg-muted">Document subjective, objective, assessment, and plan</p>
+          <p className="text-[12px] text-neutral-500 mt-1">Document subjective, objective, assessment, and plan</p>
         </div>
-        <Button variant="ghost" size="sm" onClick={handleSave} className="gap-2">
-          <Save className="h-4 w-4" />
+        <Button variant="ghost" size="sm" onClick={handleSave} className="gap-2 text-[12px]">
+          <Save className="h-3 w-3" />
           Save
         </Button>
       </div>
 
-      <div className="space-y-8">
+      <div className="space-y-10">
         {/* ========== Subjective ========== */}
         <section>
-          <h3 className="text-lg font-semibold text-primary mb-4">Subjective</h3>
-          <div className="space-y-6">
+          <h3 className="text-[15px] font-semibold text-neutral-900 mb-3">Subjective</h3>
+          <div className="space-y-5">
             {/* CC/HPI */}
             <div>
-              <Label className="text-sm font-medium text-fg mb-2">
+              <Label className="text-[12px] font-medium text-neutral-600 mb-1.5">
                 Chief Complaint / History of Present Illness
               </Label>
               <AutosizeTextarea
                 value={chiefComplaint}
                 onChange={(e) => setChiefComplaint(e.target.value)}
-                placeholder="Reported concerns, symptom history, relevant context"
-                minRows={3}
+                placeholder="Reported concerns, symptom history, relevant context."
+                minRows={2}
                 maxRows={8}
+                className="w-full p-3 rounded-md border border-neutral-200 bg-white focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-[13px] placeholder:text-neutral-500"
               />
-              <AIChip
-                text="Patient presents with intermittent chest tightness and shortness of breath for the past 3 weeks, worse at night and after exertion. Denies fever or cough. Reports a history of elevated blood pressure and borderline cholesterol."
-                onInsert={() => insertSuggestion("Patient presents with intermittent chest tightness and shortness of breath for the past 3 weeks, worse at night and after exertion. Denies fever or cough. Reports a history of elevated blood pressure and borderline cholesterol.", setChiefComplaint)}
-              />
+              <div className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-2.5 py-1 text-[12px] text-neutral-700 hover:bg-neutral-50 cursor-pointer">
+                <div className="w-1.5 h-1.5 rounded-full bg-primary"></div>
+                <span>GoldCare AI • Preview</span>
+              </div>
             </div>
 
             {/* Current Medications */}
             <div>
-              <Label className="text-sm font-medium text-fg mb-2">Current Medications</Label>
+              <Label className="text-[12px] font-medium text-neutral-600 mb-1.5">Current Medications</Label>
               <InlineAddInput
-                placeholder="Prescription medications with dose and frequency"
+                placeholder="Prescription medications with dose and frequency."
                 onAdd={(value) => setMedications(prev => [...prev, value])}
+                className="w-full p-3 rounded-md border border-neutral-200 bg-white focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-[13px] placeholder:text-neutral-500"
               />
               {medications.length > 0 && (
                 <div className="flex flex-wrap gap-2 mt-3">
@@ -145,21 +157,19 @@ function SOAPNoteSection() {
                   ))}
                 </div>
               )}
-              <AIChip
-                text="Lisinopril 10 mg once daily • Atorvastatin 20 mg once nightly • Albuterol inhaler PRN"
-                onInsert={() => {
-                  const meds = ["Lisinopril 10 mg once daily", "Atorvastatin 20 mg once nightly", "Albuterol inhaler PRN"];
-                  setMedications(prev => [...prev, ...meds]);
-                }}
-              />
+              <div className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-2.5 py-1 text-[12px] text-neutral-700 hover:bg-neutral-50 cursor-pointer">
+                <div className="w-1.5 h-1.5 rounded-full bg-primary"></div>
+                <span>GoldCare AI • Preview</span>
+              </div>
             </div>
 
             {/* Supplements & OTC */}
             <div>
-              <Label className="text-sm font-medium text-fg mb-2">Supplements & OTC</Label>
+              <Label className="text-[12px] font-medium text-neutral-600 mb-1.5">Supplements & OTC</Label>
               <InlineAddInput
-                placeholder="Supplements or OTC with dose and frequency"
+                placeholder="Supplements or OTC with dose and frequency."
                 onAdd={(value) => setSupplements(prev => [...prev, value])}
+                className="w-full p-3 rounded-md border border-neutral-200 bg-white focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-[13px] placeholder:text-neutral-500"
               />
               {supplements.length > 0 && (
                 <div className="flex flex-wrap gap-2 mt-3">
@@ -168,21 +178,19 @@ function SOAPNoteSection() {
                   ))}
                 </div>
               )}
-              <AIChip
-                text="Vitamin D3 2000 IU daily • Magnesium glycinate 400 mg nightly"
-                onInsert={() => {
-                  const supps = ["Vitamin D3 2000 IU daily", "Magnesium glycinate 400 mg nightly"];
-                  setSupplements(prev => [...prev, ...supps]);
-                }}
-              />
+              <div className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-2.5 py-1 text-[12px] text-neutral-700 hover:bg-neutral-50 cursor-pointer">
+                <div className="w-1.5 h-1.5 rounded-full bg-primary"></div>
+                <span>GoldCare AI • Preview</span>
+              </div>
             </div>
 
             {/* Allergies */}
             <div>
-              <Label className="text-sm font-medium text-fg mb-2">Allergies</Label>
+              <Label className="text-[12px] font-medium text-neutral-600 mb-1.5">Allergies</Label>
               <InlineAddInput
-                placeholder="Allergies and reactions. NKDA if none"
+                placeholder="Allergies and reactions. NKDA if none."
                 onAdd={(value) => setAllergies(prev => [...prev, value])}
+                className="w-full p-3 rounded-md border border-neutral-200 bg-white focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-[13px] placeholder:text-neutral-500"
               />
               {allergies.length > 0 && (
                 <div className="flex flex-wrap gap-2 mt-3">
@@ -191,166 +199,229 @@ function SOAPNoteSection() {
                   ))}
                 </div>
               )}
-              <AIChip
-                text="Penicillin — rash • No food or environmental allergies reported"
-                onInsert={() => {
-                  const allergyList = ["Penicillin — rash", "No food or environmental allergies reported"];
-                  setAllergies(prev => [...prev, ...allergyList]);
-                }}
-              />
+              <div className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-2.5 py-1 text-[12px] text-neutral-700 hover:bg-neutral-50 cursor-pointer">
+                <div className="w-1.5 h-1.5 rounded-full bg-primary"></div>
+                <span>GoldCare AI • Preview</span>
+              </div>
             </div>
           </div>
         </section>
+
+        {/* Divider */}
+        <div className="h-px bg-neutral-200"></div>
 
         {/* ========== Objective ========== */}
         <section>
-          <h3 className="text-lg font-semibold text-primary mb-4">Objective</h3>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Measurements Card */}
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-base">Measurements</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label className="text-sm font-medium text-fg mb-1">Waist (in)</Label>
-                    <Input type="number" placeholder="34" />
-                  </div>
-                  <div>
-                    <Label className="text-sm font-medium text-fg mb-1">Hip (in)</Label>
-                    <Input type="number" placeholder="40" />
-                  </div>
-                </div>
-                <div className="grid grid-cols-3 gap-3">
-                  <div>
-                    <Label className="text-sm font-medium text-fg mb-1">Height (ft)</Label>
-                    <Input type="number" value={heightFt} onChange={e=>setHeightFt(e.target.value)} placeholder="5" />
-                  </div>
-                  <div>
-                    <Label className="text-sm font-medium text-fg mb-1">Height (in)</Label>
-                    <Input type="number" value={heightIn} onChange={e=>setHeightIn(e.target.value)} placeholder="7" />
-                  </div>
-                  <div>
-                    <Label className="text-sm font-medium text-fg mb-1">Weight (lbs)</Label>
-                    <Input type="number" value={weightLbs} onChange={e=>setWeightLbs(e.target.value)} placeholder="178" />
-                  </div>
+          <h3 className="text-[15px] font-semibold text-neutral-900 mb-3">Objective</h3>
+          
+          <div className="space-y-5">
+            {/* Measurements Section */}
+            <div>
+              <h4 className="text-[12px] font-medium text-neutral-600 mb-3">Measurements</h4>
+              <div className="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                  <Label className="text-[12px] font-medium text-neutral-600 mb-1.5">Waist</Label>
+                  <input
+                    type="number" 
+                    value={waist}
+                    onChange={(e) => setWaist(e.target.value)}
+                    placeholder="34 in"
+                    className="w-full p-3 rounded-md border border-neutral-200 bg-white focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-[13px] placeholder:text-neutral-500"
+                  />
                 </div>
                 <div>
-                  <Label className="text-sm font-medium text-fg mb-1">BMI (auto)</Label>
-                  <Input disabled value={bmi} placeholder="—" className="bg-muted text-fg-muted" />
+                  <Label className="text-[12px] font-medium text-neutral-600 mb-1.5">Hip</Label>
+                  <input
+                    type="number" 
+                    value={hip}
+                    onChange={(e) => setHip(e.target.value)}
+                    placeholder="40 in"
+                    className="w-full p-3 rounded-md border border-neutral-200 bg-white focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-[13px] placeholder:text-neutral-500"
+                  />
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+              <div className="grid grid-cols-4 gap-3">
+                <div>
+                  <Label className="text-[12px] font-medium text-neutral-600 mb-1.5">Height (ft)</Label>
+                  <input
+                    type="number" 
+                    value={heightFt} 
+                    onChange={(e) => setHeightFt(e.target.value)} 
+                    placeholder="5"
+                    className="w-full p-3 rounded-md border border-neutral-200 bg-white focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-[13px] placeholder:text-neutral-500"
+                  />
+                </div>
+                <div>
+                  <Label className="text-[12px] font-medium text-neutral-600 mb-1.5">Height (in)</Label>
+                  <input
+                    type="number" 
+                    value={heightIn} 
+                    onChange={(e) => setHeightIn(e.target.value)} 
+                    placeholder="7"
+                    className="w-full p-3 rounded-md border border-neutral-200 bg-white focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-[13px] placeholder:text-neutral-500"
+                  />
+                </div>
+                <div>
+                  <Label className="text-[12px] font-medium text-neutral-600 mb-1.5">Weight</Label>
+                  <input
+                    type="number" 
+                    value={weightLbs} 
+                    onChange={(e) => setWeightLbs(e.target.value)} 
+                    placeholder="178 lbs"
+                    className="w-full p-3 rounded-md border border-neutral-200 bg-white focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-[13px] placeholder:text-neutral-500"
+                  />
+                </div>
+                <div>
+                  <Label className="text-[12px] font-medium text-neutral-600 mb-1.5">BMI</Label>
+                  <input
+                    disabled 
+                    value={bmi} 
+                    placeholder="—"
+                    className="w-full p-3 rounded-md border border-neutral-200 bg-neutral-50 text-neutral-500 text-[13px] cursor-not-allowed"
+                  />
+                </div>
+              </div>
+            </div>
 
-            {/* Vitals Card */}
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-base">Vital Signs</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label className="text-sm font-medium text-fg mb-1">Blood Pressure</Label>
-                    <Input type="text" placeholder="120/80" />
-                  </div>
-                  <div>
-                    <Label className="text-sm font-medium text-fg mb-1">Pulse (bpm)</Label>
-                    <Input type="number" placeholder="72" />
-                  </div>
+            {/* Vitals Section */}
+            <div>
+              <h4 className="text-[12px] font-medium text-neutral-600 mb-3">Vital Signs</h4>
+              <div className="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                  <Label className="text-[12px] font-medium text-neutral-600 mb-1.5">Blood Pressure</Label>
+                  <input
+                    type="text" 
+                    value={bp}
+                    onChange={(e) => setBp(e.target.value)}
+                    placeholder="120/80"
+                    className="w-full p-3 rounded-md border border-neutral-200 bg-white focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-[13px] placeholder:text-neutral-500"
+                  />
                 </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label className="text-sm font-medium text-fg mb-1">Respiratory Rate</Label>
-                    <Input type="number" placeholder="16" />
-                  </div>
-                  <div>
-                    <Label className="text-sm font-medium text-fg mb-1">Temperature (°F)</Label>
-                    <Input type="number" step="0.1" placeholder="98.6" />
-                  </div>
+                <div>
+                  <Label className="text-[12px] font-medium text-neutral-600 mb-1.5">Pulse</Label>
+                  <input
+                    type="number" 
+                    value={pulse}
+                    onChange={(e) => setPulse(e.target.value)}
+                    placeholder="72 bpm"
+                    className="w-full p-3 rounded-md border border-neutral-200 bg-white focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-[13px] placeholder:text-neutral-500"
+                  />
                 </div>
-              </CardContent>
-            </Card>
-          </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-[12px] font-medium text-neutral-600 mb-1.5">Respiratory Rate</Label>
+                  <input
+                    type="number" 
+                    value={respiratoryRate}
+                    onChange={(e) => setRespiratoryRate(e.target.value)}
+                    placeholder="16"
+                    className="w-full p-3 rounded-md border border-neutral-200 bg-white focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-[13px] placeholder:text-neutral-500"
+                  />
+                </div>
+                <div>
+                  <Label className="text-[12px] font-medium text-neutral-600 mb-1.5">Temperature</Label>
+                  <input
+                    type="number" 
+                    step="0.1" 
+                    value={temperature}
+                    onChange={(e) => setTemperature(e.target.value)}
+                    placeholder="98.6°F"
+                    className="w-full p-3 rounded-md border border-neutral-200 bg-white focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-[13px] placeholder:text-neutral-500"
+                  />
+                </div>
+              </div>
+            </div>
 
-          {/* Clinical Observations */}
-          <div className="mt-6">
-            <Label className="text-sm font-medium text-fg mb-2">Clinical Observations</Label>
-            <AutosizeTextarea
-              value={observations}
-              onChange={(e) => setObservations(e.target.value)}
-              placeholder="Summarize exam and general appearance"
-              minRows={3}
-              maxRows={6}
-            />
-            <AIChip
-              text="Patient appears alert and oriented, in no acute distress. Lungs clear to auscultation, regular heart rhythm, no murmurs. Mildly elevated blood pressure noted."
-              onInsert={() => insertSuggestion("Patient appears alert and oriented, in no acute distress. Lungs clear to auscultation, regular heart rhythm, no murmurs. Mildly elevated blood pressure noted.", setObservations)}
-            />
+            {/* Clinical Observations */}
+            <div>
+              <Label className="text-[12px] font-medium text-neutral-600 mb-1.5">Clinical Observations</Label>
+              <AutosizeTextarea
+                value={observations}
+                onChange={(e) => setObservations(e.target.value)}
+                placeholder="Summarize exam and general appearance."
+                minRows={2}
+                maxRows={6}
+                className="w-full p-3 rounded-md border border-neutral-200 bg-white focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-[13px] placeholder:text-neutral-500"
+              />
+              <div className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-2.5 py-1 text-[12px] text-neutral-700 hover:bg-neutral-50 cursor-pointer">
+                <div className="w-1.5 h-1.5 rounded-full bg-primary"></div>
+                <span>GoldCare AI • Preview</span>
+              </div>
+            </div>
           </div>
         </section>
+
+        {/* Divider */}
+        <div className="h-px bg-neutral-200"></div>
 
         {/* ========== Assessment ========== */}
         <section>
-          <h3 className="text-lg font-semibold text-primary mb-4">Assessment</h3>
-          <div className="space-y-6">
+          <h3 className="text-[15px] font-semibold text-neutral-900 mb-3">Assessment</h3>
+          <div className="space-y-5">
             <div>
-              <Label className="text-sm font-medium text-fg mb-2">Assessment / Problem List</Label>
+              <Label className="text-[12px] font-medium text-neutral-600 mb-1.5">Assessment / Problem List</Label>
               <AutosizeTextarea
                 value={assessment}
                 onChange={(e) => setAssessment(e.target.value)}
-                placeholder="Key clinical issues under consideration"
-                minRows={3}
+                placeholder="Key clinical issues under consideration."
+                minRows={2}
                 maxRows={6}
+                className="w-full p-3 rounded-md border border-neutral-200 bg-white focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-[13px] placeholder:text-neutral-500"
               />
-              <AIChip
-                text="Primary concerns include hypertension, possible early cardiovascular disease, and poor sleep contributing to fatigue."
-                onInsert={() => insertSuggestion("Primary concerns include hypertension, possible early cardiovascular disease, and poor sleep contributing to fatigue.", setAssessment)}
-              />
+              <div className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-2.5 py-1 text-[12px] text-neutral-700 hover:bg-neutral-50 cursor-pointer">
+                <div className="w-1.5 h-1.5 rounded-full bg-primary"></div>
+                <span>GoldCare AI • Preview</span>
+              </div>
             </div>
 
             <div>
-              <Label className="text-sm font-medium text-fg mb-2">Differential Diagnosis</Label>
+              <Label className="text-[12px] font-medium text-neutral-600 mb-1.5">Differential Diagnosis</Label>
               <AutosizeTextarea
                 value={differential}
                 onChange={(e) => setDifferential(e.target.value)}
-                placeholder="Possible alternate explanations"
+                placeholder="Possible alternate explanations."
                 minRows={2}
                 maxRows={5}
+                className="w-full p-3 rounded-md border border-neutral-200 bg-white focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-[13px] placeholder:text-neutral-500"
               />
-              <AIChip
-                text="Hypertension with secondary cardiovascular risk • Obstructive sleep apnea • Anxiety-related chest tightness"
-                onInsert={() => insertSuggestion("Hypertension with secondary cardiovascular risk • Obstructive sleep apnea • Anxiety-related chest tightness", setDifferential)}
-              />
+              <div className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-2.5 py-1 text-[12px] text-neutral-700 hover:bg-neutral-50 cursor-pointer">
+                <div className="w-1.5 h-1.5 rounded-full bg-primary"></div>
+                <span>GoldCare AI • Preview</span>
+              </div>
             </div>
           </div>
         </section>
 
+        {/* Divider */}
+        <div className="h-px bg-neutral-200"></div>
+
         {/* ========== Plan ========== */}
         <section>
-          <h3 className="text-lg font-semibold text-primary mb-4">Plan</h3>
-          <div className="space-y-6">
+          <h3 className="text-[15px] font-semibold text-neutral-900 mb-3">Plan</h3>
+          <div className="space-y-5">
             <div>
-              <Label className="text-sm font-medium text-fg mb-2">Plan / Patient Instructions</Label>
+              <Label className="text-[12px] font-medium text-neutral-600 mb-1.5">Plan / Patient Instructions</Label>
               <AutosizeTextarea
                 value={plan}
                 onChange={(e) => setPlan(e.target.value)}
-                placeholder="Diagnostic tests, prescriptions, lifestyle guidance, follow-up instructions"
-                minRows={4}
+                placeholder="Diagnostic tests, prescriptions, lifestyle guidance, follow-up instructions."
+                minRows={2}
                 maxRows={8}
+                className="w-full p-3 rounded-md border border-neutral-200 bg-white focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-[13px] placeholder:text-neutral-500"
               />
-              <AIChip
-                text="1) Order EKG, lipid panel, and basic metabolic panel. 2) Continue lisinopril and atorvastatin as prescribed. 3) Recommend sleep study referral to rule out OSA. 4) Follow-up in 6 weeks with lab results."
-                onInsert={() => insertSuggestion("1) Order EKG, lipid panel, and basic metabolic panel. 2) Continue lisinopril and atorvastatin as prescribed. 3) Recommend sleep study referral to rule out OSA. 4) Follow-up in 6 weeks with lab results.", setPlan)}
-              />
+              <div className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-2.5 py-1 text-[12px] text-neutral-700 hover:bg-neutral-50 cursor-pointer">
+                <div className="w-1.5 h-1.5 rounded-full bg-primary"></div>
+                <span>GoldCare AI • Preview</span>
+              </div>
             </div>
 
             <div>
-              <Label className="text-sm font-medium text-fg mb-2">Acute Diagnosis</Label>
+              <Label className="text-[12px] font-medium text-neutral-600 mb-1.5">Acute Diagnosis</Label>
               <InlineAddInput
-                placeholder="Confirmed diagnosis with ICD-10 codes"
+                placeholder="Confirmed diagnosis with ICD-10 codes."
                 onAdd={(value) => setDiagnoses(prev => [...prev, value])}
+                className="w-full p-3 rounded-md border border-neutral-200 bg-white focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-[13px] placeholder:text-neutral-500"
               />
               {diagnoses.length > 0 && (
                 <div className="flex flex-wrap gap-2 mt-3">
@@ -359,20 +430,18 @@ function SOAPNoteSection() {
                   ))}
                 </div>
               )}
-              <AIChip
-                text="I10 — Essential hypertension • E78.5 — Hyperlipidemia, unspecified"
-                onInsert={() => {
-                  const diagList = ["I10 — Essential hypertension", "E78.5 — Hyperlipidemia, unspecified"];
-                  setDiagnoses(prev => [...prev, ...diagList]);
-                }}
-              />
+              <div className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-2.5 py-1 text-[12px] text-neutral-700 hover:bg-neutral-50 cursor-pointer">
+                <div className="w-1.5 h-1.5 rounded-full bg-primary"></div>
+                <span>GoldCare AI • Preview</span>
+              </div>
             </div>
 
             <div>
-              <Label className="text-sm font-medium text-fg mb-2">Comorbidities / Contributing Conditions</Label>
+              <Label className="text-[12px] font-medium text-neutral-600 mb-1.5">Comorbidities / Contributing Conditions</Label>
               <InlineAddInput
-                placeholder="Chronic or contributing factors"
+                placeholder="Chronic or contributing factors."
                 onAdd={(value) => setComorbidities(prev => [...prev, value])}
+                className="w-full p-3 rounded-md border border-neutral-200 bg-white focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-[13px] placeholder:text-neutral-500"
               />
               {comorbidities.length > 0 && (
                 <div className="flex flex-wrap gap-2 mt-3">
@@ -381,13 +450,10 @@ function SOAPNoteSection() {
                   ))}
                 </div>
               )}
-              <AIChip
-                text="Overweight • Family history of premature CAD • Poor sleep hygiene"
-                onInsert={() => {
-                  const conditions = ["Overweight", "Family history of premature CAD", "Poor sleep hygiene"];
-                  setComorbidities(prev => [...prev, ...conditions]);
-                }}
-              />
+              <div className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-2.5 py-1 text-[12px] text-neutral-700 hover:bg-neutral-50 cursor-pointer">
+                <div className="w-1.5 h-1.5 rounded-full bg-primary"></div>
+                <span>GoldCare AI • Preview</span>
+              </div>
             </div>
           </div>
         </section>
@@ -399,9 +465,9 @@ function SOAPNoteSection() {
 /* ---------- Helper Components ---------- */
 function Tag({ text, onRemove }: { text: string; onRemove: () => void }) {
   return (
-    <span className="px-3 py-1 text-xs bg-surface text-fg border border-border rounded-full inline-flex items-center gap-2">
+    <span className="px-2.5 py-1 text-[12px] bg-white border border-neutral-200 text-neutral-700 rounded-full inline-flex items-center gap-2">
       {text}
-      <button onClick={onRemove} className="text-fg-muted hover:text-fg focus-visible:outline-none">×</button>
+      <button onClick={onRemove} className="text-neutral-400 hover:text-neutral-600 focus-visible:outline-none">×</button>
     </span>
   );
 }
