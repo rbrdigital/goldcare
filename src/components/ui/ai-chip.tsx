@@ -54,7 +54,7 @@ export function AIChip({ text, onInsert, onDismiss, className }: AIChipProps) {
         </svg>
         <span className="font-medium">GoldCare AI</span>
         <span>•</span>
-        <span>Insert</span>
+        <span>Preview</span>
       </button>
     );
   }
