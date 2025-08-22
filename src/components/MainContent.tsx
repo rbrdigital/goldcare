@@ -206,72 +206,53 @@ function SOAPNoteSection() {
         <section>
           <h3 className="text-lg font-semibold text-primary mb-4">Objective</h3>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Measurements Card */}
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-base">Measurements</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label className="text-sm font-medium text-fg mb-1">Waist (in)</Label>
-                    <Input type="number" placeholder="34" />
-                  </div>
-                  <div>
-                    <Label className="text-sm font-medium text-fg mb-1">Hip (in)</Label>
-                    <Input type="number" placeholder="40" />
-                  </div>
-                </div>
-                <div className="grid grid-cols-3 gap-3">
-                  <div>
-                    <Label className="text-sm font-medium text-fg mb-1">Height (ft)</Label>
-                    <Input type="number" value={heightFt} onChange={e=>setHeightFt(e.target.value)} placeholder="5" />
-                  </div>
-                  <div>
-                    <Label className="text-sm font-medium text-fg mb-1">Height (in)</Label>
-                    <Input type="number" value={heightIn} onChange={e=>setHeightIn(e.target.value)} placeholder="7" />
-                  </div>
-                  <div>
-                    <Label className="text-sm font-medium text-fg mb-1">Weight (lbs)</Label>
-                    <Input type="number" value={weightLbs} onChange={e=>setWeightLbs(e.target.value)} placeholder="178" />
-                  </div>
-                </div>
-                <div>
-                  <Label className="text-sm font-medium text-fg mb-1">BMI (auto)</Label>
-                  <Input disabled value={bmi} placeholder="—" className="bg-muted text-fg-muted" />
-                </div>
-              </CardContent>
-            </Card>
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div>
+                <Label className="text-sm font-medium text-fg mb-1">Waist (in)</Label>
+                <Input type="number" placeholder="34" />
+              </div>
+              <div>
+                <Label className="text-sm font-medium text-fg mb-1">Hip (in)</Label>
+                <Input type="number" placeholder="40" />
+              </div>
+              <div>
+                <Label className="text-sm font-medium text-fg mb-1">Weight (lbs)</Label>
+                <Input type="number" value={weightLbs} onChange={e=>setWeightLbs(e.target.value)} placeholder="178" />
+              </div>
+              <div>
+                <Label className="text-sm font-medium text-fg mb-1">BMI (auto)</Label>
+                <Input disabled value={bmi} placeholder="—" className="bg-muted text-fg-muted" />
+              </div>
+            </div>
 
-            {/* Vitals Card */}
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-base">Vital Signs</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label className="text-sm font-medium text-fg mb-1">Blood Pressure</Label>
-                    <Input type="text" placeholder="120/80" />
-                  </div>
-                  <div>
-                    <Label className="text-sm font-medium text-fg mb-1">Pulse (bpm)</Label>
-                    <Input type="number" placeholder="72" />
-                  </div>
+            <div>
+              <Label className="text-sm font-medium text-fg mb-1">Height</Label>
+              <div className="flex gap-2 items-center">
+                <div className="flex-1">
+                  <Input 
+                    type="number" 
+                    value={heightFt} 
+                    onChange={e=>setHeightFt(e.target.value)} 
+                    placeholder="5" 
+                    min="0" 
+                    max="8"
+                  />
+                  <span className="text-xs text-fg-muted mt-1 block">feet</span>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label className="text-sm font-medium text-fg mb-1">Respiratory Rate</Label>
-                    <Input type="number" placeholder="16" />
-                  </div>
-                  <div>
-                    <Label className="text-sm font-medium text-fg mb-1">Temperature (°F)</Label>
-                    <Input type="number" step="0.1" placeholder="98.6" />
-                  </div>
+                <div className="flex-1">
+                  <Input 
+                    type="number" 
+                    value={heightIn} 
+                    onChange={e=>setHeightIn(e.target.value)} 
+                    placeholder="7" 
+                    min="0" 
+                    max="11"
+                  />
+                  <span className="text-xs text-fg-muted mt-1 block">inches</span>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </div>
 
           {/* Clinical Observations */}
