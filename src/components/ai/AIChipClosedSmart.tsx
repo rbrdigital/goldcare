@@ -51,7 +51,7 @@ export function AIChipClosedSmart({ text, onInsert, onPreview, className }: AICh
   return (
     <div 
       className={cn(
-        "mt-2 w-full flex items-center justify-between rounded-full border border-border bg-surface-muted px-3 py-2 text-[13px] text-fg-muted",
+        "mt-2 w-full flex items-center justify-between rounded-full border border-border bg-surface-muted px-3 py-2 text-[13px] text-black",
         className
       )}
       role="group"
@@ -64,7 +64,7 @@ export function AIChipClosedSmart({ text, onInsert, onPreview, className }: AICh
           height="12" 
           viewBox="0 0 12 12" 
           fill="none"
-          className="shrink-0 text-primary"
+          className="shrink-0 text-black"
           aria-hidden="true"
         >
           <mask id="mask0_1169_244" style={{maskType: 'luminance'}} maskUnits="userSpaceOnUse" x="0" y="0" width="12" height="12">
