@@ -20,7 +20,7 @@ const config: Config = {
     extend: {
       colors: {
         bg: "var(--color-bg)",
-        surface: "var(--color-surface)",
+        surface: "#ffffff",
         border: "var(--color-border)",
         fg: "var(--color-fg)",
         "fg-muted": "var(--color-fg-muted)",
