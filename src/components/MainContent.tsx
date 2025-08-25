@@ -330,6 +330,8 @@ function SOAPNoteSection() {
           </div>
         </section>
 
+        <Separator className="my-8" />
+
         {/* ========== Assessment ========== */}
         <section>
           <h3 className="text-lg font-semibold text-fg mb-4">Assessment</h3>

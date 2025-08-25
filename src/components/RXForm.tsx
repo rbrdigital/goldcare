@@ -311,6 +311,8 @@ export default function RXForm() {
         </div>
       </div>
 
+      <Separator className="my-4" />
+
       {/* Order Summary */}
       <div className="rounded-md border border-border bg-surface p-4">
         <div className="font-medium mb-1">{copy.orderSummary}</div>
