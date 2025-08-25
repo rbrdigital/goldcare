@@ -1,6 +1,7 @@
 import { Clock, Users, MapPin, Shield, ArrowLeft, Minimize2, Maximize2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import patientAvatar from "@/assets/patient-avatar.jpg";
 
 interface PatientMiniCardProps {
   patient: {
@@ -43,9 +44,11 @@ export function PatientMiniCard({
           </Button>
           <div className="h-4 w-px bg-border" />
           <div className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity" onClick={onProfileClick}>
-            <div className="h-10 w-10 rounded-full bg-medical-blue text-white flex items-center justify-center font-semibold">
-              {patient.name.split(' ').map(n => n[0]).join('')}
-            </div>
+            <img 
+              src={patientAvatar} 
+              alt={`${patient.name}'s avatar`}
+              className="h-10 w-10 rounded-full object-cover"
+            />
             <div className="flex items-center gap-2 text-sm">
               <span className="font-semibold text-foreground">{patient.name}</span>
               <span className="text-muted-foreground">•</span>
