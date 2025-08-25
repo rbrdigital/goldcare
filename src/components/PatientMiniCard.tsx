@@ -76,13 +76,13 @@ export function PatientMiniCard({
           <div className="flex items-center gap-2">
             <button 
               onClick={onJoinMeeting}
-              className="px-4 py-2 bg-medical-green hover:bg-medical-green/90 text-white rounded-md text-sm font-medium transition-colors"
+              className="px-4 py-2 bg-fg text-bg hover:bg-fg/90 rounded-md text-sm font-medium transition-colors"
             >
               Join Meeting
             </button>
             <button 
               onClick={onFinishAppointment}
-              className="px-4 py-2 bg-button-primary text-button-primary-text hover:opacity-95 rounded-md text-sm font-medium transition-colors"
+              className="px-4 py-2 bg-bg text-fg border border-fg hover:bg-surface rounded-md text-sm font-medium transition-colors"
             >
               Finish Appointment
             </button>
