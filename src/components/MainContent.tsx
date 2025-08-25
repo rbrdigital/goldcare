@@ -113,7 +113,7 @@ function SOAPNoteSection() {
       <div className="space-y-8">
         {/* ========== Subjective ========== */}
         <section>
-          <h3 className="text-lg font-semibold text-primary mb-4">Subjective</h3>
+          <h3 className="text-lg font-semibold text-fg mb-4">Subjective</h3>
           <div className="space-y-6">
             {/* CC/HPI */}
             <div>
@@ -206,7 +206,7 @@ function SOAPNoteSection() {
 
         {/* ========== Objective ========== */}
         <section>
-          <h3 className="text-lg font-semibold text-primary mb-4">Objective</h3>
+          <h3 className="text-lg font-semibold text-fg mb-4">Objective</h3>
 
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -312,7 +312,7 @@ function SOAPNoteSection() {
 
         {/* ========== Assessment ========== */}
         <section>
-          <h3 className="text-lg font-semibold text-primary mb-4">Assessment</h3>
+          <h3 className="text-lg font-semibold text-fg mb-4">Assessment</h3>
           <div className="space-y-6">
             <div>
               <Label className="text-sm font-medium text-fg mb-2">Assessment / Problem List</Label>
@@ -348,7 +348,7 @@ function SOAPNoteSection() {
 
         {/* ========== Plan ========== */}
         <section>
-          <h3 className="text-lg font-semibold text-primary mb-4">Plan</h3>
+          <h3 className="text-lg font-semibold text-fg mb-4">Plan</h3>
           <div className="space-y-6">
             <div>
               <Label className="text-sm font-medium text-fg mb-2">Plan / Patient Instructions</Label>
