@@ -1,4 +1,3 @@
-// src/components/ai/AIChipClosedSmart.tsx
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
@@ -32,20 +31,15 @@ export function AIChipClosedSmart({
   React.useEffect(() => {
     const el = containerRef.current;
     if (!el || typeof ResizeObserver === "undefined") return;
-
     const ro = new ResizeObserver(measure);
     ro.observe(el);
     const onWin = () => measure();
     window.addEventListener("resize", onWin);
-
     return () => {
       ro.disconnect();
       window.removeEventListener("resize", onWin);
     };
   }, [measure]);
-
-  // Keep it single-line, no word breaks
-  const displayText = text ?? "";
 
   const actionLabel = isOverflowing ? "Preview" : "Insert";
   const actionHandler = isOverflowing ? onPreview : onInsert;
@@ -60,7 +54,6 @@ export function AIChipClosedSmart({
         className
       )}
     >
-      {/* 14×14 inline icon */}
       <svg
         width="14"
         height="14"
@@ -81,10 +74,10 @@ export function AIChipClosedSmart({
       <span
         ref={previewRef}
         className="text-sm min-w-0 whitespace-nowrap overflow-hidden text-ellipsis"
-        title={displayText}
+        title={text ?? ""}
         data-testid="gcai-preview-text"
       >
-        {displayText}
+        {text ?? ""}
       </span>
 
       <div className="flex-1 min-w-[8px]" />
