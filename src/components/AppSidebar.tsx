@@ -146,7 +146,7 @@ export function AppSidebar({ mini = false, activeItem = "soap", onItemClick }: A
   }
 
   return (
-    <aside className="w-80 border-r bg-background flex flex-col">
+    <aside className="w-[264px] border-r bg-background flex flex-col">
       <div className="p-4">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
