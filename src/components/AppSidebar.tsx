@@ -60,7 +60,7 @@ const patientDataItems: SidebarItem[] = [
   { id: "previous-results", label: "Previous Labs & Imaging Results", icon: <Activity className="h-4 w-4" />, href: "#previous-results", count: 3, isNew: true },
   { id: "history", label: "Family & Surgical History", icon: <Users className="h-4 w-4" />, href: "#history" },
   { id: "profile", label: "Patient Profile", icon: <User className="h-4 w-4" />, href: "#profile" },
-  { id: "accommodation", label: "Patient Accommodation & Notes", icon: <FileBarChart className="h-4 w-4" />, href: "#accommodation" }
+  { id: "accommodation", label: "Accommodation & Notes", icon: <FileBarChart className="h-4 w-4" />, href: "#accommodation" }
 ];
 
 const manageApptItems: SidebarItem[] = [
@@ -146,7 +146,7 @@ export function AppSidebar({ mini = false, activeItem = "soap", onItemClick }: A
   }
 
   return (
-    <aside className="w-[280px] border-r bg-background flex flex-col">
+    <aside className="w-80 border-r bg-background flex flex-col">
       <div className="p-4">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -254,7 +254,7 @@ function SidebarItem({ item, isActive, onClick }: SidebarItemProps) {
       className={cn(
         "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all relative group",
         showActive 
-          ? "bg-medical-blue-light text-medical-blue font-medium" 
+          ? "bg-medical-blue-light text-medical-blue font-medium border-l-4 border-l-medical-blue" 
           : "hover:bg-muted text-muted-foreground hover:text-foreground",
         item.disabled && "opacity-40 pointer-events-none"
       )}
@@ -263,6 +263,25 @@ function SidebarItem({ item, isActive, onClick }: SidebarItemProps) {
         {item.icon}
       </div>
       <span className="flex-1 text-left truncate">{item.label}</span>
+      
+      <div className="flex items-center gap-1">
+        {item.count && (
+          <Badge variant="secondary" className="h-5 text-xs px-2">
+            {item.count}
+          </Badge>
+        )}
+        {item.isNew && (
+          <Badge className="h-5 text-xs px-2 bg-medical-green text-white">
+            New
+          </Badge>
+        )}
+        {item.dirty && (
+          <div className="w-2 h-2 rounded-full bg-medical-blue" />
+        )}
+        {item.attention && (
+          <div className="w-0 h-0 border-l-4 border-b-4 border-l-transparent border-b-medical-amber" />
+        )}
+      </div>
     </button>
   );
 }
