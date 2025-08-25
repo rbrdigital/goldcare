@@ -54,13 +54,13 @@ const clinicalItems: SidebarItem[] = [
 ];
 
 const patientDataItems: SidebarItem[] = [
-  { id: "goldcare-ai", label: "GoldCare AI", icon: <GoldCareAIIcon className="h-4 w-4" />, href: "#goldcare-ai", isNew: true },
+  { id: "goldcare-ai", label: "GoldCare AI", icon: <GoldCareAIIcon className="h-4 w-4" />, href: "#goldcare-ai" },
   { id: "intake", label: "Intake Form", icon: <ClipboardList className="h-4 w-4" />, href: "#intake", attention: true },
   { id: "diagnoses-meds-allergies", label: "Diagnoses, Meds, Allergies", icon: <Stethoscope className="h-4 w-4" />, href: "#diagnoses" },
-  { id: "previous-results", label: "Previous Labs & Imaging Results", icon: <Activity className="h-4 w-4" />, href: "#previous-results", count: 3 },
+  { id: "previous-results", label: "Previous Labs & Imaging Results", icon: <Activity className="h-4 w-4" />, href: "#previous-results", count: 3, isNew: true },
   { id: "history", label: "Family & Surgical History", icon: <Users className="h-4 w-4" />, href: "#history" },
   { id: "profile", label: "Patient Profile", icon: <User className="h-4 w-4" />, href: "#profile" },
-  { id: "accommodation", label: "Patient Accommodation & Notes", icon: <FileBarChart className="h-4 w-4" />, href: "#accommodation" }
+  { id: "accommodation", label: "Accommodation & Notes", icon: <FileBarChart className="h-4 w-4" />, href: "#accommodation" }
 ];
 
 const manageApptItems: SidebarItem[] = [
@@ -254,7 +254,7 @@ function SidebarItem({ item, isActive, onClick }: SidebarItemProps) {
       className={cn(
         "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all relative group",
         showActive 
-          ? "bg-medical-blue-light text-medical-blue font-medium border-l-4 border-l-medical-blue" 
+          ? "bg-medical-blue-light text-medical-blue font-medium" 
           : "hover:bg-muted text-muted-foreground hover:text-foreground",
         item.disabled && "opacity-40 pointer-events-none"
       )}
