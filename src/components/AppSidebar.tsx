@@ -54,10 +54,10 @@ const clinicalItems: SidebarItem[] = [
 ];
 
 const patientDataItems: SidebarItem[] = [
-  { id: "goldcare-ai", label: "GoldCare AI", icon: <GoldCareAIIcon className="h-4 w-4" />, href: "#goldcare-ai" },
+  { id: "goldcare-ai", label: "GoldCare AI", icon: <GoldCareAIIcon className="h-4 w-4" />, href: "#goldcare-ai", isNew: true },
   { id: "intake", label: "Intake Form", icon: <ClipboardList className="h-4 w-4" />, href: "#intake", attention: true },
   { id: "diagnoses-meds-allergies", label: "Diagnoses, Meds, Allergies", icon: <Stethoscope className="h-4 w-4" />, href: "#diagnoses" },
-  { id: "previous-results", label: "Previous Labs & Imaging Results", icon: <Activity className="h-4 w-4" />, href: "#previous-results", count: 3, isNew: true },
+  { id: "previous-results", label: "Previous Labs & Imaging Results", icon: <Activity className="h-4 w-4" />, href: "#previous-results", count: 3 },
   { id: "history", label: "Family & Surgical History", icon: <Users className="h-4 w-4" />, href: "#history" },
   { id: "profile", label: "Patient Profile", icon: <User className="h-4 w-4" />, href: "#profile" },
   { id: "accommodation", label: "Accommodation & Notes", icon: <FileBarChart className="h-4 w-4" />, href: "#accommodation" }
