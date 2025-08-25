@@ -304,26 +304,6 @@ export default function RXForm() {
 
             <Separator className="my-4" />
 
-            {/* Safety AI chip */}
-            <div className="mb-4">
-              <AIChipClosedSmart
-                text="Safety: avoid with anaphylaxis to penicillins; take with food; consider doxycycline/azithro if allergy."
-                onInsert={() =>
-                  patchItem(i, {
-                    notesPatient: mergeLines(rx.notesPatient, [
-                      "Avoid if history of anaphylaxis to penicillins.",
-                      "Take with food to reduce GI upset."
-                    ])
-                  })
-                }
-                onPreview={() =>
-                  window.alert(
-                    "Safety notes\n• Penicillin anaphylaxis → use doxycycline/azithromycin\n• Take with food\n• Stop and seek care for rash or breathing difficulty"
-                  )
-                }
-              />
-            </div>
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label>Notes to patient</Label>
@@ -333,10 +313,36 @@ export default function RXForm() {
                   value={rx.notesPatient}
                   onChange={(e) => patchItem(i, { notesPatient: e.target.value })}
                 />
+                {/* Safety AI chip */}
+                <div className="mt-2">
+                  <AIChipClosedSmart
+                    text="Safety: avoid with anaphylaxis to penicillins; take with food; consider doxycycline/azithro if allergy."
+                    onInsert={() =>
+                      patchItem(i, {
+                        notesPatient: mergeLines(rx.notesPatient, [
+                          "Avoid if history of anaphylaxis to penicillins.",
+                          "Take with food to reduce GI upset."
+                        ])
+                      })
+                    }
+                    onPreview={() =>
+                      window.alert(
+                        "Safety notes\n• Penicillin anaphylaxis → use doxycycline/azithromycin\n• Take with food\n• Stop and seek care for rash or breathing difficulty"
+                      )
+                    }
+                  />
+                </div>
               </div>
               <div>
+                <Label>Notes to pharmacy</Label>
+                <AutosizeTextarea
+                  minRows={2}
+                  placeholder="Additional instructions for the pharmacy"
+                  value={rx.notesPharmacy}
+                  onChange={(e) => patchItem(i, { notesPharmacy: e.target.value })}
+                />
                 {/* Pharmacy guidance AI chip */}
-                <div className="mb-2">
+                <div className="mt-2">
                   <AIChipClosedSmart
                     text="Pharmacy guidance: counsel on GI tolerance, drug interactions with warfarin/oral contraceptives, proper storage, completion of full course."
                     onInsert={() =>
@@ -356,13 +362,6 @@ export default function RXForm() {
                     }
                   />
                 </div>
-                <Label>Notes to pharmacy</Label>
-                <AutosizeTextarea
-                  minRows={2}
-                  placeholder="Additional instructions for the pharmacy"
-                  value={rx.notesPharmacy}
-                  onChange={(e) => patchItem(i, { notesPharmacy: e.target.value })}
-                />
               </div>
             </div>
 
