@@ -19,7 +19,7 @@ const config: Config = {
     },
     extend: {
       colors: {
-        // New unified tokens
+        // New unified tokens - primary only for text
         bg: "var(--bg)",
         "bg-muted": "var(--bg-muted)",
         surface: "var(--surface)",
@@ -28,12 +28,12 @@ const config: Config = {
         "fg-muted": "var(--fg-muted)",
         border: "var(--border)",
         divider: "var(--divider)",
-        primary: "var(--primary)",
-        "primary-50": "var(--primary-50)",
-        "primary-100": "var(--primary-100)",
-        "primary/30": "var(--primary-30a)",
-        "medical-blue": "var(--medical-blue)",
-        "medical-blue-light": "var(--medical-blue-light)",
+        primary: "var(--primary)",        /* Blue - text only */
+        "primary-50": "var(--primary-50)",    /* Light gray */
+        "primary-100": "var(--primary-100)",  /* Darker gray */
+        "primary/30": "var(--primary-30a)",   /* 10% black */
+        "medical-blue": "var(--medical-blue)",      /* Black */
+        "medical-blue-light": "var(--medical-blue-light)", /* Light gray */
         "medical-green": "var(--medical-green)",
         "medical-green-light": "var(--medical-green-light)",
         "medical-amber": "var(--medical-amber)",
