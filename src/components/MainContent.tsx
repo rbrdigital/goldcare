@@ -20,7 +20,7 @@ import {
   User,
   Save
 } from "lucide-react";
-import { RXForm } from "@/components/RXForm";
+import RXForm from "@/components/RXForm";
 
 interface MainContentProps {
   activeSection: string;
