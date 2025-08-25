@@ -5,11 +5,9 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
-import { Plus, Trash2, Edit3, RefreshCw, Search, Pill } from "lucide-react";
+import { Plus, Trash2, Edit3, RefreshCw, Search, Pill, Save } from "lucide-react";
 
 interface RXOrder {
   id: string;
@@ -216,28 +214,33 @@ export function RXForm() {
 
   return (
     <div className="space-y-6">
-      {/* Page Header - SOAP Style */}
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2 text-muted-foreground">
+          <h1 className="text-2xl font-bold flex items-center gap-2 text-fg">
             <Pill className="h-6 w-6 text-medical-blue" />
             RX - Prescriptions
           </h1>
           <p className="text-fg-muted">Create and manage prescription orders</p>
         </div>
-        <Button onClick={addOrder} className="flex items-center gap-2">
-          <Plus className="h-4 w-4" />
-          Add Order
-        </Button>
+        <div className="flex items-center gap-3">
+          <Button variant="ghost" size="sm" className="gap-2">
+            <Save className="h-4 w-4" />
+            Save
+          </Button>
+          <Button onClick={addOrder} className="flex items-center gap-2">
+            <Plus className="h-4 w-4" />
+            Add Order
+          </Button>
+        </div>
       </div>
 
-      {/* Orders - SOAP Section Style */}
       <div className="space-y-8">
         {orders.map((order, index) => (
           <section key={order.id} data-testid="rx-form-root">
             {/* Section Header */}
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-primary">Prescription #{index + 1}</h3>
+              <h3 className="text-lg font-semibold text-fg">Prescription #{index + 1}</h3>
               <div className="flex items-center gap-2">
                 <Button variant="outline" size="sm" className="h-8">
                   <RefreshCw className="h-3 w-3 mr-1" />
@@ -261,16 +264,14 @@ export function RXForm() {
               </div>
             </div>
 
-            {/* Fields - SOAP Style */}
             <div className="space-y-6">
               {/* Medicine Name */}
               <div>
-                <label className="block text-sm font-medium text-foreground mb-2">Medicine Name *</label>
-                <input
+                <Label className="text-sm font-medium text-fg mb-2">Medicine Name *</Label>
+                <Input
                   value={order.medicineName}
                   onChange={(e) => updateOrder(order.id, { medicineName: e.target.value })}
                   placeholder="Enter medicine name"
-                  className="w-full p-3 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
                 />
                 <AIsuggestion 
                   text="Based on patient history and symptoms, consider prescribing Lisinopril 10mg daily for hypertension management. This ACE inhibitor has shown excellent results in similar patient profiles."
@@ -282,9 +283,9 @@ export function RXForm() {
               {/* Formulation and Route */}
               <div className="grid grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Formulation *</label>
+                  <Label className="text-sm font-medium text-fg mb-2">Formulation *</Label>
                   <Select value={order.formulation} onValueChange={(value) => updateOrder(order.id, { formulation: value })}>
-                    <SelectTrigger className="w-full p-3 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent">
+                    <SelectTrigger>
                       <SelectValue placeholder="Select formulation" />
                     </SelectTrigger>
                     <SelectContent>
@@ -296,9 +297,9 @@ export function RXForm() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Route *</label>
+                  <Label className="text-sm font-medium text-fg mb-2">Route *</Label>
                   <Select value={order.route} onValueChange={(value) => updateOrder(order.id, { route: value })}>
-                    <SelectTrigger className="w-full p-3 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent">
+                    <SelectTrigger>
                       <SelectValue placeholder="Select route" />
                     </SelectTrigger>
                     <SelectContent>
@@ -313,20 +314,19 @@ export function RXForm() {
               {/* Dose and Quantity */}
               <div className="grid grid-cols-3 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Dose *</label>
-                  <input
+                  <Label className="text-sm font-medium text-fg mb-2">Dose *</Label>
+                  <Input
                     type="number"
                     value={order.dose}
                     onChange={(e) => updateOrder(order.id, { dose: e.target.value })}
                     placeholder="0"
-                    className="w-full p-3 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Unit</label>
+                  <Label className="text-sm font-medium text-fg mb-2">Unit</Label>
                   <Select value={order.doseUnit} onValueChange={(value) => updateOrder(order.id, { doseUnit: value })}>
-                    <SelectTrigger className="w-full p-3 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent">
+                    <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -338,22 +338,21 @@ export function RXForm() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Quantity *</label>
-                  <input
+                  <Label className="text-sm font-medium text-fg mb-2">Quantity *</Label>
+                  <Input
                     type="number"
                     value={order.quantity}
                     onChange={(e) => updateOrder(order.id, { quantity: e.target.value })}
                     placeholder="0"
-                    className="w-full p-3 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
                   />
                 </div>
               </div>
 
               {/* Frequency */}
               <div>
-                <label className="block text-sm font-medium text-foreground mb-2">Frequency *</label>
+                <Label className="text-sm font-medium text-fg mb-2">Frequency *</Label>
                 <Select value={order.frequency} onValueChange={(value) => updateOrder(order.id, { frequency: value })}>
-                  <SelectTrigger className="w-full p-3 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent">
+                  <SelectTrigger>
                     <SelectValue placeholder="Select frequency" />
                   </SelectTrigger>
                   <SelectContent>
@@ -367,20 +366,19 @@ export function RXForm() {
               {/* Duration and Refills */}
               <div className="grid grid-cols-3 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Duration</label>
-                  <input
+                  <Label className="text-sm font-medium text-fg mb-2">Duration</Label>
+                  <Input
                     type="number"
                     value={order.duration}
                     onChange={(e) => updateOrder(order.id, { duration: e.target.value })}
                     placeholder="0"
-                    className="w-full p-3 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Unit</label>
+                  <Label className="text-sm font-medium text-fg mb-2">Unit</Label>
                   <Select value={order.durationUnit} onValueChange={(value) => updateOrder(order.id, { durationUnit: value })}>
-                    <SelectTrigger className="w-full p-3 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent">
+                    <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -392,14 +390,13 @@ export function RXForm() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Refills</label>
-                  <input
+                  <Label className="text-sm font-medium text-fg mb-2">Refills</Label>
+                  <Input
                     type="number"
                     min="0"
                     max="11"
                     value={order.refills}
                     onChange={(e) => updateOrder(order.id, { refills: e.target.value })}
-                    className="w-full p-3 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
                   />
                 </div>
               </div>
@@ -413,19 +410,18 @@ export function RXForm() {
                     onCheckedChange={(checked) => updateOrder(order.id, { prn: checked as boolean })}
                     className="border-border focus-visible:ring-primary"
                   />
-                  <label htmlFor={`prn-${order.id}`} className="text-sm font-medium text-foreground cursor-pointer">
+                  <Label htmlFor={`prn-${order.id}`} className="text-sm font-medium text-fg cursor-pointer">
                     PRN (As needed)
-                  </label>
+                  </Label>
                 </div>
 
                 {order.prn && (
                   <div className="ml-6">
-                    <label className="block text-sm font-medium text-foreground mb-2">PRN Indication</label>
-                    <input
+                    <Label className="text-sm font-medium text-fg mb-2">PRN Indication</Label>
+                    <Input
                       value={order.prnIndication}
                       onChange={(e) => updateOrder(order.id, { prnIndication: e.target.value })}
                       placeholder="Indication for PRN use"
-                      className="w-full p-3 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
                     />
                   </div>
                 )}
@@ -433,18 +429,19 @@ export function RXForm() {
 
               {/* Special Instructions */}
               <div>
-                <label className="block text-sm font-medium text-foreground mb-2">Special Instructions</label>
-                <textarea
+                <Label className="text-sm font-medium text-fg mb-2">Special Instructions</Label>
+                <Textarea
                   value={order.specialInstructions}
                   onChange={(e) => updateOrder(order.id, { specialInstructions: e.target.value })}
                   placeholder="Additional instructions for the patient or pharmacy"
-                  className="w-full h-24 p-3 border border-border rounded-md resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                  className="resize-none"
+                  rows={3}
                 />
               </div>
 
               {/* Pharmacy Selector */}
               <div>
-                <label className="block text-sm font-medium text-foreground mb-2">Pharmacy *</label>
+                <Label className="text-sm font-medium text-fg mb-2">Pharmacy *</Label>
                 <div className="flex items-center justify-between p-3 border border-border rounded-md">
                   <div className="flex-1">
                     {getSelectedPharmacy(order.selectedPharmacy) && (
@@ -475,7 +472,6 @@ export function RXForm() {
         ))}
       </div>
 
-      {/* Footer Actions - SOAP Style */}
       <Separator />
       <div className="flex items-center justify-end gap-3 pt-4">
         <Button variant="outline">Cancel</Button>
@@ -493,12 +489,12 @@ export function RXForm() {
           <div className="space-y-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-fg-muted" />
-              <Input
-                placeholder="Search pharmacies..."
-                value={pharmacySearch}
-                onChange={(e) => setPharmacySearch(e.target.value)}
-                className="pl-10 bg-surface text-fg placeholder:text-fg-muted border-border focus-visible:ring-primary"
-              />
+                <Input
+                  placeholder="Search pharmacies..."
+                  value={pharmacySearch}
+                  onChange={(e) => setPharmacySearch(e.target.value)}
+                  className="pl-10"
+                />
             </div>
 
             <div className="max-h-96 overflow-y-auto space-y-2">

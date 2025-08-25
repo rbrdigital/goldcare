@@ -432,16 +432,23 @@ function RXSection() {
 function LabOrdersSection() {
   return (
     <div className="space-y-6">
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
+          <h1 className="text-2xl font-bold flex items-center gap-2 text-fg">
             <FlaskConical className="h-6 w-6 text-medical-blue" />
             Lab Orders
             <Badge className="ml-2">2 Pending</Badge>
           </h1>
           <p className="text-fg-muted">Laboratory tests and orders</p>
         </div>
-        <Button>Order New Lab</Button>
+        <div className="flex items-center gap-3">
+          <Button variant="ghost" size="sm" className="gap-2">
+            <Save className="h-4 w-4" />
+            Save
+          </Button>
+          <Button>Order New Lab</Button>
+        </div>
       </div>
 
       <div className="grid gap-4">
@@ -488,15 +495,22 @@ function LabOrdersSection() {
 function IntakeFormSection() {
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-2">
-        <AlertTriangle className="h-6 w-6 text-medical-amber" />
-        <div>
-          <h1 className="text-2xl font-bold">Intake Form</h1>
-          <p className="text-fg-muted">Complete patient intake information</p>
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <AlertTriangle className="h-6 w-6 text-medical-amber" />
+          <div>
+            <h1 className="text-2xl font-bold text-fg">Intake Form</h1>
+            <p className="text-fg-muted">Complete patient intake information</p>
+          </div>
+          <Badge variant="secondary" className="bg-medical-amber-light text-medical-amber ml-4">
+            Requires Attention
+          </Badge>
         </div>
-        <Badge variant="secondary" className="bg-medical-amber-light text-medical-amber ml-auto">
-          Requires Attention
-        </Badge>
+        <Button variant="ghost" size="sm" className="gap-2">
+          <Save className="h-4 w-4" />
+          Save
+        </Button>
       </div>
 
       <Card>
@@ -518,12 +532,19 @@ function IntakeFormSection() {
 function DiagnosesSection() {
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold flex items-center gap-2">
-          <Activity className="h-6 w-6 text-medical-blue" />
-          Diagnoses, Medications & Allergies
-        </h1>
-        <p className="text-fg-muted">Current patient conditions and treatments</p>
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold flex items-center gap-2 text-fg">
+            <Activity className="h-6 w-6 text-medical-blue" />
+            Diagnoses, Medications & Allergies
+          </h1>
+          <p className="text-fg-muted">Current patient conditions and treatments</p>
+        </div>
+        <Button variant="ghost" size="sm" className="gap-2">
+          <Save className="h-4 w-4" />
+          Save
+        </Button>
       </div>
 
       <div className="grid gap-6">
@@ -585,15 +606,20 @@ function DiagnosesSection() {
 function PreviousResultsSection() {
   return (
     <div className="space-y-6">
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
+          <h1 className="text-2xl font-bold flex items-center gap-2 text-fg">
             <Activity className="h-6 w-6 text-medical-blue" />
             Previous Labs & Imaging Results
             <Badge className="ml-2 bg-medical-green text-white">3 New</Badge>
           </h1>
           <p className="text-fg-muted">Historical test results and imaging studies</p>
         </div>
+        <Button variant="ghost" size="sm" className="gap-2">
+          <Save className="h-4 w-4" />
+          Save
+        </Button>
       </div>
 
       <div className="grid gap-4">
