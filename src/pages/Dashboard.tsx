@@ -98,8 +98,8 @@ export function Dashboard() {
       <div className={cn(
         "flex-1 grid transition-all duration-200",
         hasRightSheet 
-          ? "grid-cols-[280px_minmax(0,1fr)_auto] lg:grid-cols-[280px_minmax(0,1fr)_auto]" 
-          : "grid-cols-[280px_minmax(0,1fr)] lg:grid-cols-[280px_minmax(0,1fr)]"
+          ? `grid-cols-[${sidebarMini ? '64px' : '280px'}_minmax(0,1fr)_auto] lg:grid-cols-[${sidebarMini ? '64px' : '280px'}_minmax(0,1fr)_auto]`
+          : `grid-cols-[${sidebarMini ? '64px' : '280px'}_minmax(0,1fr)] lg:grid-cols-[${sidebarMini ? '64px' : '280px'}_minmax(0,1fr)]`
       )}>
         {/* Left Sidebar */}
         <AppSidebar 
