@@ -263,25 +263,6 @@ function SidebarItem({ item, isActive, onClick }: SidebarItemProps) {
         {item.icon}
       </div>
       <span className="flex-1 text-left truncate">{item.label}</span>
-      
-      <div className="flex items-center gap-1">
-        {item.count && (
-          <Badge variant="secondary" className="h-5 text-xs px-2">
-            {item.count}
-          </Badge>
-        )}
-        {item.isNew && (
-          <Badge className="h-5 text-xs px-2 bg-medical-green text-white">
-            New
-          </Badge>
-        )}
-        {item.dirty && (
-          <div className="w-2 h-2 rounded-full bg-medical-blue" />
-        )}
-        {item.attention && (
-          <div className="w-0 h-0 border-l-4 border-b-4 border-l-transparent border-b-medical-amber" />
-        )}
-      </div>
     </button>
   );
 }
