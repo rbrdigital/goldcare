@@ -254,7 +254,7 @@ function SidebarItem({ item, isActive, onClick }: SidebarItemProps) {
       className={cn(
         "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all relative group",
         showActive 
-          ? "bg-medical-blue-light text-medical-blue font-medium border-l-4 border-l-medical-blue" 
+          ? "bg-medical-blue-light text-medical-blue font-medium" 
           : "hover:bg-muted text-muted-foreground hover:text-foreground",
         item.disabled && "opacity-40 pointer-events-none"
       )}
