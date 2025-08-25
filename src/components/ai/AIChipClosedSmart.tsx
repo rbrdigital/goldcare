@@ -4,7 +4,6 @@ import { cn } from "@/lib/utils"
 interface AIChipClosedSmartProps {
   text: string;
   onInsert: () => void;
-  onPreview: () => void;
   className?: string;
 }
 
@@ -17,9 +16,10 @@ function truncateAtWord(input: string, max = 140): string {
   return (lastSpace > 40 ? slice.slice(0, lastSpace) : slice).trimEnd() + "…";
 }
 
-export function AIChipClosedSmart({ text, onInsert, onPreview, className }: AIChipClosedSmartProps) {
+export function AIChipClosedSmart({ text, onInsert, className }: AIChipClosedSmartProps) {
   const previewRef = React.useRef<HTMLSpanElement>(null);
   const [isOverflowing, setIsOverflowing] = React.useState(false);
+  const [isExpanded, setIsExpanded] = React.useState(false);
 
   const measure = React.useCallback(() => {
     const el = previewRef.current;
@@ -45,8 +45,8 @@ export function AIChipClosedSmart({ text, onInsert, onPreview, className }: AICh
     };
   }, [measure]);
 
-  // If overflowing, pre-truncate to a pleasant word boundary
-  const displayText = isOverflowing ? truncateAtWord(text, 140) : text;
+  // If overflowing and not expanded, pre-truncate to a pleasant word boundary
+  const displayText = (isOverflowing && !isExpanded) ? truncateAtWord(text, 140) : text;
 
   return (
     <div 
@@ -77,7 +77,10 @@ export function AIChipClosedSmart({ text, onInsert, onPreview, className }: AICh
         <strong className="shrink-0">GoldCare&nbsp;AI:</strong>
         <span 
           ref={previewRef}
-          className="min-w-0 truncate whitespace-nowrap" 
+          className={cn(
+            "min-w-0",
+            isExpanded ? "whitespace-pre-wrap break-words" : "truncate whitespace-nowrap"
+          )}
           data-testid="gcai-preview-text"
           title={text}
         >
@@ -85,15 +88,34 @@ export function AIChipClosedSmart({ text, onInsert, onPreview, className }: AICh
         </span>
       </div>
 
-      {isOverflowing ? (
+      {isOverflowing && !isExpanded ? (
         <button
           type="button"
-          onClick={onPreview}
+          onClick={() => setIsExpanded(true)}
           className="ml-3 shrink-0 text-[12px] font-medium text-primary hover:underline focus:outline-none"
           aria-label="Preview GoldCare AI suggestion"
         >
           Preview
         </button>
+      ) : isExpanded ? (
+        <div className="ml-3 shrink-0 flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setIsExpanded(false)}
+            className="text-[12px] font-medium text-fg-muted hover:underline focus:outline-none"
+            aria-label="Collapse GoldCare AI suggestion"
+          >
+            Collapse
+          </button>
+          <button
+            type="button"
+            onClick={onInsert}
+            className="text-[12px] font-medium text-primary hover:underline focus:outline-none"
+            aria-label="Insert GoldCare AI suggestion"
+          >
+            Insert
+          </button>
+        </div>
       ) : (
         <button
           type="button"

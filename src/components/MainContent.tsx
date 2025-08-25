@@ -130,7 +130,6 @@ function SOAPNoteSection() {
               <AIChipClosedSmart
                 text="Patient presents with intermittent chest tightness and shortness of breath for the past 3 weeks, worse at night and after exertion. Denies fever or cough. Reports a history of elevated blood pressure and borderline cholesterol."
                 onInsert={() => insertSuggestion("Patient presents with intermittent chest tightness and shortness of breath for the past 3 weeks, worse at night and after exertion. Denies fever or cough. Reports a history of elevated blood pressure and borderline cholesterol.", setChiefComplaint)}
-                onPreview={() => window.alert("Patient presents with intermittent chest tightness and shortness of breath for the past 3 weeks, worse at night and after exertion. Denies fever or cough. Reports a history of elevated blood pressure and borderline cholesterol.")}
               />
             </div>
 
@@ -156,7 +155,6 @@ function SOAPNoteSection() {
                   const meds = ["Lisinopril 10 mg once daily", "Atorvastatin 20 mg once nightly", "Albuterol inhaler PRN"];
                   setMedications(prev => [...prev, ...meds]);
                 }}
-                onPreview={() => window.alert("Lisinopril 10 mg once daily • Atorvastatin 20 mg once nightly • Albuterol inhaler PRN")}
               />
             </div>
 
@@ -182,7 +180,6 @@ function SOAPNoteSection() {
                   const supps = ["Vitamin D3 2000 IU daily", "Magnesium glycinate 400 mg nightly"];
                   setSupplements(prev => [...prev, ...supps]);
                 }}
-                onPreview={() => window.alert("Vitamin D3 2000 IU daily • Magnesium glycinate 400 mg nightly")}
               />
             </div>
 
@@ -208,7 +205,6 @@ function SOAPNoteSection() {
                   const allergyList = ["Penicillin — rash", "No food or environmental allergies reported"];
                   setAllergies(prev => [...prev, ...allergyList]);
                 }}
-                onPreview={() => window.alert("Penicillin — rash • No food or environmental allergies reported")}
               />
             </div>
           </div>
@@ -233,7 +229,6 @@ function SOAPNoteSection() {
                 <AIChipClosedSmart
                   text="32"
                   onInsert={() => setWaist("32")}
-                  onPreview={() => window.alert("32")}
                 />
               </div>
               <div>
@@ -247,7 +242,6 @@ function SOAPNoteSection() {
                 <AIChipClosedSmart
                   text="38"
                   onInsert={() => setHip("38")}
-                  onPreview={() => window.alert("38")}
                 />
               </div>
             </div>
@@ -284,7 +278,6 @@ function SOAPNoteSection() {
                   setHeightFt("5");
                   setHeightIn("8");
                 }}
-                onPreview={() => window.alert("5 feet 8 inches")}
               />
             </div>
 
@@ -295,7 +288,6 @@ function SOAPNoteSection() {
                 <AIChipClosedSmart
                   text="165"
                   onInsert={() => setWeightLbs("165")}
-                  onPreview={() => window.alert("165")}
                 />
               </div>
               <div>
@@ -304,7 +296,6 @@ function SOAPNoteSection() {
                 <AIChipClosedSmart
                   text="BMI will be calculated automatically based on height and weight"
                   onInsert={() => {}} // BMI is auto-calculated, no insert action
-                  onPreview={() => window.alert("BMI will be calculated automatically based on height and weight")}
                 />
               </div>
             </div>
@@ -325,7 +316,6 @@ function SOAPNoteSection() {
             <AIChipClosedSmart
               text="Patient appears alert and oriented, in no acute distress. Lungs clear to auscultation, regular heart rhythm, no murmurs. Mildly elevated blood pressure noted."
               onInsert={() => insertSuggestion("Patient appears alert and oriented, in no acute distress. Lungs clear to auscultation, regular heart rhythm, no murmurs. Mildly elevated blood pressure noted.", setObservations)}
-              onPreview={() => window.alert("Patient appears alert and oriented, in no acute distress. Lungs clear to auscultation, regular heart rhythm, no murmurs. Mildly elevated blood pressure noted.")}
             />
           </div>
         </section>
@@ -348,7 +338,6 @@ function SOAPNoteSection() {
               <AIChipClosedSmart
                 text="Primary concerns include hypertension, possible early cardiovascular disease, and poor sleep contributing to fatigue."
                 onInsert={() => insertSuggestion("Primary concerns include hypertension, possible early cardiovascular disease, and poor sleep contributing to fatigue.", setAssessment)}
-                onPreview={() => window.alert("Primary concerns include hypertension, possible early cardiovascular disease, and poor sleep contributing to fatigue.")}
               />
             </div>
 
@@ -366,7 +355,6 @@ function SOAPNoteSection() {
               <AIChipClosedSmart
                 text="Hypertension with secondary cardiovascular risk • Obstructive sleep apnea • Anxiety-related chest tightness"
                 onInsert={() => insertSuggestion("Hypertension with secondary cardiovascular risk • Obstructive sleep apnea • Anxiety-related chest tightness", setDifferential)}
-                onPreview={() => window.alert("Hypertension with secondary cardiovascular risk • Obstructive sleep apnea • Anxiety-related chest tightness")}
               />
             </div>
           </div>
@@ -390,7 +378,6 @@ function SOAPNoteSection() {
               <AIChipClosedSmart
                 text="1) Order EKG, lipid panel, and basic metabolic panel. 2) Continue lisinopril and atorvastatin as prescribed. 3) Recommend sleep study referral to rule out OSA. 4) Follow-up in 6 weeks with lab results."
                 onInsert={() => insertSuggestion("1) Order EKG, lipid panel, and basic metabolic panel. 2) Continue lisinopril and atorvastatin as prescribed. 3) Recommend sleep study referral to rule out OSA. 4) Follow-up in 6 weeks with lab results.", setPlan)}
-                onPreview={() => window.alert("1) Order EKG, lipid panel, and basic metabolic panel. 2) Continue lisinopril and atorvastatin as prescribed. 3) Recommend sleep study referral to rule out OSA. 4) Follow-up in 6 weeks with lab results.")}
               />
             </div>
 
@@ -415,7 +402,6 @@ function SOAPNoteSection() {
                   const diagList = ["I10 — Essential hypertension", "E78.5 — Hyperlipidemia, unspecified"];
                   setDiagnoses(prev => [...prev, ...diagList]);
                 }}
-                onPreview={() => window.alert("I10 — Essential hypertension • E78.5 — Hyperlipidemia, unspecified")}
               />
             </div>
 
@@ -440,7 +426,6 @@ function SOAPNoteSection() {
                   const conditions = ["Overweight", "Family history of premature CAD", "Poor sleep hygiene"];
                   setComorbidities(prev => [...prev, ...conditions]);
                 }}
-                onPreview={() => window.alert("Overweight • Family history of premature CAD • Poor sleep hygiene")}
               />
             </div>
           </div>

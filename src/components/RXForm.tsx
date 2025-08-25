@@ -125,11 +125,6 @@ export default function RXForm() {
                 onInsert={() =>
                   applyTherapyInsight(i, patchItem)
                 }
-                onPreview={() =>
-                  window.alert(
-                    "Therapy plan\n• Medicine: amoxicillin–clavulanate 875/125 mg tablet\n• Route: Oral\n• Frequency: every 12 hours\n• Duration: 10 days\n• Qty per dose: 1\n• Refills: 0\n• Auto-calculates total quantity"
-                  )
-                }
               />
             </div>
 
@@ -325,11 +320,6 @@ export default function RXForm() {
                         ])
                       })
                     }
-                    onPreview={() =>
-                      window.alert(
-                        "Safety notes\n• Penicillin anaphylaxis → use doxycycline/azithromycin\n• Take with food\n• Stop and seek care for rash or breathing difficulty"
-                      )
-                    }
                   />
                 </div>
               </div>
@@ -354,11 +344,6 @@ export default function RXForm() {
                           "Store in cool, dry place. Refrigeration not required."
                         ])
                       })
-                    }
-                    onPreview={() =>
-                      window.alert(
-                        "Pharmacy guidance\n• Counsel on GI tolerance (take with food)\n• Drug interactions: warfarin, oral contraceptives\n• Patient education: complete full course\n• Storage: room temperature, dry place\n• Watch for C. diff symptoms if diarrhea develops"
-                      )
                     }
                   />
                 </div>
