@@ -82,7 +82,7 @@ export function Dashboard() {
   const hasRightSheet = labsImagingSideSheetOpen || diagnosesMedsAllergiesSideSheetOpen || patientProfileDrawerOpen || goldcareAIPanelOpen;
 
   return (
-    <div className={cn("min-h-screen bg-bg flex flex-col", hasRightSheet && "has-rightsheet")}>
+    <div className="min-h-screen grid grid-rows-[auto_1fr]">
       {/* Patient Mini Card */}
       <PatientMiniCard
         sidebarMini={sidebarMini}
@@ -94,47 +94,43 @@ export function Dashboard() {
         onProfileClick={() => handleItemClick("profile")}
       />
 
-      {/* Main Layout - CSS Grid */}
-      <div className={cn(
-        "flex-1 grid transition-all duration-200",
-        hasRightSheet 
-          ? `grid-cols-[${sidebarMini ? '64px' : '280px'}_minmax(0,1fr)_auto] lg:grid-cols-[${sidebarMini ? '64px' : '280px'}_minmax(0,1fr)_auto]`
-          : `grid-cols-[${sidebarMini ? '64px' : '280px'}_minmax(0,1fr)] lg:grid-cols-[${sidebarMini ? '64px' : '280px'}_minmax(0,1fr)]`
-      )}>
-        {/* Left Sidebar */}
-        <AppSidebar 
-          mini={sidebarMini}
-          activeItem={activeSection}
-          onItemClick={handleItemClick}
-        />
-
-        {/* Main Content */}
-        <MainContent activeSection={activeSection} />
-
-        {/* Right Panel */}
-        <RightPanel isOpen={hasRightSheet}>
-          {patientProfileDrawerOpen && (
-            <PatientProfileDrawer
-              isOpen={true}
-              onClose={() => setPatientProfileDrawerOpen(false)}
-            />
-          )}
-          {labsImagingSideSheetOpen && (
-            <LabsImagingSideSheet
-              isOpen={true}
-              onClose={() => setLabsImagingSideSheetOpen(false)}
-            />
-          )}
-          {diagnosesMedsAllergiesSideSheetOpen && (
-            <DiagnosesMedsAllergiesSideSheet
-              isOpen={true}
-              onClose={() => setDiagnosesMedsAllergiesSideSheetOpen(false)}
-            />
-          )}
-          {goldcareAIPanelOpen && (
-            <GoldCareAIPanel />
-          )}
-        </RightPanel>
+      {/* Main Layout */}
+      <div className="grid grid-cols-1 md:grid-cols-[264px_minmax(0,1fr)]">
+        <aside className="md:w-[264px] shrink-0 border-r border-border">
+          <AppSidebar 
+            mini={sidebarMini}
+            activeItem={activeSection}
+            onItemClick={handleItemClick}
+          />
+        </aside>
+        <main className="min-w-0">
+          <MainContent activeSection={activeSection} />
+          
+          {/* Right Panel */}
+          <RightPanel isOpen={hasRightSheet}>
+            {patientProfileDrawerOpen && (
+              <PatientProfileDrawer
+                isOpen={true}
+                onClose={() => setPatientProfileDrawerOpen(false)}
+              />
+            )}
+            {labsImagingSideSheetOpen && (
+              <LabsImagingSideSheet
+                isOpen={true}
+                onClose={() => setLabsImagingSideSheetOpen(false)}
+              />
+            )}
+            {diagnosesMedsAllergiesSideSheetOpen && (
+              <DiagnosesMedsAllergiesSideSheet
+                isOpen={true}
+                onClose={() => setDiagnosesMedsAllergiesSideSheetOpen(false)}
+              />
+            )}
+            {goldcareAIPanelOpen && (
+              <GoldCareAIPanel />
+            )}
+          </RightPanel>
+        </main>
       </div>
     </div>
   );
