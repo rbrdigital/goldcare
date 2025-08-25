@@ -118,7 +118,7 @@ export default function RXForm() {
               />
             </div>
 
-            {/* GoldCare AI (limit to 2 chips) */}
+            {/* GoldCare AI - Therapy plan */}
             <div className="space-y-2 mb-4">
               <AIChipClosedSmart
                 text="Therapy plan: amoxicillin–clavulanate 875/125 mg tablet, 1 tab PO q12h x 10 days; 0 refills."
@@ -128,22 +128,6 @@ export default function RXForm() {
                 onPreview={() =>
                   window.alert(
                     "Therapy plan\n• Medicine: amoxicillin–clavulanate 875/125 mg tablet\n• Route: Oral\n• Frequency: every 12 hours\n• Duration: 10 days\n• Qty per dose: 1\n• Refills: 0\n• Auto-calculates total quantity"
-                  )
-                }
-              />
-              <AIChipClosedSmart
-                text="Safety: avoid with anaphylaxis to penicillins; take with food; consider doxycycline/azithro if allergy."
-                onInsert={() =>
-                  patchItem(i, {
-                    notesPharmacy: mergeLines(rx.notesPharmacy, [
-                      "Avoid if history of anaphylaxis to penicillins.",
-                      "Take with food to reduce GI upset."
-                    ])
-                  })
-                }
-                onPreview={() =>
-                  window.alert(
-                    "Safety notes\n• Penicillin anaphylaxis → use doxycycline/azithromycin\n• Take with food\n• Stop and seek care for rash or breathing difficulty"
                   )
                 }
               />
@@ -320,6 +304,26 @@ export default function RXForm() {
 
             <Separator className="my-4" />
 
+            {/* Safety AI chip */}
+            <div className="mb-4">
+              <AIChipClosedSmart
+                text="Safety: avoid with anaphylaxis to penicillins; take with food; consider doxycycline/azithro if allergy."
+                onInsert={() =>
+                  patchItem(i, {
+                    notesPatient: mergeLines(rx.notesPatient, [
+                      "Avoid if history of anaphylaxis to penicillins.",
+                      "Take with food to reduce GI upset."
+                    ])
+                  })
+                }
+                onPreview={() =>
+                  window.alert(
+                    "Safety notes\n• Penicillin anaphylaxis → use doxycycline/azithromycin\n• Take with food\n• Stop and seek care for rash or breathing difficulty"
+                  )
+                }
+              />
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label>Notes to patient</Label>
@@ -331,6 +335,27 @@ export default function RXForm() {
                 />
               </div>
               <div>
+                {/* Pharmacy guidance AI chip */}
+                <div className="mb-2">
+                  <AIChipClosedSmart
+                    text="Pharmacy guidance: counsel on GI tolerance, drug interactions with warfarin/oral contraceptives, proper storage, completion of full course."
+                    onInsert={() =>
+                      patchItem(i, {
+                        notesPharmacy: mergeLines(rx.notesPharmacy, [
+                          "Counsel patient on taking with food to minimize GI upset.",
+                          "Check for drug interactions with warfarin and oral contraceptives.",
+                          "Advise patient to complete full course even if symptoms improve.",
+                          "Store in cool, dry place. Refrigeration not required."
+                        ])
+                      })
+                    }
+                    onPreview={() =>
+                      window.alert(
+                        "Pharmacy guidance\n• Counsel on GI tolerance (take with food)\n• Drug interactions: warfarin, oral contraceptives\n• Patient education: complete full course\n• Storage: room temperature, dry place\n• Watch for C. diff symptoms if diarrhea develops"
+                      )
+                    }
+                  />
+                </div>
                 <Label>Notes to pharmacy</Label>
                 <AutosizeTextarea
                   minRows={2}
