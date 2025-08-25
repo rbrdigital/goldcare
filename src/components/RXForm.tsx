@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
@@ -8,6 +6,7 @@ import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { AIChipClosedSmart } from "@/components/ai/AIChipClosedSmart";
+import { copy } from "@/copy/en";
 
 type Frequency = {
   label: string;
@@ -115,17 +114,17 @@ export default function RXForm() {
       <header className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold">ADD ORDER #1</h2>
         <div className="flex items-center gap-2">
-          <Button variant="outline">Create refill</Button>
-          <Button variant="outline">Edit</Button>
+          <Button variant="outline">{copy.createRefill}</Button>
+          <Button variant="outline">{copy.edit}</Button>
         </div>
       </header>
 
       <div className="grid grid-cols-1 gap-3">
         <div>
-          <Label htmlFor="medicine">Medicine name</Label>
+          <Label htmlFor="medicine">{copy.medicineName}</Label>
           <Input
             id="medicine"
-            placeholder="Enter medicine name"
+            placeholder={copy.medicineNamePlaceholder}
             value={medicine}
             onChange={(e) => setMedicine(e.target.value)}
           />
@@ -171,7 +170,7 @@ export default function RXForm() {
       <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
         {/* Quantity per dose */}
         <div className="md:col-span-3">
-          <Label htmlFor="qty">Quantity</Label>
+          <Label htmlFor="qty">{copy.quantity}</Label>
           <Input
             id="qty"
             type="number"
@@ -183,19 +182,19 @@ export default function RXForm() {
 
         {/* Formulation */}
         <div className="md:col-span-3">
-          <Label>Formulation</Label>
+          <Label>{copy.formulation}</Label>
           <Select value={formulation} onChange={setFormulation} options={FORMULATIONS} />
         </div>
 
         {/* Route */}
         <div className="md:col-span-3">
-          <Label>Route</Label>
+          <Label>{copy.route}</Label>
           <Select value={route} onChange={setRoute} options={ROUTES} />
         </div>
 
         {/* Frequency */}
         <div className="md:col-span-3">
-          <Label>Frequency</Label>
+          <Label>{copy.frequency}</Label>
           <Select
             value={frequency.label}
             onChange={(label) => {
@@ -208,7 +207,7 @@ export default function RXForm() {
 
         {/* Duration */}
         <div className="md:col-span-3">
-          <Label htmlFor="duration">Duration</Label>
+          <Label htmlFor="duration">{copy.duration}</Label>
           <Input
             id="duration"
             type="number"
@@ -218,23 +217,23 @@ export default function RXForm() {
           />
         </div>
         <div className="md:col-span-3">
-          <Label>Unit</Label>
+          <Label>{copy.unit}</Label>
           <Select value={durationUnit} onChange={setDurationUnit} options={DURATION_UNITS} />
         </div>
 
         {/* Total Qty */}
         <div className="md:col-span-3">
-          <Label htmlFor="tqty">Total Qty</Label>
+          <Label htmlFor="tqty">{copy.totalQty}</Label>
           <Input id="tqty" type="number" value={totalQty} readOnly />
         </div>
         <div className="md:col-span-3">
-          <Label>Unit</Label>
+          <Label>{copy.unit}</Label>
           <Select value={totalQtyUnit} onChange={setTotalQtyUnit} options={QTY_UNITS} />
         </div>
 
         {/* Refills */}
         <div className="md:col-span-3">
-          <Label htmlFor="refills">Refills</Label>
+          <Label htmlFor="refills">{copy.refills}</Label>
           <Input
             id="refills"
             type="number"
@@ -246,7 +245,7 @@ export default function RXForm() {
 
         {/* Action */}
         <div className="md:col-span-3">
-          <Label htmlFor="action">Action</Label>
+          <Label htmlFor="action">{copy.action}</Label>
           <Input id="action" value={action} onChange={(e) => setAction(e.target.value)} />
         </div>
 
@@ -259,32 +258,32 @@ export default function RXForm() {
             checked={isPRN}
             onChange={(e) => setIsPRN(e.target.checked)}
           />
-          <Label htmlFor="prn" className="mb-0">PRN (as needed)</Label>
+          <Label htmlFor="prn" className="mb-0">{copy.prnAsNeeded}</Label>
         </div>
 
         {/* Location */}
         <div className="md:col-span-3">
-          <Label htmlFor="location">Location</Label>
+          <Label htmlFor="location">{copy.location}</Label>
           <Input id="location" value={location} onChange={(e) => setLocation(e.target.value)} />
         </div>
 
         {/* Substitutions */}
         <div className="md:col-span-3">
-          <Label>Substitutions</Label>
+          <Label>{copy.substitutions}</Label>
           <Select
-            value={subsAllowed ? "Substitutions allowed" : "No substitutions"}
-            onChange={(v) => setSubsAllowed(v === "Substitutions allowed")}
-            options={["Substitutions allowed", "No substitutions"]}
+            value={subsAllowed ? copy.substitutionsAllowed : copy.noSubstitutions}
+            onChange={(v) => setSubsAllowed(v === copy.substitutionsAllowed)}
+            options={[copy.substitutionsAllowed, copy.noSubstitutions]}
           />
         </div>
 
         {/* Dates */}
         <div className="md:col-span-3">
-          <Label htmlFor="startDate">Start date</Label>
+          <Label htmlFor="startDate">{copy.startDate}</Label>
           <Input id="startDate" type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
         </div>
         <div className="md:col-span-3">
-          <Label htmlFor="earliestFill">Earliest fill date</Label>
+          <Label htmlFor="earliestFill">{copy.earliestFillDate}</Label>
           <Input id="earliestFill" type="date" value={earliestFill} onChange={(e) => setEarliestFill(e.target.value)} />
         </div>
       </div>
@@ -293,19 +292,19 @@ export default function RXForm() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <Label>Notes to patient</Label>
+          <Label>{copy.notesToPatient}</Label>
           <AutosizeTextarea
             minRows={2}
-            placeholder="Additional instructions for the patient"
+            placeholder={copy.patientNotesPlaceholder}
             value={notesPatient}
             onChange={(e) => setNotesPatient(e.target.value)}
           />
         </div>
         <div>
-          <Label>Notes to pharmacy</Label>
+          <Label>{copy.notesToPharmacy}</Label>
           <AutosizeTextarea
             minRows={2}
-            placeholder="Additional instructions for the pharmacy"
+            placeholder={copy.pharmacyNotesPlaceholder}
             value={notesPharmacy}
             onChange={(e) => setNotesPharmacy(e.target.value)}
           />
@@ -316,7 +315,7 @@ export default function RXForm() {
 
       {/* Order Summary */}
       <div className="rounded-md border border-border bg-surface p-4">
-        <div className="font-medium mb-1">Order Summary</div>
+        <div className="font-medium mb-1">{copy.orderSummary}</div>
         <div className="text-sm text-fg-muted">
           {renderSummary({
             action,
@@ -342,15 +341,15 @@ export default function RXForm() {
 
       {/* Pharmacy selector (mock) */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        <ChoiceCard label="Partell specialty pharmacy" sub="Freedom" />
-        <ChoiceCard label="Walgreens" sub="Nearby" />
-        <ChoiceCard label="Choose other pharmacy" />
-        <ChoiceCard label="Send to manager" />
+        <ChoiceCard label={copy.partellSpecialty} sub={copy.freedom} />
+        <ChoiceCard label={copy.walgreens} sub={copy.nearby} />
+        <ChoiceCard label={copy.chooseOtherPharmacy} />
+        <ChoiceCard label={copy.sendToManager} />
       </div>
 
       <div className="flex items-center justify-between mt-6">
-        <Button variant="outline">Cancel</Button>
-        <Button className="bg-primary text-on-primary">Save</Button>
+        <Button variant="outline">{copy.cancel}</Button>
+        <Button className="bg-primary text-on-primary">{copy.save}</Button>
       </div>
     </div>
   );

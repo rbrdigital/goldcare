@@ -1,11 +1,10 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
-import { AIChip } from "@/components/ui/ai-chip";
+import { AIChipClosedSmart } from "@/components/ai/AIChipClosedSmart";
 import { InlineAddInput } from "@/components/ui/inline-add-input";
 import { useState, useRef, useEffect } from "react";
 import { toast } from "@/hooks/use-toast";
@@ -21,6 +20,7 @@ import {
   Save
 } from "lucide-react";
 import RXForm from "@/components/RXForm";
+import { copy } from "@/copy/en";
 
 interface MainContentProps {
   activeSection: string;
@@ -48,7 +48,7 @@ export function MainContent({ activeSection }: MainContentProps) {
 
   return (
     <main className="flex-1 overflow-y-auto">
-      <div className="p-6 max-w-4xl mx-auto">
+      <div className="p-6">
         {renderSection()}
       </div>
     </main>
@@ -100,44 +100,47 @@ function SOAPNoteSection() {
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2 text-fg">
             <FileText className="h-6 w-6 text-medical-blue" />
-            SOAP Note
+            {copy.soapNote}
           </h1>
-          <p className="text-fg-muted">Document subjective, objective, assessment, and plan</p>
+          <p className="text-fg-muted">{copy.soapNoteDesc}</p>
         </div>
         <Button variant="ghost" size="sm" onClick={handleSave} className="gap-2">
           <Save className="h-4 w-4" />
-          Save
+          {copy.save}
         </Button>
       </div>
 
       <div className="space-y-8">
         {/* ========== Subjective ========== */}
         <section>
-          <h3 className="text-lg font-semibold text-fg mb-4">Subjective</h3>
+          <h3 className="text-lg font-semibold text-fg mb-4">{copy.subjective}</h3>
           <div className="space-y-6">
             {/* CC/HPI */}
             <div>
               <Label className="text-sm font-medium text-fg mb-2">
-                Chief Complaint / History of Present Illness
+                {copy.chiefComplaint}
               </Label>
               <AutosizeTextarea
                 value={chiefComplaint}
                 onChange={(e) => setChiefComplaint(e.target.value)}
-                placeholder="Reported concerns, symptom history, relevant context"
+                placeholder={copy.chiefComplaintPlaceholder}
                 minRows={3}
                 maxRows={8}
               />
-              <AIChip
+              <AIChipClosedSmart
                 text="Patient presents with intermittent chest tightness and shortness of breath for the past 3 weeks, worse at night and after exertion. Denies fever or cough. Reports a history of elevated blood pressure and borderline cholesterol."
                 onInsert={() => insertSuggestion("Patient presents with intermittent chest tightness and shortness of breath for the past 3 weeks, worse at night and after exertion. Denies fever or cough. Reports a history of elevated blood pressure and borderline cholesterol.", setChiefComplaint)}
+                onPreview={() => window.alert("Patient presents with intermittent chest tightness and shortness of breath for the past 3 weeks, worse at night and after exertion. Denies fever or cough. Reports a history of elevated blood pressure and borderline cholesterol.")}
               />
             </div>
 
+            <Separator />
+            
             {/* Current Medications */}
             <div>
-              <Label className="text-sm font-medium text-fg mb-2">Current Medications</Label>
+              <Label className="text-sm font-medium text-fg mb-2">{copy.currentMedications}</Label>
               <InlineAddInput
-                placeholder="Prescription medications with dose and frequency"
+                placeholder={copy.currentMedsPlaceholder}
                 onAdd={(value) => setMedications(prev => [...prev, value])}
               />
               {medications.length > 0 && (
@@ -147,20 +150,23 @@ function SOAPNoteSection() {
                   ))}
                 </div>
               )}
-              <AIChip
+              <AIChipClosedSmart
                 text="Lisinopril 10 mg once daily • Atorvastatin 20 mg once nightly • Albuterol inhaler PRN"
                 onInsert={() => {
                   const meds = ["Lisinopril 10 mg once daily", "Atorvastatin 20 mg once nightly", "Albuterol inhaler PRN"];
                   setMedications(prev => [...prev, ...meds]);
                 }}
+                onPreview={() => window.alert("Lisinopril 10 mg once daily • Atorvastatin 20 mg once nightly • Albuterol inhaler PRN")}
               />
             </div>
 
+            <Separator />
+
             {/* Supplements & OTC */}
             <div>
-              <Label className="text-sm font-medium text-fg mb-2">Supplements & OTC</Label>
+              <Label className="text-sm font-medium text-fg mb-2">{copy.supplementsOtc}</Label>
               <InlineAddInput
-                placeholder="Supplements or OTC with dose and frequency"
+                placeholder={copy.supplementsPlaceholder}
                 onAdd={(value) => setSupplements(prev => [...prev, value])}
               />
               {supplements.length > 0 && (
@@ -170,20 +176,23 @@ function SOAPNoteSection() {
                   ))}
                 </div>
               )}
-              <AIChip
+              <AIChipClosedSmart
                 text="Vitamin D3 2000 IU daily • Magnesium glycinate 400 mg nightly"
                 onInsert={() => {
                   const supps = ["Vitamin D3 2000 IU daily", "Magnesium glycinate 400 mg nightly"];
                   setSupplements(prev => [...prev, ...supps]);
                 }}
+                onPreview={() => window.alert("Vitamin D3 2000 IU daily • Magnesium glycinate 400 mg nightly")}
               />
             </div>
 
+            <Separator />
+
             {/* Allergies */}
             <div>
-              <Label className="text-sm font-medium text-fg mb-2">Allergies</Label>
+              <Label className="text-sm font-medium text-fg mb-2">{copy.allergies}</Label>
               <InlineAddInput
-                placeholder="Allergies and reactions. NKDA if none"
+                placeholder={copy.allergiesPlaceholder}
                 onAdd={(value) => setAllergies(prev => [...prev, value])}
               />
               {allergies.length > 0 && (
@@ -193,53 +202,58 @@ function SOAPNoteSection() {
                   ))}
                 </div>
               )}
-              <AIChip
+              <AIChipClosedSmart
                 text="Penicillin — rash • No food or environmental allergies reported"
                 onInsert={() => {
                   const allergyList = ["Penicillin — rash", "No food or environmental allergies reported"];
                   setAllergies(prev => [...prev, ...allergyList]);
                 }}
+                onPreview={() => window.alert("Penicillin — rash • No food or environmental allergies reported")}
               />
             </div>
           </div>
         </section>
 
+        <Separator className="my-8" />
+
         {/* ========== Objective ========== */}
         <section>
-          <h3 className="text-lg font-semibold text-fg mb-4">Objective</h3>
+          <h3 className="text-lg font-semibold text-fg mb-4">{copy.objective}</h3>
 
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label className="text-sm font-medium text-fg mb-1">Waist (in)</Label>
+                <Label className="text-sm font-medium text-fg mb-1">{copy.waist}</Label>
                 <Input 
                   type="number" 
                   value={waist} 
                   onChange={e=>setWaist(e.target.value)}
                   placeholder="34" 
                 />
-                <AIChip
+                <AIChipClosedSmart
                   text="32"
                   onInsert={() => setWaist("32")}
+                  onPreview={() => window.alert("32")}
                 />
               </div>
               <div>
-                <Label className="text-sm font-medium text-fg mb-1">Hip (in)</Label>
+                <Label className="text-sm font-medium text-fg mb-1">{copy.hip}</Label>
                 <Input 
                   type="number" 
                   value={hip} 
                   onChange={e=>setHip(e.target.value)}
                   placeholder="40" 
                 />
-                <AIChip
+                <AIChipClosedSmart
                   text="38"
                   onInsert={() => setHip("38")}
+                  onPreview={() => window.alert("38")}
                 />
               </div>
             </div>
 
             <div>
-              <Label className="text-sm font-medium text-fg mb-1">Height</Label>
+              <Label className="text-sm font-medium text-fg mb-1">{copy.height}</Label>
               <div className="flex gap-2 items-center">
                 <div className="flex-1">
                   <Input 
@@ -250,7 +264,7 @@ function SOAPNoteSection() {
                     min="0" 
                     max="8"
                   />
-                  <span className="text-xs text-fg-muted mt-1 block">feet</span>
+                  <span className="text-xs text-fg-muted mt-1 block">{copy.feet}</span>
                 </div>
                 <div className="flex-1">
                   <Input 
@@ -261,114 +275,131 @@ function SOAPNoteSection() {
                     min="0" 
                     max="11"
                   />
-                  <span className="text-xs text-fg-muted mt-1 block">inches</span>
+                  <span className="text-xs text-fg-muted mt-1 block">{copy.inches}</span>
                 </div>
               </div>
-              <AIChip
+              <AIChipClosedSmart
                 text="5 feet 8 inches"
                 onInsert={() => {
                   setHeightFt("5");
                   setHeightIn("8");
                 }}
+                onPreview={() => window.alert("5 feet 8 inches")}
               />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label className="text-sm font-medium text-fg mb-1">Weight (lbs)</Label>
+                <Label className="text-sm font-medium text-fg mb-1">{copy.weight}</Label>
                 <Input type="number" value={weightLbs} onChange={e=>setWeightLbs(e.target.value)} placeholder="178" />
-                <AIChip
+                <AIChipClosedSmart
                   text="165"
                   onInsert={() => setWeightLbs("165")}
+                  onPreview={() => window.alert("165")}
                 />
               </div>
               <div>
-                <Label className="text-sm font-medium text-fg mb-1">BMI (auto)</Label>
-                <Input disabled value={bmi} placeholder="—" className="bg-muted text-fg-muted" />
-                <AIChip
+                <Label className="text-sm font-medium text-fg mb-1">{copy.bmi}</Label>
+                <Input disabled value={bmi} placeholder="—" className="bg-surface-muted text-fg-muted" />
+                <AIChipClosedSmart
                   text="BMI will be calculated automatically based on height and weight"
                   onInsert={() => {}} // BMI is auto-calculated, no insert action
+                  onPreview={() => window.alert("BMI will be calculated automatically based on height and weight")}
                 />
               </div>
             </div>
           </div>
 
+          <Separator className="my-6" />
+
           {/* Clinical Observations */}
-          <div className="mt-6">
-            <Label className="text-sm font-medium text-fg mb-2">Clinical Observations</Label>
+          <div>
+            <Label className="text-sm font-medium text-fg mb-2">{copy.clinicalObservations}</Label>
             <AutosizeTextarea
               value={observations}
               onChange={(e) => setObservations(e.target.value)}
-              placeholder="Summarize exam and general appearance"
+              placeholder={copy.observationsPlaceholder}
               minRows={3}
               maxRows={6}
             />
-            <AIChip
+            <AIChipClosedSmart
               text="Patient appears alert and oriented, in no acute distress. Lungs clear to auscultation, regular heart rhythm, no murmurs. Mildly elevated blood pressure noted."
               onInsert={() => insertSuggestion("Patient appears alert and oriented, in no acute distress. Lungs clear to auscultation, regular heart rhythm, no murmurs. Mildly elevated blood pressure noted.", setObservations)}
+              onPreview={() => window.alert("Patient appears alert and oriented, in no acute distress. Lungs clear to auscultation, regular heart rhythm, no murmurs. Mildly elevated blood pressure noted.")}
             />
           </div>
         </section>
+
+        <Separator className="my-8" />
 
         {/* ========== Assessment ========== */}
         <section>
           <h3 className="text-lg font-semibold text-fg mb-4">Assessment</h3>
           <div className="space-y-6">
             <div>
-              <Label className="text-sm font-medium text-fg mb-2">Assessment / Problem List</Label>
+              <Label className="text-sm font-medium text-fg mb-2">{copy.assessment}</Label>
               <AutosizeTextarea
                 value={assessment}
                 onChange={(e) => setAssessment(e.target.value)}
-                placeholder="Key clinical issues under consideration"
+                placeholder={copy.assessmentPlaceholder}
                 minRows={3}
                 maxRows={6}
               />
-              <AIChip
+              <AIChipClosedSmart
                 text="Primary concerns include hypertension, possible early cardiovascular disease, and poor sleep contributing to fatigue."
                 onInsert={() => insertSuggestion("Primary concerns include hypertension, possible early cardiovascular disease, and poor sleep contributing to fatigue.", setAssessment)}
+                onPreview={() => window.alert("Primary concerns include hypertension, possible early cardiovascular disease, and poor sleep contributing to fatigue.")}
               />
             </div>
 
+            <Separator />
+
             <div>
-              <Label className="text-sm font-medium text-fg mb-2">Differential Diagnosis</Label>
+              <Label className="text-sm font-medium text-fg mb-2">{copy.differential}</Label>
               <AutosizeTextarea
                 value={differential}
                 onChange={(e) => setDifferential(e.target.value)}
-                placeholder="Possible alternate explanations"
+                placeholder={copy.differentialPlaceholder}
                 minRows={2}
                 maxRows={5}
               />
-              <AIChip
+              <AIChipClosedSmart
                 text="Hypertension with secondary cardiovascular risk • Obstructive sleep apnea • Anxiety-related chest tightness"
                 onInsert={() => insertSuggestion("Hypertension with secondary cardiovascular risk • Obstructive sleep apnea • Anxiety-related chest tightness", setDifferential)}
+                onPreview={() => window.alert("Hypertension with secondary cardiovascular risk • Obstructive sleep apnea • Anxiety-related chest tightness")}
               />
             </div>
           </div>
         </section>
 
+        <Separator className="my-8" />
+
         {/* ========== Plan ========== */}
         <section>
-          <h3 className="text-lg font-semibold text-fg mb-4">Plan</h3>
+          <h3 className="text-lg font-semibold text-fg mb-4">{copy.planSection}</h3>
           <div className="space-y-6">
             <div>
-              <Label className="text-sm font-medium text-fg mb-2">Plan / Patient Instructions</Label>
+              <Label className="text-sm font-medium text-fg mb-2">{copy.plan}</Label>
               <AutosizeTextarea
                 value={plan}
                 onChange={(e) => setPlan(e.target.value)}
-                placeholder="Diagnostic tests, prescriptions, lifestyle guidance, follow-up instructions"
+                placeholder={copy.planPlaceholder}
                 minRows={4}
                 maxRows={8}
               />
-              <AIChip
+              <AIChipClosedSmart
                 text="1) Order EKG, lipid panel, and basic metabolic panel. 2) Continue lisinopril and atorvastatin as prescribed. 3) Recommend sleep study referral to rule out OSA. 4) Follow-up in 6 weeks with lab results."
                 onInsert={() => insertSuggestion("1) Order EKG, lipid panel, and basic metabolic panel. 2) Continue lisinopril and atorvastatin as prescribed. 3) Recommend sleep study referral to rule out OSA. 4) Follow-up in 6 weeks with lab results.", setPlan)}
+                onPreview={() => window.alert("1) Order EKG, lipid panel, and basic metabolic panel. 2) Continue lisinopril and atorvastatin as prescribed. 3) Recommend sleep study referral to rule out OSA. 4) Follow-up in 6 weeks with lab results.")}
               />
             </div>
 
+            <Separator />
+
             <div>
-              <Label className="text-sm font-medium text-fg mb-2">Acute Diagnosis</Label>
+              <Label className="text-sm font-medium text-fg mb-2">{copy.acuteDiagnosis}</Label>
               <InlineAddInput
-                placeholder="Confirmed diagnosis with ICD-10 codes"
+                placeholder={copy.acuteDiagnosisPlaceholder}
                 onAdd={(value) => setDiagnoses(prev => [...prev, value])}
               />
               {diagnoses.length > 0 && (
@@ -378,19 +409,22 @@ function SOAPNoteSection() {
                   ))}
                 </div>
               )}
-              <AIChip
+              <AIChipClosedSmart
                 text="I10 — Essential hypertension • E78.5 — Hyperlipidemia, unspecified"
                 onInsert={() => {
                   const diagList = ["I10 — Essential hypertension", "E78.5 — Hyperlipidemia, unspecified"];
                   setDiagnoses(prev => [...prev, ...diagList]);
                 }}
+                onPreview={() => window.alert("I10 — Essential hypertension • E78.5 — Hyperlipidemia, unspecified")}
               />
             </div>
 
+            <Separator />
+
             <div>
-              <Label className="text-sm font-medium text-fg mb-2">Comorbidities / Contributing Conditions</Label>
+              <Label className="text-sm font-medium text-fg mb-2">{copy.comorbidities}</Label>
               <InlineAddInput
-                placeholder="Chronic or contributing factors"
+                placeholder={copy.comorbiditiesPlaceholder}
                 onAdd={(value) => setComorbidities(prev => [...prev, value])}
               />
               {comorbidities.length > 0 && (
@@ -400,12 +434,13 @@ function SOAPNoteSection() {
                   ))}
                 </div>
               )}
-              <AIChip
+              <AIChipClosedSmart
                 text="Overweight • Family history of premature CAD • Poor sleep hygiene"
                 onInsert={() => {
                   const conditions = ["Overweight", "Family history of premature CAD", "Poor sleep hygiene"];
                   setComorbidities(prev => [...prev, ...conditions]);
                 }}
+                onPreview={() => window.alert("Overweight • Family history of premature CAD • Poor sleep hygiene")}
               />
             </div>
           </div>
@@ -437,56 +472,48 @@ function LabOrdersSection() {
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2 text-fg">
             <FlaskConical className="h-6 w-6 text-medical-blue" />
-            Lab Orders
-            <Badge className="ml-2">2 Pending</Badge>
+            {copy.labOrders}
+            <Badge className="ml-2">{`2 ${copy.pending}`}</Badge>
           </h1>
-          <p className="text-fg-muted">Laboratory tests and orders</p>
+          <p className="text-fg-muted">{copy.labOrdersDesc}</p>
         </div>
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="sm" className="gap-2">
             <Save className="h-4 w-4" />
-            Save
+            {copy.save}
           </Button>
-          <Button>Order New Lab</Button>
+          <Button>{copy.orderNewLab}</Button>
         </div>
       </div>
 
-      <div className="grid gap-4">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              Complete Blood Count (CBC)
-              <Badge variant="secondary" className="bg-medical-amber-light text-medical-amber">
-                Pending
-              </Badge>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              <p className="text-sm"><strong>Ordered:</strong> Today, 2:30 PM</p>
-              <p className="text-sm"><strong>Priority:</strong> Routine</p>
-              <p className="text-sm"><strong>Indication:</strong> Follow-up on recent infection</p>
-            </div>
-          </CardContent>
-        </Card>
+      <div className="space-y-6">
+        <div className="border border-border rounded-lg p-4 bg-surface">
+          <div className="flex items-center justify-between mb-3">
+            <h4 className="font-semibold text-fg">Complete Blood Count (CBC)</h4>
+            <Badge variant="secondary" className="bg-medical-amber-light text-medical-amber">
+              {copy.pending}
+            </Badge>
+          </div>
+          <div className="space-y-1 text-sm text-fg-muted">
+            <p><strong>{copy.ordered}:</strong> Today, 2:30 PM</p>
+            <p><strong>{copy.priority}:</strong> {copy.routine}</p>
+            <p><strong>{copy.indication}:</strong> Follow-up on recent infection</p>
+          </div>
+        </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              Basic Metabolic Panel (BMP)
-              <Badge variant="secondary" className="bg-medical-amber-light text-medical-amber">
-                Pending
-              </Badge>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              <p className="text-sm"><strong>Ordered:</strong> Today, 2:30 PM</p>
-              <p className="text-sm"><strong>Priority:</strong> Routine</p>
-              <p className="text-sm"><strong>Indication:</strong> Routine metabolic screening</p>
-            </div>
-          </CardContent>
-        </Card>
+        <div className="border border-border rounded-lg p-4 bg-surface">
+          <div className="flex items-center justify-between mb-3">
+            <h4 className="font-semibold text-fg">Basic Metabolic Panel (BMP)</h4>
+            <Badge variant="secondary" className="bg-medical-amber-light text-medical-amber">
+              {copy.pending}
+            </Badge>
+          </div>
+          <div className="space-y-1 text-sm text-fg-muted">
+            <p><strong>{copy.ordered}:</strong> Today, 2:30 PM</p>
+            <p><strong>{copy.priority}:</strong> {copy.routine}</p>
+            <p><strong>{copy.indication}:</strong> Routine metabolic screening</p>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -500,31 +527,27 @@ function IntakeFormSection() {
         <div className="flex items-center gap-2">
           <AlertTriangle className="h-6 w-6 text-medical-amber" />
           <div>
-            <h1 className="text-2xl font-bold text-fg">Intake Form</h1>
-            <p className="text-fg-muted">Complete patient intake information</p>
+            <h1 className="text-2xl font-bold text-fg">{copy.intakeForm}</h1>
+            <p className="text-fg-muted">{copy.intakeFormDesc}</p>
           </div>
           <Badge variant="secondary" className="bg-medical-amber-light text-medical-amber ml-4">
-            Requires Attention
+            {copy.requiresAttention}
           </Badge>
         </div>
         <Button variant="ghost" size="sm" className="gap-2">
           <Save className="h-4 w-4" />
-          Save
+          {copy.save}
         </Button>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Patient Information</CardTitle>
-          <CardDescription>Basic demographic and contact information</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="text-center py-8 text-fg-muted">
-            <p>Intake form is incomplete. Please have patient complete form before proceeding.</p>
-            <Button className="mt-4">Send Intake Form to Patient</Button>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="border border-border rounded-lg p-6 bg-surface">
+        <h4 className="font-semibold text-fg mb-2">Patient Information</h4>
+        <p className="text-sm text-fg-muted mb-4">Basic demographic and contact information</p>
+        <div className="text-center py-8 text-fg-muted">
+          <p>Intake form is incomplete. Please have patient complete form before proceeding.</p>
+          <Button className="mt-4">{copy.sendIntakeForm}</Button>
+        </div>
+      </div>
     </div>
   );
 }
@@ -537,67 +560,59 @@ function DiagnosesSection() {
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2 text-fg">
             <Activity className="h-6 w-6 text-medical-blue" />
-            Diagnoses, Medications & Allergies
+            {copy.diagnosesTitle}
           </h1>
-          <p className="text-fg-muted">Current patient conditions and treatments</p>
+          <p className="text-fg-muted">{copy.diagnosesDesc}</p>
         </div>
         <Button variant="ghost" size="sm" className="gap-2">
           <Save className="h-4 w-4" />
-          Save
+          {copy.save}
         </Button>
       </div>
 
-      <div className="grid gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Active Diagnoses</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
-                <div>
-                  <h4 className="font-medium">Acute Upper Respiratory Infection</h4>
-                  <p className="text-sm text-fg-muted">ICD-10: J06.9 • Diagnosed today</p>
-                </div>
-                <Badge>Active</Badge>
+      <div className="space-y-6">
+        <div>
+          <h4 className="font-semibold text-fg mb-3">Active Diagnoses</h4>
+          <div className="border border-border rounded-lg p-4 bg-surface">
+            <div className="flex items-center justify-between">
+              <div>
+                <h5 className="font-medium text-fg">Acute Upper Respiratory Infection</h5>
+                <p className="text-sm text-fg-muted">ICD-10: J06.9 • Diagnosed today</p>
               </div>
+              <Badge>{copy.active}</Badge>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Current Medications</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
-                <div>
-                  <h4 className="font-medium">Lisinopril 10mg</h4>
-                  <p className="text-sm text-fg-muted">Daily for hypertension</p>
-                </div>
-                <Badge variant="secondary">Long-term</Badge>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <Separator />
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Allergies</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between p-3 bg-medical-red-light rounded-lg">
-                <div>
-                  <h4 className="font-medium text-medical-red">Penicillin</h4>
-                  <p className="text-sm text-fg-muted">Severe: Anaphylaxis</p>
-                </div>
-                <Badge variant="destructive">Critical</Badge>
+        <div>
+          <h4 className="font-semibold text-fg mb-3">Current Medications</h4>
+          <div className="border border-border rounded-lg p-4 bg-surface">
+            <div className="flex items-center justify-between">
+              <div>
+                <h5 className="font-medium text-fg">Lisinopril 10mg</h5>
+                <p className="text-sm text-fg-muted">Daily for hypertension</p>
               </div>
+              <Badge variant="secondary">{copy.longTerm}</Badge>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
+
+        <Separator />
+
+        <div>
+          <h4 className="font-semibold text-fg mb-3">Allergies</h4>
+          <div className="border border-border rounded-lg p-4 bg-medical-red-light">
+            <div className="flex items-center justify-between">
+              <div>
+                <h5 className="font-medium text-medical-red">Penicillin</h5>
+                <p className="text-sm text-fg-muted">Severe: Anaphylaxis</p>
+              </div>
+              <Badge variant="destructive">{copy.critical}</Badge>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -611,49 +626,41 @@ function PreviousResultsSection() {
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2 text-fg">
             <Activity className="h-6 w-6 text-medical-blue" />
-            Previous Labs & Imaging Results
-            <Badge className="ml-2 bg-medical-green text-white">3 New</Badge>
+            {copy.previousResults}
+            <Badge className="ml-2 bg-medical-green text-white">{`3 ${copy.new}`}</Badge>
           </h1>
-          <p className="text-fg-muted">Historical test results and imaging studies</p>
+          <p className="text-fg-muted">{copy.previousResultsDesc}</p>
         </div>
         <Button variant="ghost" size="sm" className="gap-2">
           <Save className="h-4 w-4" />
-          Save
+          {copy.save}
         </Button>
       </div>
 
-      <div className="grid gap-4">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              Complete Blood Count (CBC)
-              <Badge className="bg-medical-green-light text-medical-green">New</Badge>
-            </CardTitle>
-            <CardDescription>Lab Corp • Collected: March 10, 2024</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              <div>
-                <p><strong>WBC:</strong> 7.2 K/uL (Normal)</p>
-                <p><strong>RBC:</strong> 4.8 M/uL (Normal)</p>
-              </div>
-              <div>
-                <p><strong>Hemoglobin:</strong> 14.2 g/dL (Normal)</p>
-                <p><strong>Platelets:</strong> 280 K/uL (Normal)</p>
-              </div>
+      <div className="space-y-6">
+        <div className="border border-border rounded-lg p-4 bg-surface">
+          <div className="flex items-center justify-between mb-3">
+            <h4 className="font-semibold text-fg">Complete Blood Count (CBC)</h4>
+            <Badge className="bg-medical-green-light text-medical-green">{copy.new}</Badge>
+          </div>
+          <p className="text-sm text-fg-muted mb-4">Lab Corp • {copy.collected}: March 10, 2024</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            <div>
+              <p><strong>WBC:</strong> 7.2 K/uL ({copy.normal})</p>
+              <p><strong>RBC:</strong> 4.8 M/uL ({copy.normal})</p>
             </div>
-          </CardContent>
-        </Card>
+            <div>
+              <p><strong>Hemoglobin:</strong> 14.2 g/dL ({copy.normal})</p>
+              <p><strong>Platelets:</strong> 280 K/uL ({copy.normal})</p>
+            </div>
+          </div>
+        </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Chest X-Ray</CardTitle>
-            <CardDescription>Regional Medical Center • March 8, 2024</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm">Clear lung fields. No acute cardiopulmonary process. Heart size normal.</p>
-          </CardContent>
-        </Card>
+        <div className="border border-border rounded-lg p-4 bg-surface">
+          <h4 className="font-semibold text-fg mb-3">Chest X-Ray</h4>
+          <p className="text-sm text-fg-muted mb-3">Regional Medical Center • March 8, 2024</p>
+          <p className="text-sm">Clear lung fields. No acute cardiopulmonary process. Heart size normal.</p>
+        </div>
       </div>
     </div>
   );
