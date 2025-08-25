@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 const mockPatient = {
   name: "Sarah Johnson",
   age: 34,
-  location: "Seattle, WA",
+  location: "Naples, FL",
   membership: "Premium",
   avatar: ""
 };
