@@ -44,14 +44,11 @@ export default function AIChipPanel({
         />
       </svg>
 
-      {/* prefix + content stay in the same inline flow */}
-      <span className="text-sm font-medium whitespace-nowrap">GoldCare&nbsp;AI:</span>
-
-      <span className="text-sm leading-5 min-w-0 whitespace-normal">
+      {/* prefix + content in continuous inline flow */}
+      <span className="text-sm leading-5 min-w-0 flex-1">
+        <span className="font-medium">GoldCare&nbsp;AI:</span>{" "}
         {text}
       </span>
-
-      <div className="flex-1 min-w-[8px]" />
 
       {/* actions on the right: Insert (blue), Close (muted) */}
       <button
