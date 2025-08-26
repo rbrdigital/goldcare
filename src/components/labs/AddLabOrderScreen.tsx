@@ -1,12 +1,12 @@
 "use client";
 
 import * as React from "react";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
-import { cn } from "@/lib/utils";
+import ComboboxChips from "@/components/ui/ComboboxChips";
 import OrderSetModal from "./OrderSetModal";
 
 type Diagnosis = { code: string; label: string };
@@ -127,17 +127,19 @@ const LAB_SETS: Record<string, string[]> = {
 const ORDER_TABS = Object.keys(LAB_SETS);
 
 export default function AddLabOrderScreen() {
-  const [diagnoses, setDiagnoses] = React.useState<Diagnosis[]>([]);
+  const [selectedDiagnoses, setSelectedDiagnoses] = React.useState<string[]>([]);
   const [otherDx, setOtherDx] = React.useState("");
   const [requests, setRequests] = React.useState<Request[]>([]);
   const [modal, setModal] = React.useState<{ open: boolean; category: string | null }>({ open: false, category: null });
 
-  const addDiagnosis = (code: string) => {
-    const found = TOP_DIAGNOSES.find((d) => d.code === code);
-    if (!found || diagnoses.some((d) => d.code === code)) return;
-    setDiagnoses((arr) => [...arr, found]);
-  };
-  const removeDiagnosis = (code: string) => setDiagnoses((arr) => arr.filter((d) => d.code !== code));
+  // Convert TOP_DIAGNOSES to combobox format
+  const diagnosisOptions = React.useMemo(
+    () => TOP_DIAGNOSES.map(d => ({
+      value: `${d.label} (${d.code})`,
+      label: `${d.label} (${d.code})`
+    })),
+    []
+  );
 
   const openSet = (category: string) => setModal({ open: true, category });
   const confirmSet = (exams: string[]) => {
@@ -154,114 +156,104 @@ export default function AddLabOrderScreen() {
   const removeSet = (category: string) => setRequests((prev) => prev.filter((r) => r.category !== category));
 
   return (
-    <div className="p-6">
-      <header className="mb-4 flex items-center justify-between">
-        <h1 className="text-[22px] font-semibold">Add Lab order</h1>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" className="border border-border">Cancel</Button>
+    <div className="mx-auto w-full max-w-5xl px-6">
+      <div className="space-y-6">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold flex items-center gap-2 text-fg">
+              Lab orders
+            </h1>
+            <p className="text-fg-muted">Create and manage lab orders for your patients</p>
+          </div>
+          <div className="flex items-center gap-2">
+            <Badge variant="outline">Auto-saved</Badge>
+            <Button variant="outline">Duplicate</Button>
+            <Button variant="outline">Create new</Button>
+          </div>
+        </div>
+
+        {/* Clinical diagnosis */}
+        <section>
+          <h2 className="text-lg font-semibold mb-3">Clinical diagnosis</h2>
+          <div className="space-y-4">
+            <ComboboxChips
+              id="diagnoses"
+              label="Common diagnoses"
+              placeholder="Search diagnoses or add custom text..."
+              options={diagnosisOptions}
+              selected={selectedDiagnoses}
+              onSelectionChange={setSelectedDiagnoses}
+            />
+
+            <div>
+              <Label htmlFor="other">Other (free text)</Label>
+              <AutosizeTextarea
+                id="other"
+                minRows={2}
+                placeholder="Describe additional clinical context"
+                value={otherDx}
+                onChange={(e) => setOtherDx(e.target.value)}
+              />
+            </div>
+          </div>
+        </section>
+
+        <Separator className="my-6" />
+
+        {/* Orders */}
+        <section>
+          <h2 className="text-lg font-semibold mb-3">Order</h2>
+
+          <div className="flex flex-wrap gap-2">
+            {ORDER_TABS.map((cat) => (
+              <button
+                key={cat}
+                type="button"
+                className="rounded-full border border-border bg-surface px-3 py-1 text-sm hover:bg-surface-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                onClick={() => openSet(cat)}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+
+          {/* Requests list */}
+          <div className="mt-4 divide-y divide-divider">
+            {requests.map((r) => (
+              <div key={r.id} className="py-3 flex items-center justify-between">
+                <div className="min-w-0">
+                  <div className="font-medium">{r.category}</div>
+                  <div className="text-sm text-fg-muted truncate">{r.exams.join(" • ")}</div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <button className="text-sm text-fg-muted hover:underline focus-visible:outline-none" onClick={() => editSet(r.category)}>Edit</button>
+                  <button className="text-sm text-fg-muted hover:underline focus-visible:outline-none" onClick={() => removeSet(r.category)}>Remove</button>
+                </div>
+              </div>
+            ))}
+            {requests.length === 0 && <p className="text-sm text-fg-muted py-3">No lab orders selected.</p>}
+          </div>
+        </section>
+
+        <Separator className="my-6" />
+
+        {/* Summary card */}
+        <section>
+          <div className="rounded-md border border-border bg-surface p-4">
+            <div className="font-medium mb-1">Order summary</div>
+            <div className="text-sm text-fg-muted leading-6">
+              {renderSummary(selectedDiagnoses, otherDx, requests)}
+            </div>
+          </div>
+        </section>
+
+        {/* Footer actions */}
+        <div className="flex justify-end gap-2 pt-4">
+          <Button variant="outline">Cancel</Button>
           <Button className="bg-black text-white hover:opacity-90">Save</Button>
         </div>
-      </header>
-
-      {/* Clinical diagnosis */}
-      <section>
-        <h2 className="text-lg font-semibold mb-3">Clinical diagnosis</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <div className="md:col-span-2">
-            <Label htmlFor="dx-select">Common diagnoses</Label>
-            <select
-              id="dx-select"
-              className={cn(
-                "w-full h-9 px-3 rounded-md bg-surface border border-border text-sm",
-                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-              )}
-              defaultValue=""
-              onChange={(e) => {
-                if (e.target.value) addDiagnosis(e.target.value);
-                e.currentTarget.value = "";
-              }}
-            >
-              <option value="">Select diagnosis</option>
-              {TOP_DIAGNOSES.map((d) => (
-                <option key={d.code} value={d.code}>
-                  {d.label} ({d.code})
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="md:col-span-3">
-            <div className="flex flex-wrap gap-2 mt-2">
-              {diagnoses.map((d) => (
-                <span key={d.code} className="inline-flex items-center rounded-full border border-border bg-surface px-3 py-1 text-sm">
-                  {d.label} ({d.code})
-                  <button className="ml-2 text-fg-muted hover:underline focus-visible:outline-none" onClick={() => removeDiagnosis(d.code)}>Remove</button>
-                </span>
-              ))}
-            </div>
-          </div>
-
-          <div className="md:col-span-3">
-            <Label htmlFor="other">Other (free text)</Label>
-            <AutosizeTextarea
-              id="other"
-              minRows={2}
-              placeholder="Describe additional clinical context"
-              value={otherDx}
-              onChange={(e) => setOtherDx(e.target.value)}
-            />
-          </div>
-        </div>
-      </section>
-
-      <Separator className="my-6" />
-
-      {/* Orders */}
-      <section>
-        <h2 className="text-lg font-semibold mb-3">Order</h2>
-
-        <div className="flex flex-wrap gap-2">
-          {ORDER_TABS.map((cat) => (
-            <button
-              key={cat}
-              type="button"
-              className="rounded-full border border-border bg-surface px-3 py-1 text-sm hover:bg-surface-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-              onClick={() => openSet(cat)}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-
-        {/* Requests list */}
-        <div className="mt-4 divide-y divide-divider">
-          {requests.map((r) => (
-            <div key={r.id} className="py-3 flex items-center justify-between">
-              <div className="min-w-0">
-                <div className="font-medium">{r.category}</div>
-                <div className="text-sm text-fg-muted truncate">{r.exams.join(" • ")}</div>
-              </div>
-              <div className="flex items-center gap-3">
-                <button className="text-sm text-fg-muted hover:underline focus-visible:outline-none" onClick={() => editSet(r.category)}>Edit</button>
-                <button className="text-sm text-fg-muted hover:underline focus-visible:outline-none" onClick={() => removeSet(r.category)}>Remove</button>
-              </div>
-            </div>
-          ))}
-          {requests.length === 0 && <p className="text-sm text-fg-muted py-3">No lab orders selected.</p>}
-        </div>
-      </section>
-
-      <Separator className="my-6" />
-
-      {/* Summary card */}
-      <section>
-        <div className="rounded-md border border-border bg-surface p-4">
-          <div className="font-medium mb-1">Order summary</div>
-          <div className="text-sm text-fg-muted leading-6">
-            {renderSummary(diagnoses, otherDx, requests)}
-          </div>
-        </div>
-      </section>
+      </div>
 
       {/* Modal: preselect ALL items for the chosen set; user can uncheck then Confirm */}
       {modal.open && modal.category ? (
@@ -280,15 +272,13 @@ export default function AddLabOrderScreen() {
   );
 }
 
-function renderSummary(dxs: Diagnosis[], other: string, reqs: Request[]) {
-  const dxPart =
-    dxs.length > 0
-      ? `Diagnoses: ${dxs.map((d) => `${d.label} (${d.code})`).join("; ")}.`
-      : "Diagnoses: —.";
-  const otherPart = other.trim() ? ` Notes: ${other.trim()}.` : "";
-  const orders =
-    reqs.length > 0
-      ? reqs.map((r) => `${r.category}: ${r.exams.join(", ")}`).join(" | ")
-      : "No lab orders selected.";
-  return `${dxPart}${otherPart} Orders: ${orders}`;
+function renderSummary(diagnoses: string[], other: string, reqs: Request[]) {
+  const dxPart = diagnoses.length > 0 
+    ? `Diagnoses: ${diagnoses.join("; ")}`
+    : "Diagnoses: —";
+  const otherPart = other.trim() ? `; Notes: ${other.trim()}` : "";
+  const orders = reqs.length > 0
+    ? reqs.map((r) => `${r.category}: ${r.exams.join(", ")}`).join("; ")
+    : "No lab orders selected";
+  return `${dxPart}${otherPart}; Orders: ${orders}`;
 }

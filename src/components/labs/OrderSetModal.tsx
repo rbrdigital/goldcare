@@ -1,5 +1,4 @@
 import * as React from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -34,11 +33,12 @@ export default function OrderSetModal({
   };
 
   return (
-    <Dialog open onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>{title} Lab Set</DialogTitle>
-        </DialogHeader>
+    <>
+      <div className="fixed inset-0 bg-black/40 z-50" onClick={onClose} />
+      <div className="fixed left-[50%] top-[50%] z-50 w-full max-w-2xl translate-x-[-50%] translate-y-[-50%] rounded-xl border border-border bg-white p-6 max-h-[80vh] overflow-y-auto">
+        <div className="mb-4">
+          <h2 className="text-lg font-semibold">{title} Lab Set</h2>
+        </div>
         
         <div className="space-y-3 py-4">
           {options.map((item) => {
@@ -74,7 +74,7 @@ export default function OrderSetModal({
             Confirm ({checkedItems.length})
           </Button>
         </div>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </>
   );
 }
