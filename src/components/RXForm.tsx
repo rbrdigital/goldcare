@@ -93,7 +93,7 @@ export default function RXForm() {
   };
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-6">
       <PageHeader
         title="Prescriptions"
         description="Create and manage prescription orders for your patients"
