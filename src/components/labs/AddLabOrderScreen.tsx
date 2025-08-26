@@ -5,24 +5,22 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { PageHeader } from "@/components/ui/page-header";
 import { FlaskConical } from "lucide-react";
-
+import PageContainer from "@/components/layout/PageContainer";
 import ComboboxChips from "@/components/ui/ComboboxChips";
 import OrderSetModal from "./OrderSetModal";
 
 type Diagnosis = { code: string; label: string };
 type Request = { id: string; category: string; exams: string[] };
 
-// Lab order type with requests as arrays
+// Lab order type
 interface LabOrder {
   id: string;
   diagnoses: string[];
   otherDx: string;
-  requests: { id: string; category: string; exams: string }[];
+  requests: Request[];
 }
 
 // Top ~30 common ICD-10 (clinically popular; no backend)
@@ -155,9 +153,12 @@ export default function AddLabOrderScreen() {
     orderIndex: number | null;
   }>({ open: false, category: null, orderIndex: null });
 
-  // Convert diagnoses for ComboboxChips (outside of JSX)
-  const diagnosisOptions = React.useMemo(() => 
-    TOP_DIAGNOSES.map(d => ({ value: d.code, label: d.label })), 
+  // Convert TOP_DIAGNOSES to combobox format
+  const diagnosisOptions = React.useMemo(
+    () => TOP_DIAGNOSES.map(d => ({
+      value: `${d.label} (${d.code})`,
+      label: `${d.label} (${d.code})`
+    })),
     []
   );
 
@@ -166,7 +167,7 @@ export default function AddLabOrderScreen() {
   };
 
   // Lab order management functions
-  const addOrder = () => {
+  const addLabOrder = () => {
     const newOrder: LabOrder = {
       id: crypto.randomUUID(),
       diagnoses: [],
@@ -176,12 +177,12 @@ export default function AddLabOrderScreen() {
     setLabOrders(prev => [...prev, newOrder]);
   };
 
-  const removeOrder = (index: number) => {
-    if (labOrders.length <= 1) return;
+  const removeLabOrder = (index: number) => {
+    if (labOrders.length <= 1) return; // Keep at least one order
     setLabOrders(prev => prev.filter((_, i) => i !== index));
   };
 
-  const duplicateOrder = (index: number) => {
+  const duplicateLabOrder = (index: number) => {
     const orderToDuplicate = labOrders[index];
     const duplicatedOrder: LabOrder = {
       ...orderToDuplicate,
@@ -190,48 +191,10 @@ export default function AddLabOrderScreen() {
     setLabOrders(prev => [...prev, duplicatedOrder]);
   };
 
-  const patchOrder = (index: number, updates: Partial<LabOrder>) => {
+  const updateLabOrder = (index: number, updates: Partial<LabOrder>) => {
     setLabOrders(prev => prev.map((order, i) => 
       i === index ? { ...order, ...updates } : order
     ));
-  };
-
-  const addRequest = (orderIndex: number) => {
-    const newRequest = {
-      id: crypto.randomUUID(),
-      category: "",
-      exams: ""
-    };
-    setLabOrders(prev => prev.map((order, i) => 
-      i === orderIndex 
-        ? { ...order, requests: [...order.requests, newRequest] }
-        : order
-    ));
-  };
-
-  const removeRequest = (orderIndex: number, requestId: string) => {
-    setLabOrders(prev => prev.map((order, i) => 
-      i === orderIndex 
-        ? { ...order, requests: order.requests.filter(r => r.id !== requestId) }
-        : order
-    ));
-  };
-
-  const updateRequest = (orderIndex: number, requestId: string, updates: Partial<{ category: string; exams: string }>) => {
-    setLabOrders(prev => prev.map((order, i) => 
-      i === orderIndex 
-        ? { 
-            ...order, 
-            requests: order.requests.map(r => 
-              r.id === requestId ? { ...r, ...updates } : r
-            ) 
-          }
-        : order
-    ));
-  };
-
-  const openModal = (orderIndex: number) => {
-    setModal({ open: true, category: "Basic", orderIndex });
   };
 
   const openSet = (category: string, orderIndex: number) => 
@@ -243,184 +206,184 @@ export default function AddLabOrderScreen() {
     const orderIndex = modal.orderIndex;
     const category = modal.category;
     
-    patchOrder(orderIndex, {
+    updateLabOrder(orderIndex, {
       requests: labOrders[orderIndex].requests.map(r => 
-        r.category === category ? { ...r, exams: exams.join(", ") } : r
+        r.category === category ? { ...r, exams } : r
       ).concat(
         labOrders[orderIndex].requests.find(r => r.category === category) 
           ? [] 
-          : [{ id: `${category}-${Date.now()}`, category, exams: exams.join(", ") }]
+          : [{ id: `${category}-${Date.now()}`, category, exams }]
       ).filter(r => r.category !== category || exams.length > 0)
     });
     
     setModal({ open: false, category: null, orderIndex: null });
   };
 
-  const renderSummary = (order: LabOrder) => {
-    if (order.diagnoses.length === 0 && !order.otherDx.trim() && order.requests.length === 0) {
-      return "";
-    }
-    
-    const dxPart = order.diagnoses.length > 0 
-      ? `Diagnoses: ${order.diagnoses.join("; ")}`
-      : "Diagnoses: —";
-    const otherPart = order.otherDx.trim() ? `; Notes: ${order.otherDx.trim()}` : "";
-    const orders = order.requests.length > 0
-      ? order.requests.map((r) => `${r.category}: ${r.exams}`).join("; ")
-      : "No lab orders selected";
-    return `${dxPart}${otherPart}; Orders: ${orders}`;
+  const editSet = (category: string, orderIndex: number) => openSet(category, orderIndex);
+  
+  const removeSet = (category: string, orderIndex: number) => {
+    updateLabOrder(orderIndex, {
+      requests: labOrders[orderIndex].requests.filter(r => r.category !== category)
+    });
   };
 
   return (
     <>
-    <div className="space-y-6">
-      <PageHeader
-        title="Lab orders"
-        description="Create and manage lab orders for your patients"
-        icon={FlaskConical}
-      />
+      <PageContainer>
+        <div className="space-y-6">
+        <PageHeader
+          title="Lab orders"
+          description="Create and manage lab orders for your patients"
+          icon={FlaskConical}
+          onSave={handleSave}
+        />
 
-      {labOrders.map((order, idx) => (
-        <Card key={idx} className="bg-surface border border-border rounded-lg p-4 shadow-sm">
-          <div className="flex flex-row items-center justify-between mb-4">
-            <div className="flex flex-row items-center gap-2">
-              <span className="text-sm font-medium text-fg">Order #{idx + 1}</span>
-            </div>
-            <div className="flex flex-row items-center gap-2">
-              {labOrders.length > 1 && (
-                <Button
-                  variant="subtle"
-                  size="sm"
-                  onClick={() => duplicateOrder(idx)}
+        {/* Render each lab order */}
+        {labOrders.map((order, orderIndex) => (
+          <div key={order.id} className="space-y-6">
+            {/* Lab order section header */}
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-semibold">Lab order #{orderIndex + 1}</h2>
+              <div className="flex items-center gap-2">
+                <Button 
+                  variant="outline" 
+                  onClick={() => duplicateLabOrder(orderIndex)}
                 >
                   Duplicate
                 </Button>
-              )}
-              {labOrders.length > 1 && (
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={() => removeOrder(idx)}
+                <Button 
+                  variant="outline" 
+                  onClick={() => removeLabOrder(orderIndex)}
+                  disabled={labOrders.length <= 1}
                 >
                   Remove
                 </Button>
-              )}
+              </div>
             </div>
-          </div>
 
-          <div className="space-y-4">
-            {/* Diagnoses */}
-            <div className="grid grid-cols-1 gap-3">
-              <div className="space-y-2">
-                <Label className="text-sm font-medium text-fg">Diagnoses</Label>
+            {/* Clinical diagnosis */}
+            <section>
+              <h3 className="text-base font-medium mb-3">Clinical diagnosis</h3>
+              <div className="space-y-4">
                 <ComboboxChips
+                  id={`diagnoses-${orderIndex}`}
+                  label="Common diagnoses"
+                  placeholder="Search diagnoses or add custom text..."
                   options={diagnosisOptions}
                   selected={order.diagnoses}
-                  onSelectionChange={(newDiagnoses) => patchOrder(idx, { diagnoses: newDiagnoses })}
-                  placeholder="Select diagnoses..."
+                  onSelectionChange={(diagnoses) => updateLabOrder(orderIndex, { diagnoses })}
                 />
+
+                <div>
+                  <Label htmlFor={`other-${orderIndex}`}>Other (free text)</Label>
+                  <AutosizeTextarea
+                    id={`other-${orderIndex}`}
+                    minRows={2}
+                    placeholder="Describe additional clinical context"
+                    value={order.otherDx}
+                    onChange={(e) => updateLabOrder(orderIndex, { otherDx: e.target.value })}
+                  />
+                </div>
               </div>
-            </div>
+            </section>
 
-            {/* Other diagnoses */}
-            <div className="space-y-2">
-              <Label htmlFor={`other-dx-${idx}`} className="text-sm font-medium text-fg">
-                Other diagnosis
-              </Label>
-              <AutosizeTextarea
-                id={`other-dx-${idx}`}
-                value={order.otherDx}
-                onChange={(e) => patchOrder(idx, { otherDx: e.target.value })}
-                placeholder="Any additional diagnosis not listed above..."
-                className="bg-surface text-fg placeholder:text-fg-muted border border-border rounded-md px-3 py-2 focus:ring-2 focus:ring-primary focus:border-transparent"
-              />
-            </div>
+            <Separator className="my-6" />
 
-            {/* Lab requests */}
-            <div className="space-y-3">
-              <div className="flex flex-row items-center justify-between">
-                <Label className="text-sm font-medium text-fg">Lab requests</Label>
-                <Button
-                  variant="subtle"
-                  size="sm"
-                  onClick={() => openModal(idx)}
-                >
-                  Select from order sets
-                </Button>
+            {/* Orders */}
+            <section>
+              <h2 className="text-lg font-semibold mb-3">Order</h2>
+
+              <div className="flex flex-wrap gap-2">
+                {ORDER_TABS.map((cat) => (
+                  <button
+                    key={cat}
+                    type="button"
+                    className="rounded-full border border-border bg-surface px-3 py-1 text-sm hover:bg-surface-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                    onClick={() => openSet(cat, orderIndex)}
+                  >
+                    {cat}
+                  </button>
+                ))}
               </div>
 
-              {order.requests.map((req, reqIdx) => (
-                <div key={req.id} className="border border-border rounded-md p-3 bg-bg">
-                  <div className="flex flex-row items-start justify-between gap-3">
-                    <div className="flex-1 space-y-2">
-                      <Input
-                        value={req.category}
-                        onChange={(e) => updateRequest(idx, req.id, { category: e.target.value })}
-                        placeholder="Lab category (e.g., Blood work, Imaging)"
-                        className="bg-surface text-fg placeholder:text-fg-muted border border-border rounded-md px-3 py-2 focus:ring-2 focus:ring-primary focus:border-transparent"
-                      />
-                      <AutosizeTextarea
-                        value={req.exams}
-                        onChange={(e) => updateRequest(idx, req.id, { exams: e.target.value })}
-                        placeholder="Specific exams/tests..."
-                        className="bg-surface text-fg placeholder:text-fg-muted border border-border rounded-md px-3 py-2 focus:ring-2 focus:ring-primary focus:border-transparent"
-                      />
+              {/* Requests list */}
+              <div className="mt-4 divide-y divide-divider">
+                {order.requests.map((r) => (
+                  <div key={r.id} className="py-3 flex items-center justify-between">
+                    <div className="min-w-0">
+                      <div className="font-medium">{r.category}</div>
+                      <div className="text-sm text-fg-muted truncate">{r.exams.join(" • ")}</div>
                     </div>
-                    <Button
-                      variant="subtle"
-                      size="sm"
-                      onClick={() => removeRequest(idx, req.id)}
-                    >
-                      Remove
-                    </Button>
+                    <div className="flex items-center gap-3">
+                      <button 
+                        className="text-sm text-fg-muted hover:underline focus-visible:outline-none" 
+                        onClick={() => editSet(r.category, orderIndex)}
+                      >
+                        Edit
+                      </button>
+                      <button 
+                        className="text-sm text-fg-muted hover:underline focus-visible:outline-none" 
+                        onClick={() => removeSet(r.category, orderIndex)}
+                      >
+                        Remove
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+                {order.requests.length === 0 && (
+                  <p className="text-sm text-fg-muted py-3">No lab orders selected.</p>
+                )}
+              </div>
+            </section>
 
-              <Button
-                variant="subtle"
-                size="sm"
-                onClick={() => addRequest(idx)}
-                className="w-full"
-              >
-                + Add lab request
-              </Button>
-            </div>
-
-            {/* Summary */}
-            {renderSummary(order) && (
-              <div className="border-t border-border pt-4">
-                <div className="text-sm text-fg-muted">
-                  <strong>Summary:</strong> {renderSummary(order)}
+            {/* Summary card for this order */}
+            <section>
+              <div className="rounded-md border border-border bg-surface p-4">
+                <div className="font-medium mb-1">Order summary</div>
+                <div className="text-sm text-fg-muted leading-6">
+                  {renderSummary(order.diagnoses, order.otherDx, order.requests)}
                 </div>
               </div>
-            )}
+            </section>
+
+            {/* Separator between orders */}
+            {orderIndex < labOrders.length - 1 && <Separator className="my-6" />}
           </div>
-        </Card>
-      ))}
+        ))}
 
-      {/* Add another order */}
-      <div className="flex justify-center">
-        <Button
-          variant="subtle"
-          onClick={addOrder}
-          className="px-6"
-        >
-          + Add another order
-        </Button>
-      </div>
-    </div>
+        {/* Add another order */}
+        <div className="mt-4">
+          <Button variant="outline" className="text-sm" onClick={addLabOrder}>
+            + Add another order
+          </Button>
+        </div>
+        </div>
+      </PageContainer>
 
-    {/* Modal: preselect ALL items for the chosen set; user can uncheck then Confirm */}
-    {modal.open && modal.category && modal.orderIndex !== null ? (
-      <OrderSetModal
-        title={`${modal.category}`}
-        options={LAB_SETS[modal.category] || []}
-        selected={LAB_SETS[modal.category] || []}
-        onClose={() => setModal({ open: false, category: null, orderIndex: null })}
-        onConfirm={confirmSet}
-      />
-    ) : null}
+      {/* Modal: preselect ALL items for the chosen set; user can uncheck then Confirm */}
+      {modal.open && modal.category && modal.orderIndex !== null ? (
+        <OrderSetModal
+          title={modal.category}
+          options={LAB_SETS[modal.category]}
+          selected={
+            labOrders[modal.orderIndex].requests.find((r) => r.category === modal.category)?.exams ??
+            LAB_SETS[modal.category]
+          }
+          onClose={() => setModal({ open: false, category: null, orderIndex: null })}
+          onConfirm={confirmSet}
+        />
+      ) : null}
     </>
   );
+}
+
+function renderSummary(diagnoses: string[], other: string, reqs: Request[]) {
+  const dxPart = diagnoses.length > 0 
+    ? `Diagnoses: ${diagnoses.join("; ")}`
+    : "Diagnoses: —";
+  const otherPart = other.trim() ? `; Notes: ${other.trim()}` : "";
+  const orders = reqs.length > 0
+    ? reqs.map((r) => `${r.category}: ${r.exams.join(", ")}`).join("; ")
+    : "No lab orders selected";
+  return `${dxPart}${otherPart}; Orders: ${orders}`;
 }
