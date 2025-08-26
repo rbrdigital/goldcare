@@ -122,7 +122,8 @@ export function LabsImagingSideSheet({
     const date = new Date(datetime);
     return date.toLocaleDateString("en-US", {
       month: "short",
-      day: "numeric"
+      day: "numeric",
+      year: "numeric"
     }) + " • " + date.toLocaleTimeString("en-US", {
       hour: "numeric",
       minute: "2-digit"

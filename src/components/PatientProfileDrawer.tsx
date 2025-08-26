@@ -123,7 +123,7 @@ export function PatientProfileDrawer({ isOpen, onClose }: PatientProfileDrawerPr
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-sm font-medium text-foreground">03/30/25</span>
+                    <span className="text-sm font-medium text-foreground">Mar 30, 2025</span>
                     <span className="text-sm text-muted-foreground">•</span>
                     <Badge variant="outline" className="text-xs">Prescription Pack</Badge>
                     <Badge variant="secondary" className="text-xs">Medication</Badge>
@@ -146,7 +146,7 @@ export function PatientProfileDrawer({ isOpen, onClose }: PatientProfileDrawerPr
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-sm font-medium text-foreground">03/30/25</span>
+                    <span className="text-sm font-medium text-foreground">Mar 30, 2025</span>
                     <span className="text-sm text-muted-foreground">•</span>
                     <Badge variant="outline" className="text-xs">Primary Care</Badge>
                     <Badge variant="secondary" className="text-xs">Appointment</Badge>
@@ -166,7 +166,7 @@ export function PatientProfileDrawer({ isOpen, onClose }: PatientProfileDrawerPr
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-sm font-medium text-foreground">08/18/24</span>
+                    <span className="text-sm font-medium text-foreground">Aug 18, 2024</span>
                     <span className="text-sm text-muted-foreground">•</span>
                     <Badge variant="outline" className="text-xs">Pneumococcal</Badge>
                     <Badge variant="secondary" className="text-xs">Vaccine</Badge>
