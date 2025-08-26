@@ -7,6 +7,7 @@ import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { PageHeader } from "@/components/ui/page-header";
 import { AIChipClosedSmart } from "@/components/ai/AIChipClosedSmart";
 import { InlineAddInput } from "@/components/ui/inline-add-input";
+import AddLabOrderScreen from "@/components/labs/AddLabOrderScreen";
 import { useState, useRef, useEffect } from "react";
 import { toast } from "@/hooks/use-toast";
 import { 
@@ -441,56 +442,7 @@ function RXSection() {
 }
 
 function LabOrdersSection() {
-  const handleSave = () => {
-    toast({
-      title: "Lab Orders Saved",
-      description: "Your lab orders have been saved.",
-    });
-  };
-
-  return (
-    <div className="space-y-6">
-      <PageHeader
-        title={copy.labOrders}
-        description={copy.labOrdersDesc}
-        icon={FlaskConical}
-        onSave={handleSave}
-      >
-        <Badge className="ml-2">{`2 ${copy.pending}`}</Badge>
-        <Button>{copy.orderNewLab}</Button>
-      </PageHeader>
-
-      <div className="space-y-6">
-        <div className="border border-border rounded-lg p-4 bg-surface">
-          <div className="flex items-center justify-between mb-3">
-            <h4 className="font-semibold text-fg">Complete Blood Count (CBC)</h4>
-            <Badge variant="secondary" className="bg-medical-amber-light text-medical-amber">
-              {copy.pending}
-            </Badge>
-          </div>
-          <div className="space-y-1 text-sm text-fg-muted">
-            <p><strong>{copy.ordered}:</strong> Today, 2:30 PM</p>
-            <p><strong>{copy.priority}:</strong> {copy.routine}</p>
-            <p><strong>{copy.indication}:</strong> Follow-up on recent infection</p>
-          </div>
-        </div>
-
-        <div className="border border-border rounded-lg p-4 bg-surface">
-          <div className="flex items-center justify-between mb-3">
-            <h4 className="font-semibold text-fg">Basic Metabolic Panel (BMP)</h4>
-            <Badge variant="secondary" className="bg-medical-amber-light text-medical-amber">
-              {copy.pending}
-            </Badge>
-          </div>
-          <div className="space-y-1 text-sm text-fg-muted">
-            <p><strong>{copy.ordered}:</strong> Today, 2:30 PM</p>
-            <p><strong>{copy.priority}:</strong> {copy.routine}</p>
-            <p><strong>{copy.indication}:</strong> Routine metabolic screening</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+  return <AddLabOrderScreen />;
 }
 
 function IntakeFormSection() {
