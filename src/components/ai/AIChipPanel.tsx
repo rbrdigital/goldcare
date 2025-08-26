@@ -22,7 +22,7 @@ export default function AIChipPanel({
     <div
       className={cn(
         // one-line pill; wraps naturally if space is tight
-        "w-full rounded-full border border-border bg-surface-muted",
+        "w-full rounded-[20px] border border-border bg-surface-muted",
         "px-4 py-2 flex items-center gap-3",
         className
       )}
