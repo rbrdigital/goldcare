@@ -6,6 +6,8 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
+import { PageHeader } from "@/components/ui/page-header";
+import { FlaskConical } from "lucide-react";
 import ComboboxChips from "@/components/ui/ComboboxChips";
 import OrderSetModal from "./OrderSetModal";
 
@@ -141,6 +143,10 @@ export default function AddLabOrderScreen() {
     []
   );
 
+  const handleSave = () => {
+    // Auto-save functionality placeholder
+  };
+
   const openSet = (category: string) => setModal({ open: true, category });
   const confirmSet = (exams: string[]) => {
     if (!modal.category) return;
@@ -158,24 +164,25 @@ export default function AddLabOrderScreen() {
   return (
     <div className="mx-auto w-full max-w-5xl px-6">
       <div className="space-y-6">
-        {/* Header */}
+        <PageHeader
+          title="Lab orders"
+          description="Create and manage lab orders for your patients"
+          icon={FlaskConical}
+          onSave={handleSave}
+        />
+
+        {/* Lab order section header */}
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold flex items-center gap-2 text-fg">
-              Lab orders
-            </h1>
-            <p className="text-fg-muted">Create and manage lab orders for your patients</p>
-          </div>
+          <h2 className="text-lg font-semibold">Lab order #1</h2>
           <div className="flex items-center gap-2">
-            <Badge variant="outline">Auto-saved</Badge>
             <Button variant="outline">Duplicate</Button>
-            <Button variant="outline">Create new</Button>
+            <Button variant="outline">Remove</Button>
           </div>
         </div>
 
         {/* Clinical diagnosis */}
         <section>
-          <h2 className="text-lg font-semibold mb-3">Clinical diagnosis</h2>
+          <h3 className="text-base font-medium mb-3">Clinical diagnosis</h3>
           <div className="space-y-4">
             <ComboboxChips
               id="diagnoses"
@@ -233,6 +240,13 @@ export default function AddLabOrderScreen() {
               </div>
             ))}
             {requests.length === 0 && <p className="text-sm text-fg-muted py-3">No lab orders selected.</p>}
+          </div>
+
+          {/* Add another order */}
+          <div className="mt-4">
+            <Button variant="outline" className="text-sm">
+              + Add another order
+            </Button>
           </div>
         </section>
 
