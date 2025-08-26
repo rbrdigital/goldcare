@@ -355,12 +355,6 @@ export default function AddLabOrderScreen() {
             + Add another order
           </Button>
         </div>
-
-        {/* Footer actions */}
-        <div className="flex justify-end gap-2 pt-4">
-          <Button variant="outline">Cancel</Button>
-          <Button className="bg-black text-white hover:opacity-90">Save</Button>
-        </div>
       </div>
 
       {/* Modal: preselect ALL items for the chosen set; user can uncheck then Confirm */}
