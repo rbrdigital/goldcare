@@ -1,6 +1,6 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import AIChipPanel from "./AIChipPanel"
+import AIChipPanelCustomizable from "./AIChipPanelCustomizable"
 
 interface AIChipClosedSmartProps {
   text: string;
@@ -50,11 +50,11 @@ export function AIChipClosedSmart({ text, onInsert, className }: AIChipClosedSma
   // If overflowing and not expanded, pre-truncate to a pleasant word boundary
   const displayText = (isOverflowing && !isExpanded) ? truncateAtWord(text, 140) : text;
 
-  // If expanded, use AIChipPanel for the expanded state
+  // If expanded, use AIChipPanelCustomizable for the expanded state
   if (isExpanded) {
-    console.log('🐛 AIChipClosedSmart: rendering expanded state with AIChipPanel');
+    console.log('🐛 AIChipClosedSmart: rendering expanded state with AIChipPanelCustomizable');
     return (
-      <AIChipPanel
+      <AIChipPanelCustomizable
         text={text}
         onInsert={() => {
           console.log('🐛 AIChipClosedSmart: Insert clicked in expanded state');
