@@ -357,7 +357,7 @@ export default function RXForm() {
             </div>
 
             {/* Order Summary */}
-            <div className="rounded-md border border-border bg-surface p-4">
+            <div className="mt-6 rounded-md border border-border bg-surface p-4">
               <div className="font-medium mb-1">Order Summary</div>
               <div className="text-sm text-fg-muted">
                 {renderSummary({ ...rx, totalQty })}
