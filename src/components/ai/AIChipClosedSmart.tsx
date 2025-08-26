@@ -1,5 +1,6 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
+import AIChipPanel from "./AIChipPanel"
 
 interface AIChipClosedSmartProps {
   text: string;
@@ -48,6 +49,18 @@ export function AIChipClosedSmart({ text, onInsert, className }: AIChipClosedSma
   // If overflowing and not expanded, pre-truncate to a pleasant word boundary
   const displayText = (isOverflowing && !isExpanded) ? truncateAtWord(text, 140) : text;
 
+  // If expanded, use AIChipPanel for the expanded state
+  if (isExpanded) {
+    return (
+      <AIChipPanel
+        text={text}
+        onInsert={onInsert}
+        onClose={() => setIsExpanded(false)}
+        className={cn("mt-2", className)}
+      />
+    );
+  }
+
   return (
     <div 
       className={cn(
@@ -77,10 +90,7 @@ export function AIChipClosedSmart({ text, onInsert, className }: AIChipClosedSma
         <strong className="shrink-0">GoldCare&nbsp;AI:</strong>
         <span 
           ref={previewRef}
-          className={cn(
-            "min-w-0",
-            isExpanded ? "whitespace-pre-wrap break-words" : "truncate whitespace-nowrap"
-          )}
+          className="min-w-0 truncate whitespace-nowrap"
           data-testid="gcai-preview-text"
           title={text}
         >
@@ -88,7 +98,7 @@ export function AIChipClosedSmart({ text, onInsert, className }: AIChipClosedSma
         </span>
       </div>
 
-      {isOverflowing && !isExpanded ? (
+      {isOverflowing ? (
         <button
           type="button"
           onClick={() => setIsExpanded(true)}
@@ -97,25 +107,6 @@ export function AIChipClosedSmart({ text, onInsert, className }: AIChipClosedSma
         >
           Preview
         </button>
-      ) : isExpanded ? (
-        <div className="ml-3 shrink-0 flex items-center gap-2">
-          <button
-            type="button"
-            onClick={() => setIsExpanded(false)}
-            className="text-[12px] font-medium text-fg-muted hover:underline focus:outline-none"
-            aria-label="Collapse GoldCare AI suggestion"
-          >
-            Collapse
-          </button>
-          <button
-            type="button"
-            onClick={onInsert}
-            className="text-[12px] font-medium text-primary hover:underline focus:outline-none"
-            aria-label="Insert GoldCare AI suggestion"
-          >
-            Insert
-          </button>
-        </div>
       ) : (
         <button
           type="button"
