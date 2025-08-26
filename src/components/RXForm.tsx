@@ -305,8 +305,6 @@ export default function RXForm() {
               </div>
             </div>
 
-            <Separator className="my-4" />
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label>Notes to patient</Label>
@@ -357,8 +355,6 @@ export default function RXForm() {
                 </div>
               </div>
             </div>
-
-            <Separator className="my-4" />
 
             {/* Order Summary */}
             <div className="rounded-md border border-border bg-surface p-4">

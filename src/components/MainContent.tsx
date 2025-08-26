@@ -127,8 +127,6 @@ function SOAPNoteSection() {
                 useCustomizable={true}
               />
             </div>
-
-            <Separator />
             
             {/* Current Medications */}
             <div>
@@ -153,8 +151,6 @@ function SOAPNoteSection() {
               />
             </div>
 
-            <Separator />
-
             {/* Supplements & OTC */}
             <div>
               <Label className="text-sm font-medium text-fg mb-2">{copy.supplementsOtc}</Label>
@@ -177,8 +173,6 @@ function SOAPNoteSection() {
                 }}
               />
             </div>
-
-            <Separator />
 
             {/* Allergies */}
             <div>
@@ -340,8 +334,6 @@ function SOAPNoteSection() {
               />
             </div>
 
-            <Separator />
-
             <div>
               <Label className="text-sm font-medium text-fg mb-2">{copy.differential}</Label>
               <AutosizeTextarea
@@ -384,8 +376,6 @@ function SOAPNoteSection() {
               />
             </div>
 
-            <Separator />
-
             <div>
               <Label className="text-sm font-medium text-fg mb-2">{copy.acuteDiagnosis}</Label>
               <InlineAddInput
@@ -407,8 +397,6 @@ function SOAPNoteSection() {
                 }}
               />
             </div>
-
-            <Separator />
 
             <div>
               <Label className="text-sm font-medium text-fg mb-2">{copy.comorbidities}</Label>
@@ -569,8 +557,6 @@ function DiagnosesSection() {
           </div>
         </div>
 
-        <Separator />
-
         <div>
           <h4 className="font-semibold text-fg mb-3">Current Medications</h4>
           <div className="border border-border rounded-lg p-4 bg-surface">
@@ -583,8 +569,6 @@ function DiagnosesSection() {
             </div>
           </div>
         </div>
-
-        <Separator />
 
         <div>
           <h4 className="font-semibold text-fg mb-3">Allergies</h4>
