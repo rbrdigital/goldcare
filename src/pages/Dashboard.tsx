@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { AppSidebar } from "@/components/AppSidebar";
 import { MainContent } from "@/components/MainContent";
+import AddLabOrderScreen from "@/components/labs/AddLabOrderScreen";
 import { PatientProfileDrawer } from "@/components/PatientProfileDrawer";
 import { LabsImagingSideSheet } from "@/components/LabsImagingSideSheet";
 import { DiagnosesMedsAllergiesSideSheet } from "@/components/DiagnosesMedsAllergiesSideSheet";
@@ -110,7 +111,11 @@ export function Dashboard() {
         </aside>
         <main className="min-w-0">
           <div className="mx-auto w-full max-w-5xl px-6">
-            <MainContent activeSection={activeSection} />
+            {new URLSearchParams(window.location.search).get("labs") === "add" ? (
+              <AddLabOrderScreen />
+            ) : (
+              <MainContent activeSection={activeSection} />
+            )}
           </div>
         </main>
         
