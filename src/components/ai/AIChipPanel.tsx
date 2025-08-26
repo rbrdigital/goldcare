@@ -56,19 +56,26 @@ export default function AIChipPanel({
       {/* actions on the right: Insert (blue), Close (muted) */}
       <button
         type="button"
-        onClick={onClose}
+        onClick={() => {
+          console.log('🐛 AIChipPanel: Close button clicked');
+          onClose();
+        }}
         className={cn(
           "text-sm text-fg-muted hover:underline focus-visible:outline-none",
           "focus-visible:ring-2 focus-visible:ring-primary rounded"
         )}
         aria-label="Close AI suggestion"
+        data-testid="gcai-close-btn"
       >
         Close
       </button>
 
       <button
         type="button"
-        onClick={onInsert}
+        onClick={() => {
+          console.log('🐛 AIChipPanel: Insert button clicked');
+          onInsert();
+        }}
         className={cn(
           "text-sm font-medium text-primary ml-2 hover:underline focus-visible:outline-none",
           "focus-visible:ring-2 focus-visible:ring-primary rounded"

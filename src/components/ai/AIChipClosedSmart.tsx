@@ -27,6 +27,7 @@ export function AIChipClosedSmart({ text, onInsert, className }: AIChipClosedSma
     if (!el) return;
     // measure after layout
     const overflowing = el.scrollWidth > el.clientWidth;
+    console.log('🐛 AIChipClosedSmart: measuring overflow', { overflowing, scrollWidth: el.scrollWidth, clientWidth: el.clientWidth });
     setIsOverflowing(overflowing);
   }, []);
 
@@ -51,12 +52,20 @@ export function AIChipClosedSmart({ text, onInsert, className }: AIChipClosedSma
 
   // If expanded, use AIChipPanel for the expanded state
   if (isExpanded) {
+    console.log('🐛 AIChipClosedSmart: rendering expanded state with AIChipPanel');
     return (
       <AIChipPanel
         text={text}
-        onInsert={onInsert}
-        onClose={() => setIsExpanded(false)}
+        onInsert={() => {
+          console.log('🐛 AIChipClosedSmart: Insert clicked in expanded state');
+          onInsert();
+        }}
+        onClose={() => {
+          console.log('🐛 AIChipClosedSmart: Close clicked, collapsing');
+          setIsExpanded(false);
+        }}
         className={cn("mt-2", className)}
+        data-testid="gcai-expanded-panel"
       />
     );
   }
@@ -101,18 +110,26 @@ export function AIChipClosedSmart({ text, onInsert, className }: AIChipClosedSma
       {isOverflowing ? (
         <button
           type="button"
-          onClick={() => setIsExpanded(true)}
+          onClick={() => {
+            console.log('🐛 AIChipClosedSmart: Preview button clicked, expanding');
+            setIsExpanded(true);
+          }}
           className="ml-3 shrink-0 text-[12px] font-medium text-primary hover:underline focus:outline-none"
           aria-label="Preview GoldCare AI suggestion"
+          data-testid="gcai-preview-btn"
         >
           Preview
         </button>
       ) : (
         <button
           type="button"
-          onClick={onInsert}
+          onClick={() => {
+            console.log('🐛 AIChipClosedSmart: Insert button clicked (not overflowing)');
+            onInsert();
+          }}
           className="ml-3 shrink-0 text-[12px] font-medium text-primary hover:underline focus:outline-none"
           aria-label="Insert GoldCare AI suggestion"
+          data-testid="gcai-insert-btn"
         >
           Insert
         </button>
