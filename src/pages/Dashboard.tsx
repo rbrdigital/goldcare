@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
 import { AppSidebar } from "@/components/AppSidebar";
 import { MainContent } from "@/components/MainContent";
 import { PatientProfileDrawer } from "@/components/PatientProfileDrawer";
@@ -8,7 +7,6 @@ import { DiagnosesMedsAllergiesSideSheet } from "@/components/DiagnosesMedsAller
 import { GoldCareAIPanel } from "@/components/GoldCareAIPanel";
 import { PatientMiniCard } from "@/components/PatientMiniCard";
 import { RightPanel } from "@/components/layout/RightPanel";
-import AddLabOrderScreen from "@/components/labs/AddLabOrderScreen";
 import { cn } from "@/lib/utils";
 
 const mockPatient = {
@@ -20,16 +18,12 @@ const mockPatient = {
 };
 
 export function Dashboard() {
-  const [searchParams] = useSearchParams();
   const [activeSection, setActiveSection] = useState("soap");
   const [sidebarMini, setSidebarMini] = useState(false);
   const [patientProfileDrawerOpen, setPatientProfileDrawerOpen] = useState(false);
   const [labsImagingSideSheetOpen, setLabsImagingSideSheetOpen] = useState(false);
   const [diagnosesMedsAllergiesSideSheetOpen, setDiagnosesMedsAllergiesSideSheetOpen] = useState(false);
   const [goldcareAIPanelOpen, setGoldcareAIPanelOpen] = useState(false);
-  
-  // Temporary shortcut for labs=add
-  const showLabOrderScreen = searchParams.get('labs') === 'add';
 
   const handleJoinMeeting = () => {
     console.log("Joining meeting...");
@@ -116,7 +110,7 @@ export function Dashboard() {
         </aside>
         <main className="min-w-0">
           <div className="mx-auto w-full max-w-5xl px-6">
-            {showLabOrderScreen ? <AddLabOrderScreen /> : <MainContent activeSection={activeSection} />}
+            <MainContent activeSection={activeSection} />
           </div>
         </main>
         
