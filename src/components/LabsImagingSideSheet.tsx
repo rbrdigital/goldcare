@@ -111,7 +111,7 @@ export function LabsImagingSideSheet({
     const variants = {
       Awaiting: "bg-muted text-muted-foreground border-border",
       Sending: "bg-blue-50 text-blue-700 border-blue-200",
-      Pending: "bg-amber-50 text-amber-700 border-amber-200",
+      Pending: "bg-amber-50 text-[hsl(33,95%,38%)] border-amber-200",
       Draft: "bg-muted text-muted-foreground border-border"
     };
     return <Badge variant="outline" className={cn("text-xs px-2 py-1", variants[status as keyof typeof variants])}>
