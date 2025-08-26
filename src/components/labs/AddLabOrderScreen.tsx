@@ -9,6 +9,8 @@ import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import ComboboxChips from "@/components/ui/ComboboxChips";
 import OrderSetModal from "./OrderSetModal";
 
+console.log("AddLabOrderScreen: All imports loaded successfully");
+
 type Diagnosis = { code: string; label: string };
 type Request = { id: string; category: string; exams: string[] };
 
@@ -127,10 +129,14 @@ const LAB_SETS: Record<string, string[]> = {
 const ORDER_TABS = Object.keys(LAB_SETS);
 
 export default function AddLabOrderScreen() {
+  console.log("AddLabOrderScreen: Component function called");
+  
   const [selectedDiagnoses, setSelectedDiagnoses] = React.useState<string[]>([]);
   const [otherDx, setOtherDx] = React.useState("");
   const [requests, setRequests] = React.useState<Request[]>([]);
   const [modal, setModal] = React.useState<{ open: boolean; category: string | null }>({ open: false, category: null });
+
+  console.log("AddLabOrderScreen: State initialized");
 
   // Convert TOP_DIAGNOSES to combobox format
   const diagnosisOptions = React.useMemo(
@@ -140,6 +146,8 @@ export default function AddLabOrderScreen() {
     })),
     []
   );
+
+  console.log("AddLabOrderScreen: Diagnosis options created", diagnosisOptions.length);
 
   const openSet = (category: string) => setModal({ open: true, category });
   const confirmSet = (exams: string[]) => {
