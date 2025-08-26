@@ -36,7 +36,7 @@ export function AIChipPanelCustomizable({
   return (
     <div className={cn("w-full", className)} {...rest}>
       {/* Main pill */}
-      <div className="w-full rounded-full border border-border bg-surface-muted px-4 py-2 flex items-center gap-3">
+      <div className="w-full rounded-[20px] border border-border bg-surface-muted px-4 py-2 flex flex-row items-start flex-wrap gap-3">
         {/* 12x12 star icon */}
         <svg 
           xmlns="http://www.w3.org/2000/svg" 
@@ -44,7 +44,7 @@ export function AIChipPanelCustomizable({
           height="12" 
           viewBox="0 0 12 12" 
           fill="none"
-          className="shrink-0 text-fg"
+          className="shrink-0 text-fg mt-1"
           aria-hidden="true"
         >
           <mask id="mask0_1169_244" style={{maskType: 'luminance'}} maskUnits="userSpaceOnUse" x="0" y="0" width="12" height="12">
@@ -55,8 +55,7 @@ export function AIChipPanelCustomizable({
           </g>
         </svg>
 
-        <strong className="shrink-0">GoldCare&nbsp;AI:</strong>
-        <span className="text-sm leading-5 min-w-0 flex-1">{text}</span>
+        <span className="text-sm leading-5 min-w-0 flex-1"><strong>GoldCare&nbsp;AI:</strong> {text}</span>
 
         {/* Actions on the right */}
         <button
