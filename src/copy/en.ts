@@ -10,7 +10,7 @@ export const copy = {
   intakeFormDesc: "Complete patient intake information",
   diagnosesTitle: "Diagnoses, Medications & Allergies",
   diagnosesDesc: "Current patient conditions and treatments",
-  previousResults: "Previous Labs & Imaging Results",
+  previousResults: "Previous Labs & Imaging",
   previousResultsDesc: "Historical test results and imaging studies",
 
   // Buttons & Actions
