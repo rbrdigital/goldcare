@@ -1,10 +1,13 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
 import AIChipPanel from "./AIChipPanel"
+import { AIChipPanelCustomizable } from "./AIChipPanelCustomizable"
 
 interface AIChipClosedSmartProps {
   text: string;
   onInsert: () => void;
+  onGenerateInsert?: (text: string) => void;
+  useCustomizable?: boolean;
   className?: string;
 }
 
@@ -17,7 +20,7 @@ function truncateAtWord(input: string, max = 140): string {
   return (lastSpace > 40 ? slice.slice(0, lastSpace) : slice).trimEnd() + "…";
 }
 
-export function AIChipClosedSmart({ text, onInsert, className }: AIChipClosedSmartProps) {
+export function AIChipClosedSmart({ text, onInsert, onGenerateInsert, useCustomizable = false, className }: AIChipClosedSmartProps) {
   const previewRef = React.useRef<HTMLSpanElement>(null);
   const [isOverflowing, setIsOverflowing] = React.useState(false);
   const [isExpanded, setIsExpanded] = React.useState(false);
@@ -50,9 +53,29 @@ export function AIChipClosedSmart({ text, onInsert, className }: AIChipClosedSma
   // If overflowing and not expanded, pre-truncate to a pleasant word boundary
   const displayText = (isOverflowing && !isExpanded) ? truncateAtWord(text, 140) : text;
 
-  // If expanded, use AIChipPanel for the expanded state
+  // If expanded, use appropriate panel for the expanded state
   if (isExpanded) {
-    console.log('🐛 AIChipClosedSmart: rendering expanded state with AIChipPanel');
+    console.log('🐛 AIChipClosedSmart: rendering expanded state with', useCustomizable ? 'AIChipPanelCustomizable' : 'AIChipPanel');
+    
+    if (useCustomizable) {
+      return (
+        <AIChipPanelCustomizable
+          text={text}
+          onInsert={() => {
+            console.log('🐛 AIChipClosedSmart: Insert clicked in customizable expanded state');
+            onInsert();
+          }}
+          onGenerateInsert={onGenerateInsert}
+          onClose={() => {
+            console.log('🐛 AIChipClosedSmart: Close clicked, collapsing');
+            setIsExpanded(false);
+          }}
+          className={cn("mt-2", className)}
+          data-testid="gcai-expanded-panel"
+        />
+      );
+    }
+    
     return (
       <AIChipPanel
         text={text}

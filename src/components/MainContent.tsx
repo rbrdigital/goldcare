@@ -123,6 +123,8 @@ function SOAPNoteSection() {
               <AIChipClosedSmart
                 text="Patient presents with intermittent chest tightness and shortness of breath for the past 3 weeks, worse at night and after exertion. Denies fever or cough. Reports a history of elevated blood pressure and borderline cholesterol."
                 onInsert={() => insertSuggestion("Patient presents with intermittent chest tightness and shortness of breath for the past 3 weeks, worse at night and after exertion. Denies fever or cough. Reports a history of elevated blood pressure and borderline cholesterol.", setChiefComplaint)}
+                onGenerateInsert={(text) => insertSuggestion(text, setChiefComplaint)}
+                useCustomizable={true}
               />
             </div>
 
@@ -309,6 +311,8 @@ function SOAPNoteSection() {
             <AIChipClosedSmart
               text="Patient appears alert and oriented, in no acute distress. Lungs clear to auscultation, regular heart rhythm, no murmurs. Mildly elevated blood pressure noted."
               onInsert={() => insertSuggestion("Patient appears alert and oriented, in no acute distress. Lungs clear to auscultation, regular heart rhythm, no murmurs. Mildly elevated blood pressure noted.", setObservations)}
+              onGenerateInsert={(text) => insertSuggestion(text, setObservations)}
+              useCustomizable={true}
             />
           </div>
         </section>
@@ -331,6 +335,8 @@ function SOAPNoteSection() {
               <AIChipClosedSmart
                 text="Primary concerns include hypertension, possible early cardiovascular disease, and poor sleep contributing to fatigue."
                 onInsert={() => insertSuggestion("Primary concerns include hypertension, possible early cardiovascular disease, and poor sleep contributing to fatigue.", setAssessment)}
+                onGenerateInsert={(text) => insertSuggestion(text, setAssessment)}
+                useCustomizable={true}
               />
             </div>
 
@@ -348,6 +354,8 @@ function SOAPNoteSection() {
               <AIChipClosedSmart
                 text="Hypertension with secondary cardiovascular risk • Obstructive sleep apnea • Anxiety-related chest tightness"
                 onInsert={() => insertSuggestion("Hypertension with secondary cardiovascular risk • Obstructive sleep apnea • Anxiety-related chest tightness", setDifferential)}
+                onGenerateInsert={(text) => insertSuggestion(text, setDifferential)}
+                useCustomizable={true}
               />
             </div>
           </div>
@@ -371,6 +379,8 @@ function SOAPNoteSection() {
               <AIChipClosedSmart
                 text="1) Order EKG, lipid panel, and basic metabolic panel. 2) Continue lisinopril and atorvastatin as prescribed. 3) Recommend sleep study referral to rule out OSA. 4) Follow-up in 6 weeks with lab results."
                 onInsert={() => insertSuggestion("1) Order EKG, lipid panel, and basic metabolic panel. 2) Continue lisinopril and atorvastatin as prescribed. 3) Recommend sleep study referral to rule out OSA. 4) Follow-up in 6 weeks with lab results.", setPlan)}
+                onGenerateInsert={(text) => insertSuggestion(text, setPlan)}
+                useCustomizable={true}
               />
             </div>
 
