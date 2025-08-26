@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
+import { PageHeader } from "@/components/ui/page-header";
 import { AIChipClosedSmart } from "@/components/ai/AIChipClosedSmart";
 import { InlineAddInput } from "@/components/ui/inline-add-input";
 import { useState, useRef, useEffect } from "react";
@@ -95,20 +96,12 @@ function SOAPNoteSection() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2 text-fg">
-            <FileText className="h-6 w-6 text-medical-blue" />
-            {copy.soapNote}
-          </h1>
-          <p className="text-fg-muted">{copy.soapNoteDesc}</p>
-        </div>
-        <Button variant="ghost" size="sm" onClick={handleSave} className="gap-2">
-          <Save className="h-4 w-4" />
-          {copy.save}
-        </Button>
-      </div>
+      <PageHeader
+        title={copy.soapNote}
+        description={copy.soapNoteDesc}
+        icon={FileText}
+        onSave={handleSave}
+      />
 
       <div className="space-y-8">
         {/* ========== Subjective ========== */}
@@ -450,26 +443,24 @@ function RXSection() {
 }
 
 function LabOrdersSection() {
+  const handleSave = () => {
+    toast({
+      title: "Lab Orders Saved",
+      description: "Your lab orders have been saved.",
+    });
+  };
+
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2 text-fg">
-            <FlaskConical className="h-6 w-6 text-medical-blue" />
-            {copy.labOrders}
-            <Badge className="ml-2">{`2 ${copy.pending}`}</Badge>
-          </h1>
-          <p className="text-fg-muted">{copy.labOrdersDesc}</p>
-        </div>
-        <div className="flex items-center gap-3">
-          <Button variant="ghost" size="sm" className="gap-2">
-            <Save className="h-4 w-4" />
-            {copy.save}
-          </Button>
-          <Button>{copy.orderNewLab}</Button>
-        </div>
-      </div>
+      <PageHeader
+        title={copy.labOrders}
+        description={copy.labOrdersDesc}
+        icon={FlaskConical}
+        onSave={handleSave}
+      >
+        <Badge className="ml-2">{`2 ${copy.pending}`}</Badge>
+        <Button>{copy.orderNewLab}</Button>
+      </PageHeader>
 
       <div className="space-y-6">
         <div className="border border-border rounded-lg p-4 bg-surface">
@@ -505,25 +496,25 @@ function LabOrdersSection() {
 }
 
 function IntakeFormSection() {
+  const handleSave = () => {
+    toast({
+      title: "Intake Form Saved",
+      description: "Your changes have been saved.",
+    });
+  };
+
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <AlertTriangle className="h-6 w-6 text-medical-amber" />
-          <div>
-            <h1 className="text-2xl font-bold text-fg">{copy.intakeForm}</h1>
-            <p className="text-fg-muted">{copy.intakeFormDesc}</p>
-          </div>
-          <Badge variant="secondary" className="bg-medical-amber-light text-medical-amber ml-4">
-            {copy.requiresAttention}
-          </Badge>
-        </div>
-        <Button variant="ghost" size="sm" className="gap-2">
-          <Save className="h-4 w-4" />
-          {copy.save}
-        </Button>
-      </div>
+      <PageHeader
+        title={copy.intakeForm}
+        description={copy.intakeFormDesc}
+        icon={AlertTriangle}
+        onSave={handleSave}
+      >
+        <Badge variant="secondary" className="bg-medical-amber-light text-medical-amber ml-4">
+          {copy.requiresAttention}
+        </Badge>
+      </PageHeader>
 
       <div className="border border-border rounded-lg p-6 bg-surface">
         <h4 className="font-semibold text-fg mb-2">Patient Information</h4>
@@ -538,22 +529,21 @@ function IntakeFormSection() {
 }
 
 function DiagnosesSection() {
+  const handleSave = () => {
+    toast({
+      title: "Diagnoses Saved",
+      description: "Patient diagnoses, medications, and allergies have been saved.",
+    });
+  };
+
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2 text-fg">
-            <Activity className="h-6 w-6 text-medical-blue" />
-            {copy.diagnosesTitle}
-          </h1>
-          <p className="text-fg-muted">{copy.diagnosesDesc}</p>
-        </div>
-        <Button variant="ghost" size="sm" className="gap-2">
-          <Save className="h-4 w-4" />
-          {copy.save}
-        </Button>
-      </div>
+      <PageHeader
+        title={copy.diagnosesTitle}
+        description={copy.diagnosesDesc}
+        icon={Activity}
+        onSave={handleSave}
+      />
 
       <div className="space-y-6">
         <div>
@@ -604,23 +594,23 @@ function DiagnosesSection() {
 }
 
 function PreviousResultsSection() {
+  const handleSave = () => {
+    toast({
+      title: "Results Saved",
+      description: "Previous results have been saved.",
+    });
+  };
+
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2 text-fg">
-            <Activity className="h-6 w-6 text-medical-blue" />
-            {copy.previousResults}
-            <Badge className="ml-2 bg-medical-green text-white">{`3 ${copy.new}`}</Badge>
-          </h1>
-          <p className="text-fg-muted">{copy.previousResultsDesc}</p>
-        </div>
-        <Button variant="ghost" size="sm" className="gap-2">
-          <Save className="h-4 w-4" />
-          {copy.save}
-        </Button>
-      </div>
+      <PageHeader
+        title={copy.previousResults}
+        description={copy.previousResultsDesc}
+        icon={Activity}
+        onSave={handleSave}
+      >
+        <Badge className="ml-2 bg-medical-green text-white">{`3 ${copy.new}`}</Badge>
+      </PageHeader>
 
       <div className="space-y-6">
         <div className="border border-border rounded-lg p-4 bg-surface">

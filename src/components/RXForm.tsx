@@ -7,8 +7,11 @@ import { Label } from "@/components/ui/label";
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
+import { PageHeader } from "@/components/ui/page-header";
 import { AIChipClosedSmart } from "@/components/ai/AIChipClosedSmart";
 import PharmacyPickerModal from "@/components/modals/PharmacyPickerModal";
+import { Pill } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
 
 type RxFields = {
   medicine: string;
@@ -82,16 +85,21 @@ export default function RXForm() {
   const patchItem = (idx: number, patch: Partial<RxFields>) =>
     setItems((a) => a.map((it, i) => (i === idx ? { ...it, ...patch } : it)));
 
+  const handleSave = () => {
+    toast({
+      title: "Prescriptions Saved",
+      description: "Your prescription orders have been saved.",
+    });
+  };
+
   return (
-    <div className="p-6">
-      <header className="flex items-center justify-between mt-2 mb-4">
-        <h1 className="text-[22px] font-semibold">Prescriptions</h1>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" className="border border-border">Cancel</Button>
-          {/* primary actions are black per spec */}
-          <Button className="bg-primary text-on-primary">Save</Button>
-        </div>
-      </header>
+    <div className="p-6 space-y-6">
+      <PageHeader
+        title="Prescriptions"
+        description="Create and manage prescription orders for your patients"
+        icon={Pill}
+        onSave={handleSave}
+      />
 
       {items.map((rx, i) => {
         const totalQty = calcTotalQty(rx);
@@ -390,10 +398,6 @@ export default function RXForm() {
         />
       </div>
 
-      <div className="flex items-center justify-between mt-6">
-        <Button variant="outline" className="border border-border">Cancel</Button>
-        <Button className="bg-primary text-on-primary">Save</Button>
-      </div>
 
       {/* Add prescription */}
       <div className="mt-8">
