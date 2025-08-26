@@ -109,14 +109,12 @@ export function Dashboard() {
             onItemClick={handleItemClick}
           />
         </aside>
-        <main className="min-w-0">
-          <div className="mx-auto w-full max-w-5xl px-6">
-            {new URLSearchParams(window.location.search).get("labs") === "add" ? (
-              <AddLabOrderScreen />
-            ) : (
-              <MainContent activeSection={activeSection} />
-            )}
-          </div>
+        <main className="min-w-0 py-6">
+          {new URLSearchParams(window.location.search).get("labs") === "add" ? (
+            <AddLabOrderScreen />
+          ) : (
+            <MainContent activeSection={activeSection} />
+          )}
         </main>
         
         {/* Right Panel */}

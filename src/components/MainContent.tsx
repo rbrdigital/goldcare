@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import RXForm from "@/components/RXForm";
 import { copy } from "@/copy/en";
+import PageContainer from "@/components/layout/PageContainer";
 
 interface MainContentProps {
   activeSection: string;
@@ -49,11 +50,9 @@ export function MainContent({ activeSection }: MainContentProps) {
   };
 
   return (
-    <main className="flex-1 overflow-y-auto">
-      <div className="p-6">
-        {renderSection()}
-      </div>
-    </main>
+    <PageContainer>
+      {renderSection()}
+    </PageContainer>
   );
 }
 
