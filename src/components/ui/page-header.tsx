@@ -32,7 +32,7 @@ const PageHeader = ({
           {onSave && (
             <Button variant="ghost" size="sm" onClick={onSave} className="gap-2">
               <Save className="h-4 w-4" />
-              Save
+              Auto-saved
             </Button>
           )}
         </div>
