@@ -35,7 +35,7 @@ export default function AIChipPanel({
         height="12" 
         viewBox="0 0 12 12" 
         fill="none"
-        className="shrink-0 text-fg"
+        className="shrink-0 text-fg mt-1"
         aria-hidden="true"
       >
         <mask id="mask0_1169_244" style={{maskType: 'luminance'}} maskUnits="userSpaceOnUse" x="0" y="0" width="12" height="12">
