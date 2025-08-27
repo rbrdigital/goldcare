@@ -7,6 +7,7 @@ import { LabsImagingSideSheet } from "@/components/LabsImagingSideSheet";
 import { DiagnosesMedsAllergiesSideSheet } from "@/components/DiagnosesMedsAllergiesSideSheet";
 import { GoldCareAIPanel } from "@/components/GoldCareAIPanel";
 import { PatientMiniCard } from "@/components/PatientMiniCard";
+import { MedicationWorkspace } from "@/components/MedicationWorkspace";
 import { RightPanel } from "@/components/layout/RightPanel";
 import { cn } from "@/lib/utils";
 
@@ -25,6 +26,7 @@ export function Dashboard() {
   const [labsImagingSideSheetOpen, setLabsImagingSideSheetOpen] = useState(false);
   const [diagnosesMedsAllergiesSideSheetOpen, setDiagnosesMedsAllergiesSideSheetOpen] = useState(false);
   const [goldcareAIPanelOpen, setGoldcareAIPanelOpen] = useState(false);
+  const [medicationWorkspaceOpen, setMedicationWorkspaceOpen] = useState(false);
 
   const handleJoinMeeting = () => {
     console.log("Joining meeting...");
@@ -40,6 +42,7 @@ export function Dashboard() {
     setLabsImagingSideSheetOpen(false);
     setDiagnosesMedsAllergiesSideSheetOpen(false);
     setGoldcareAIPanelOpen(false);
+    setMedicationWorkspaceOpen(false);
     
     // Open the selected panel
     if (itemId === "profile") {
@@ -66,6 +69,14 @@ export function Dashboard() {
         e.preventDefault();
         setDiagnosesMedsAllergiesSideSheetOpen(!diagnosesMedsAllergiesSideSheetOpen);
       }
+      if ((e.altKey || e.metaKey) && e.key === "m") {
+        e.preventDefault();
+        setMedicationWorkspaceOpen(!medicationWorkspaceOpen);
+      }
+    };
+
+    const handleMedicationWorkspaceEvent = () => {
+      setMedicationWorkspaceOpen(true);
     };
 
     // Handle URL hash
@@ -77,10 +88,15 @@ export function Dashboard() {
     }
 
     document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [labsImagingSideSheetOpen, diagnosesMedsAllergiesSideSheetOpen]);
+    window.addEventListener("openMedicationWorkspace", handleMedicationWorkspaceEvent);
+    
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("openMedicationWorkspace", handleMedicationWorkspaceEvent);
+    };
+  }, [labsImagingSideSheetOpen, diagnosesMedsAllergiesSideSheetOpen, medicationWorkspaceOpen]);
 
-  const hasRightSheet = labsImagingSideSheetOpen || diagnosesMedsAllergiesSideSheetOpen || patientProfileDrawerOpen || goldcareAIPanelOpen;
+  const hasRightSheet = labsImagingSideSheetOpen || diagnosesMedsAllergiesSideSheetOpen || patientProfileDrawerOpen || goldcareAIPanelOpen || medicationWorkspaceOpen;
 
   return (
     <div className="min-h-screen grid grid-rows-[auto_1fr]">
@@ -139,6 +155,12 @@ export function Dashboard() {
           )}
           {goldcareAIPanelOpen && (
             <GoldCareAIPanel />
+          )}
+          {medicationWorkspaceOpen && (
+            <MedicationWorkspace
+              isOpen={true}
+              onClose={() => setMedicationWorkspaceOpen(false)}
+            />
           )}
         </RightPanel>
       </div>
