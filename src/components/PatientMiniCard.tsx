@@ -1,7 +1,8 @@
-import { Clock, Users, MapPin, Shield, ArrowLeft, Minimize2, Maximize2 } from "lucide-react";
+import { Clock, Users, MapPin, Shield, ArrowLeft, Minimize2, Maximize2, Sun, Moon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import patientAvatar from "@/assets/patient-avatar.jpg";
+import { useTheme } from "@/hooks/use-theme";
 
 interface PatientMiniCardProps {
   patient: {
@@ -28,6 +29,7 @@ export function PatientMiniCard({
   onFinishAppointment,
   onProfileClick
 }: PatientMiniCardProps) {
+  const { theme, toggleTheme } = useTheme();
   return (
     <div className="sticky top-0 z-40 bg-bg border-b border-border">
       <div className="flex h-16 items-center justify-between px-6">
@@ -41,6 +43,13 @@ export function PatientMiniCard({
             onClick={onToggleSidebar}
           >
             {sidebarMini ? <Maximize2 className="h-4 w-4" /> : <Minimize2 className="h-4 w-4" />}
+          </Button>
+          <Button 
+            variant="ghost" 
+            size="sm"
+            onClick={toggleTheme}
+          >
+            {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </Button>
           <div className="h-4 w-px bg-border" />
           <div className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity" onClick={onProfileClick}>
