@@ -36,6 +36,15 @@
   /* Shadow (minimal) */
   --shadow-sm: 0 1px 2px rgba(0,0,0,.04);
 
+  /* Checkbox tokens */
+  --surface-inverse: var(--fg);     /* Black for checked background */
+  --content-inverse: var(--bg);     /* White for checkmark */
+  --surface-base: var(--bg);        /* White for unchecked background */
+  --border-subtle: var(--border);   /* Subtle border */
+  --border-strong: #d1d5db;         /* Darker border for hover */
+  --surface-disabled: #f3f4f6;      /* Disabled background */
+  --content-disabled: #9ca3af;      /* Disabled checkmark */
+
   /* Legacy support - map old tokens to new ones */
   --color-bg: var(--bg);
   --color-surface: var(--surface);
@@ -120,6 +129,15 @@
   --color-medical-amber-light: #451a03;
   --color-medical-red: #ef4444;
   --color-medical-red-light: #450a0a;
+
+  /* Checkbox tokens - dark mode */
+  --surface-inverse: #ffffff;       /* White for checked background in dark */
+  --content-inverse: #0f172a;       /* Dark for checkmark in dark */
+  --surface-base: #1e293b;          /* Dark surface for unchecked */
+  --border-subtle: #334155;         /* Subtle border in dark */
+  --border-strong: #475569;         /* Stronger border for hover in dark */
+  --surface-disabled: #374151;      /* Disabled background in dark */
+  --content-disabled: #6b7280;      /* Disabled checkmark in dark */
 
   /* UI elements */
   --color-muted: #1e293b;
