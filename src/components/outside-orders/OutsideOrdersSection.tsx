@@ -33,7 +33,7 @@ interface InternalReferral {
 // Outside order can be either external or internal referral
 interface OutsideOrder {
   id: string;
-  type: "external" | "internal";
+  type?: "external" | "internal"; // Make optional until user selects
   external?: ExternalReferral;
   internal?: InternalReferral;
 }
@@ -53,10 +53,10 @@ export default function OutsideOrdersSection() {
   };
 
   const addOutsideOrder = () => {
-    // Show the initial selector state for new orders
+    // Create a new incomplete order that will show selectors
     const newOrder: OutsideOrder = {
-      id: crypto.randomUUID(),
-      type: "external" // temporary, will be set when user selects
+      id: crypto.randomUUID()
+      // type is not set, so selectors will be shown
     };
     setOutsideOrders(prev => [...prev, newOrder]);
   };
@@ -89,48 +89,37 @@ export default function OutsideOrdersSection() {
     setOutsideOrders(prev => [...prev, duplicatedOrder]);
   };
 
-  // Fix the initial selectors to create orders properly
   const handleExternalSelect = (orderId?: string) => {
-    if (shouldShowInitialSelectors) {
-      // Create new order
-      addOutsideOrder();
+    if (orderId) {
+      // Edit existing order or configure incomplete order
       setEditState("external-editor");
-      setEditingOrderId(outsideOrders[0]?.id || crypto.randomUUID());
-    } else {
-      // Edit existing order
-      setEditState("external-editor");
-      setEditingOrderId(orderId || "");
-      setExternalContent("");
+      setEditingOrderId(orderId);
       
-      if (orderId) {
-        setOutsideOrders(prev => prev.map(order => 
-          order.id === orderId ? { ...order, type: "external" } : order
-        ));
-      }
+      // Update order type and get existing content if editing
+      const order = outsideOrders.find(o => o.id === orderId);
+      setExternalContent(order?.external?.content || "");
+      
+      setOutsideOrders(prev => prev.map(order => 
+        order.id === orderId ? { ...order, type: "external" } : order
+      ));
+    } else {
+      // This should not happen - orderId should always be provided
+      console.warn("handleExternalSelect called without orderId");
     }
   };
 
   const handleInternalSelect = (orderId?: string) => {
-    if (shouldShowInitialSelectors) {
-      // Create new order and open modal
-      const newOrderId = crypto.randomUUID();
-      const newOrder: OutsideOrder = {
-        id: newOrderId,
-        type: "internal"
-      };
-      setOutsideOrders(prev => [...prev, newOrder]);
+    if (orderId) {
+      // Edit existing order or configure incomplete order
       setModalOpen(true);
-      setModalOrderId(newOrderId);
-    } else {
-      // Edit existing order
-      setModalOpen(true);
-      setModalOrderId(orderId || "");
+      setModalOrderId(orderId);
       
-      if (orderId) {
-        setOutsideOrders(prev => prev.map(order => 
-          order.id === orderId ? { ...order, type: "internal" } : order
-        ));
-      }
+      setOutsideOrders(prev => prev.map(order => 
+        order.id === orderId ? { ...order, type: "internal" } : order
+      ));
+    } else {
+      // This should not happen - orderId should always be provided
+      console.warn("handleInternalSelect called without orderId");
     }
   };
 
@@ -181,6 +170,14 @@ export default function OutsideOrdersSection() {
   };
 
   const handleCancel = () => {
+    // If we're editing an incomplete order, remove it
+    if (editingOrderId) {
+      const order = outsideOrders.find(o => o.id === editingOrderId);
+      if (order && !order.external && !order.internal) {
+        removeOutsideOrder(editingOrderId);
+      }
+    }
+    
     setEditState("none");
     setEditingOrderId(null);
     setExternalContent("");
@@ -190,9 +187,14 @@ export default function OutsideOrdersSection() {
     setExternalContent(text); // Replace content, don't append
   };
 
-  // Check if we should show initial selectors or existing orders
+  // Check if we should show initial selectors - when no orders exist at all
   const shouldShowInitialSelectors = outsideOrders.length === 0;
   const isEditing = editState === "external-editor";
+  
+  // Helper function to check if an order needs configuration
+  const orderNeedsConfiguration = (order: OutsideOrder) => {
+    return !order.type || (!order.external && !order.internal);
+  };
 
   return (
     <>
@@ -269,8 +271,36 @@ export default function OutsideOrdersSection() {
           {/* Render existing orders */}
           {outsideOrders.map((order, orderIndex) => (
             <div key={order.id} className="space-y-6">
-              {/* Don't render incomplete orders */}
-              {(!order.external && !order.internal) && order.id !== editingOrderId ? null : (
+              {/* Show selectors for orders that need configuration */}
+              {orderNeedsConfiguration(order) && order.id !== editingOrderId && (
+                <div className="space-y-3">
+                  <div className="text-sm font-medium text-fg mb-2">Outside order #{orderIndex + 1}</div>
+                  <button
+                    onClick={() => handleExternalSelect(order.id)}
+                    className="w-full flex items-center gap-3 p-4 rounded-lg border border-border bg-surface hover:bg-surface-muted transition-colors text-left"
+                  >
+                    <div className="w-4 h-4 rounded border-2 border-border bg-bg flex-shrink-0" />
+                    <div className="flex-1">
+                      <div className="font-medium text-fg">Suggest an External referral</div>
+                    </div>
+                    <div className="w-2 h-2 rounded-full bg-fg-muted flex-shrink-0" />
+                  </button>
+
+                  <button
+                    onClick={() => handleInternalSelect(order.id)}
+                    className="w-full flex items-center gap-3 p-4 rounded-lg border border-border bg-surface hover:bg-surface-muted transition-colors text-left"
+                  >
+                    <div className="w-4 h-4 rounded border-2 border-border bg-bg flex-shrink-0" />
+                    <div className="flex-1">
+                      <div className="font-medium text-fg">Suggest an Internal referral</div>
+                    </div>
+                    <div className="w-2 h-2 rounded-full bg-fg-muted flex-shrink-0" />
+                  </button>
+                </div>
+              )}
+
+              {/* Show configured orders */}
+              {(order.external || order.internal) && (
                 <>
                   {/* Order header */}
                   <div className="flex items-center justify-between">
@@ -378,8 +408,8 @@ export default function OutsideOrdersSection() {
             </div>
           ))}
 
-          {/* Add another order - only show if we have orders and not editing */}
-          {outsideOrders.length > 0 && !isEditing && (
+          {/* Add another order - show if we have any configured orders and not editing */}
+          {outsideOrders.some(order => order.external || order.internal) && !isEditing && (
             <div className="mt-4">
               <Button variant="outline" className="text-sm" onClick={addOutsideOrder}>
                 + Add another order
@@ -392,6 +422,13 @@ export default function OutsideOrdersSection() {
       {modalOpen && modalOrderId && (
         <InternalReferralModal
           onClose={() => {
+            // If we're closing an incomplete order, remove it
+            if (modalOrderId) {
+              const order = outsideOrders.find(o => o.id === modalOrderId);
+              if (order && !order.external && !order.internal) {
+                removeOutsideOrder(modalOrderId);
+              }
+            }
             setModalOpen(false);
             setModalOrderId(null);
           }}
