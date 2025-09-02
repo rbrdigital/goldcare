@@ -29,88 +29,94 @@ interface InternalReferralModalProps {
 
 type Step = "choose-type" | "specialty-list" | "provider-selection";
 
-const SPECIALTIES = [
-  "Cardiology",
-  "Dermatology", 
-  "Endocrinology",
-  "Gastroenterology",
-  "Nutritionist",
-  "Orthopedics",
-  "Physical Medicine & Rehabilitation",
-  "Pulmonology",
-  "Rheumatology",
-  "Urology"
-];
-
 const SERVICES = [
-  "Cardiology",
-  "Dermatology",
-  "Endocrinology", 
-  "Gastroenterology",
-  "Orthopedics"
+  "Primary & Acute Care",
+  "Psychiatric Medicine", 
+  "Pediatric Medicine",
+  "Weight Management Consultants (Prescribers)",
+  "Weight Management Consultants (Advisors)",
+  "Specialist Advisor",
+  "Complementary Cancer Care Advisors",
+  "VIP Specialist",
+  "Long COVID & Vax Injury Care",
+  "Medical Advisor",
+  "Naturopathic and Chiropractic Advisors",
+  "Children's Health Advisor",
+  "Mental Health Advisor",
+  "Sports & Injury Advisors",
+  "Biological Dentist (& Naturopathic Doctor)",
+  "Vaccine Exemption Package",
+  "Advanced Planning for People and Animals",
+  "Animal Natural Wellness",
+  "Nutrition & Lifestyle",
+  "Registered Nurse Wellness Coaching",
+  "Spiritual & Pastoral Care",
+  "GoldCare Covid/Flu Essentials Pack",
+  "GoldCare Covid/Flu Premium Pack",
+  "GoldCare Prescription Pack"
 ];
 
 const MOCK_PROVIDERS: Record<string, Provider[]> = {
-  "Cardiology": [
+  "Primary & Acute Care": [
     {
-      id: "card-1",
+      id: "primary-1",
       name: "Jennifer Frangos",
       degree: "MD",
       availability: "Available today",
       tokens: "5 tokens = 15 minutes"
     },
     {
-      id: "card-2", 
+      id: "primary-2", 
       name: "Michael Chen",
       degree: "MD",
       availability: "Available tomorrow",
       tokens: "5 tokens = 15 minutes"
     },
     {
-      id: "card-3",
+      id: "primary-3",
       name: "Sarah Williams",
       degree: "MD",
       availability: "Available Tuesday",
       tokens: "5 tokens = 15 minutes"
     }
   ],
-  "Dermatology": [
+  "Psychiatric Medicine": [
     {
-      id: "derm-1",
+      id: "psych-1",
       name: "Lisa Rodriguez",
       degree: "MD",
       availability: "Available today",
       tokens: "4 tokens = 12 minutes"
     },
     {
-      id: "derm-2",
+      id: "psych-2",
       name: "David Kim",
       degree: "MD", 
       availability: "Available tomorrow",
       tokens: "4 tokens = 12 minutes"
     }
   ],
-  "Endocrinology": [
+  "Pediatric Medicine": [
     {
-      id: "endo-1",
+      id: "pedi-1",
       name: "Maria Gonzalez",
       degree: "MD",
       availability: "Available today",
       tokens: "6 tokens = 18 minutes"
     }
   ],
-  "Gastroenterology": [
+  "Weight Management Consultants (Prescribers)": [
     {
-      id: "gastro-1",
+      id: "weight-1",
       name: "Robert Johnson",
       degree: "MD",
       availability: "Available tomorrow", 
       tokens: "5 tokens = 15 minutes"
     }
   ],
-  "Orthopedics": [
+  "Specialist Advisor": [
     {
-      id: "ortho-1",
+      id: "spec-1",
       name: "Amanda Lee",
       degree: "MD",
       availability: "Available today",
@@ -163,11 +169,11 @@ export function InternalReferralModal({ onClose, onComplete, initialReferral }: 
     }
   };
 
-  const handleSpecialtySelect = (specialty: string) => {
+  const handleSpecialtySelect = (service: string) => {
     const referral: InternalReferral = {
       id: crypto.randomUUID(),
       type: "specialty",
-      specialty
+      specialty: service
     };
     onComplete(referral);
   };
@@ -262,24 +268,24 @@ export function InternalReferralModal({ onClose, onComplete, initialReferral }: 
           <>
             <div className="mb-4">
               <h3 className="text-lg font-semibold">Internal Referral</h3>
-              <p className="text-sm text-fg-muted mt-1">Choose a specialty</p>
+              <p className="text-sm text-fg-muted mt-1">Choose a service</p>
             </div>
 
             <div className="space-y-2 mb-6 max-h-64 overflow-y-auto">
-              {SPECIALTIES.map((specialty) => (
+              {SERVICES.map((service) => (
                 <button
-                  key={specialty}
-                  onClick={() => handleSpecialtySelect(specialty)}
+                  key={service}
+                  onClick={() => handleSpecialtySelect(service)}
                   className="w-full flex items-center justify-between p-3 rounded-lg border border-border bg-surface hover:bg-surface-muted transition-colors text-left"
                 >
-                  <div className="font-medium text-fg">{specialty}</div>
+                  <div className="font-medium text-fg">{service}</div>
                   <div className="w-2 h-2 rounded-full bg-fg-muted flex-shrink-0" />
                 </button>
               ))}
             </div>
 
             <div className="flex items-center justify-between">
-              <Button variant="ghost" onClick={() => setStep("choose-type")}>Return</Button>
+              <Button variant="ghost" onClick={() => setStep("choose-type")}>Back</Button>
               <Button variant="outline" onClick={onClose}>Cancel</Button>
             </div>
           </>
@@ -307,7 +313,7 @@ export function InternalReferralModal({ onClose, onComplete, initialReferral }: 
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <Button variant="ghost" onClick={() => setStep("choose-type")}>Return</Button>
+                  <Button variant="ghost" onClick={() => setStep("choose-type")}>Back</Button>
                   <Button variant="outline" onClick={onClose}>Cancel</Button>
                 </div>
               </>
@@ -340,7 +346,15 @@ export function InternalReferralModal({ onClose, onComplete, initialReferral }: 
                         )}
                         onClick={() => !isDisabled && handleProviderToggle(provider.id)}
                       >
-                        <div className="w-8 h-8 rounded-full bg-surface-muted flex-shrink-0" />
+                        <img 
+                          src={`https://images.unsplash.com/photo-${1500000000000 + (provider.id.charCodeAt(0) * 1000)}?w=64&h=64&fit=crop&crop=face&auto=format`}
+                          alt={provider.name}
+                          className="w-8 h-8 rounded-full object-cover flex-shrink-0"
+                          onError={(e) => {
+                            e.currentTarget.src = '';
+                            e.currentTarget.className = 'w-8 h-8 rounded-full bg-surface-muted flex-shrink-0';
+                          }}
+                        />
                         <div className="flex-1 min-w-0">
                           <div className="font-medium">{provider.name}, {provider.degree}</div>
                           <div className="text-sm text-fg-muted mt-1">
@@ -371,7 +385,7 @@ export function InternalReferralModal({ onClose, onComplete, initialReferral }: 
                 )}
 
                 <div className="flex items-center justify-between">
-                  <Button variant="ghost" onClick={() => setSelectedService(null)}>Return</Button>
+                  <Button variant="ghost" onClick={() => setSelectedService(null)}>Back</Button>
                   <div className="flex items-center gap-2">
                     <Button variant="outline" onClick={onClose}>Cancel</Button>
                     <Button 

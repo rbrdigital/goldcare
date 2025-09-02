@@ -30,81 +30,169 @@ interface InternalReferral {
   }>;
 }
 
-type OrderState = "initial" | "external-editor" | "summary";
+// Outside order can be either external or internal referral
+interface OutsideOrder {
+  id: string;
+  type: "external" | "internal";
+  external?: ExternalReferral;
+  internal?: InternalReferral;
+}
+
+type EditState = "none" | "external-editor";
 
 export default function OutsideOrdersSection() {
-  const [orderState, setOrderState] = React.useState<OrderState>("initial");
-  const [externalReferral, setExternalReferral] = React.useState<ExternalReferral | null>(null);
-  const [internalReferral, setInternalReferral] = React.useState<InternalReferral | null>(null);
+  const [outsideOrders, setOutsideOrders] = React.useState<OutsideOrder[]>([]);
+  const [editState, setEditState] = React.useState<EditState>("none");
+  const [editingOrderId, setEditingOrderId] = React.useState<string | null>(null);
   const [externalContent, setExternalContent] = React.useState("");
   const [modalOpen, setModalOpen] = React.useState(false);
+  const [modalOrderId, setModalOrderId] = React.useState<string | null>(null);
 
   const handleSave = () => {
     // Auto-save functionality placeholder
   };
 
-  const handleExternalSelect = () => {
-    setOrderState("external-editor");
-  };
-
-  const handleInternalSelect = () => {
-    setModalOpen(true);
-  };
-
-  const handleExternalSave = () => {
-    if (!externalContent.trim()) return;
-    
-    setExternalReferral({
+  const addOutsideOrder = () => {
+    // Show the initial selector state for new orders
+    const newOrder: OutsideOrder = {
       id: crypto.randomUUID(),
-      content: externalContent.trim()
-    });
-    setOrderState("summary");
+      type: "external" // temporary, will be set when user selects
+    };
+    setOutsideOrders(prev => [...prev, newOrder]);
   };
 
-  const handleExternalEdit = () => {
-    setExternalContent(externalReferral?.content || "");
-    setOrderState("external-editor");
-  };
-
-  const handleExternalRemove = () => {
-    setExternalReferral(null);
-    setExternalContent("");
-    setOrderState("initial");
-  };
-
-  const handleInternalComplete = (referral: InternalReferral) => {
-    setInternalReferral(referral);
-    setModalOpen(false);
-    if (!externalReferral) {
-      setOrderState("summary");
+  const removeOutsideOrder = (orderId: string) => {
+    setOutsideOrders(prev => prev.filter(order => order.id !== orderId));
+    if (editingOrderId === orderId) {
+      setEditState("none");
+      setEditingOrderId(null);
+      setExternalContent("");
     }
   };
 
-  const handleInternalEdit = () => {
-    setModalOpen(true);
+  const duplicateOutsideOrder = (orderId: string) => {
+    const orderToDuplicate = outsideOrders.find(order => order.id === orderId);
+    if (!orderToDuplicate) return;
+    
+    const duplicatedOrder: OutsideOrder = {
+      ...orderToDuplicate,
+      id: crypto.randomUUID(),
+      external: orderToDuplicate.external ? {
+        ...orderToDuplicate.external,
+        id: crypto.randomUUID()
+      } : undefined,
+      internal: orderToDuplicate.internal ? {
+        ...orderToDuplicate.internal,
+        id: crypto.randomUUID()
+      } : undefined
+    };
+    setOutsideOrders(prev => [...prev, duplicatedOrder]);
   };
 
-  const handleInternalRemove = () => {
-    setInternalReferral(null);
-    if (!externalReferral) {
-      setOrderState("initial");
-    }
-  };
-
-  const handleCancel = () => {
-    if (orderState === "external-editor") {
-      if (externalReferral) {
-        setOrderState("summary");
-      } else {
-        setOrderState("initial");
-        setExternalContent("");
+  // Fix the initial selectors to create orders properly
+  const handleExternalSelect = (orderId?: string) => {
+    if (shouldShowInitialSelectors) {
+      // Create new order
+      addOutsideOrder();
+      setEditState("external-editor");
+      setEditingOrderId(outsideOrders[0]?.id || crypto.randomUUID());
+    } else {
+      // Edit existing order
+      setEditState("external-editor");
+      setEditingOrderId(orderId || "");
+      setExternalContent("");
+      
+      if (orderId) {
+        setOutsideOrders(prev => prev.map(order => 
+          order.id === orderId ? { ...order, type: "external" } : order
+        ));
       }
     }
   };
 
-  const insertExternalSuggestion = (text: string) => {
-    setExternalContent(prev => prev ? `${prev}\n\n${text}` : text);
+  const handleInternalSelect = (orderId?: string) => {
+    if (shouldShowInitialSelectors) {
+      // Create new order and open modal
+      const newOrderId = crypto.randomUUID();
+      const newOrder: OutsideOrder = {
+        id: newOrderId,
+        type: "internal"
+      };
+      setOutsideOrders(prev => [...prev, newOrder]);
+      setModalOpen(true);
+      setModalOrderId(newOrderId);
+    } else {
+      // Edit existing order
+      setModalOpen(true);
+      setModalOrderId(orderId || "");
+      
+      if (orderId) {
+        setOutsideOrders(prev => prev.map(order => 
+          order.id === orderId ? { ...order, type: "internal" } : order
+        ));
+      }
+    }
   };
+
+  const handleExternalSave = () => {
+    if (!externalContent.trim() || !editingOrderId) return;
+    
+    const externalReferral: ExternalReferral = {
+      id: crypto.randomUUID(),
+      content: externalContent.trim()
+    };
+
+    setOutsideOrders(prev => prev.map(order => 
+      order.id === editingOrderId 
+        ? { ...order, external: externalReferral }
+        : order
+    ));
+
+    setEditState("none");
+    setEditingOrderId(null);
+    setExternalContent("");
+  };
+
+  const handleExternalEdit = (orderId: string) => {
+    const order = outsideOrders.find(o => o.id === orderId);
+    if (order?.external) {
+      setExternalContent(order.external.content);
+      setEditState("external-editor");
+      setEditingOrderId(orderId);
+    }
+  };
+
+  const handleInternalComplete = (referral: InternalReferral) => {
+    if (!modalOrderId) return;
+    
+    setOutsideOrders(prev => prev.map(order => 
+      order.id === modalOrderId 
+        ? { ...order, internal: referral }
+        : order
+    ));
+    
+    setModalOpen(false);
+    setModalOrderId(null);
+  };
+
+  const handleInternalEdit = (orderId: string) => {
+    setModalOpen(true);
+    setModalOrderId(orderId);
+  };
+
+  const handleCancel = () => {
+    setEditState("none");
+    setEditingOrderId(null);
+    setExternalContent("");
+  };
+
+  const insertExternalSuggestion = (text: string) => {
+    setExternalContent(text); // Replace content, don't append
+  };
+
+  // Check if we should show initial selectors or existing orders
+  const shouldShowInitialSelectors = outsideOrders.length === 0;
+  const isEditing = editState === "external-editor";
 
   return (
     <>
@@ -117,12 +205,12 @@ export default function OutsideOrdersSection() {
             onSave={handleSave}
           />
 
-          {orderState === "initial" && (
+          {shouldShowInitialSelectors && !isEditing && (
             <>
               {/* Initial state - two selectable cards */}
               <div className="space-y-3">
                 <button
-                  onClick={handleExternalSelect}
+                  onClick={() => handleExternalSelect()}
                   className="w-full flex items-center gap-3 p-4 rounded-lg border border-border bg-surface hover:bg-surface-muted transition-colors text-left"
                 >
                   <div className="w-4 h-4 rounded border-2 border-border bg-bg flex-shrink-0" />
@@ -133,7 +221,7 @@ export default function OutsideOrdersSection() {
                 </button>
 
                 <button
-                  onClick={handleInternalSelect}
+                  onClick={() => handleInternalSelect()}
                   className="w-full flex items-center gap-3 p-4 rounded-lg border border-border bg-surface hover:bg-surface-muted transition-colors text-left"
                 >
                   <div className="w-4 h-4 rounded border-2 border-border bg-bg flex-shrink-0" />
@@ -143,16 +231,10 @@ export default function OutsideOrdersSection() {
                   <div className="w-2 h-2 rounded-full bg-fg-muted flex-shrink-0" />
                 </button>
               </div>
-
-              {/* Bottom actions */}
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-border">
-                <Button variant="outline">Cancel</Button>
-                <Button>Save</Button>
-              </div>
             </>
           )}
 
-          {orderState === "external-editor" && (
+          {isEditing && (
             <>
               {/* External referral editor */}
               <div className="rounded-lg border border-border bg-surface p-4 space-y-4">
@@ -176,7 +258,7 @@ export default function OutsideOrdersSection() {
                 </div>
               </div>
 
-              {/* Bottom actions */}
+              {/* Bottom actions for editor */}
               <div className="flex items-center justify-end gap-3 pt-4 border-t border-border">
                 <Button variant="outline" onClick={handleCancel}>Cancel</Button>
                 <Button onClick={handleExternalSave} disabled={!externalContent.trim()}>Save</Button>
@@ -184,105 +266,137 @@ export default function OutsideOrdersSection() {
             </>
           )}
 
-          {orderState === "summary" && (
-            <>
-              {/* Summary cards */}
-              <div className="space-y-4">
-                {externalReferral && (
-                  <div className="rounded-md border border-border bg-surface p-4">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="font-medium mb-1">External Referral</div>
-                        <div className="text-sm text-fg-muted leading-6">
-                          {externalReferral.content || "No content yet"}
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3 ml-4">
-                        <button 
-                          className="text-sm text-fg-muted hover:underline focus-visible:outline-none" 
-                          onClick={handleExternalEdit}
-                        >
-                          Edit
-                        </button>
-                        <button 
-                          className="text-sm text-fg-muted hover:underline focus-visible:outline-none" 
-                          onClick={handleExternalRemove}
-                        >
-                          Remove
-                        </button>
-                      </div>
+          {/* Render existing orders */}
+          {outsideOrders.map((order, orderIndex) => (
+            <div key={order.id} className="space-y-6">
+              {/* Don't render incomplete orders */}
+              {(!order.external && !order.internal) && order.id !== editingOrderId ? null : (
+                <>
+                  {/* Order header */}
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-lg font-semibold">Outside order #{orderIndex + 1}</h2>
+                    <div className="flex items-center gap-2">
+                      <Button 
+                        variant="outline" 
+                        onClick={() => duplicateOutsideOrder(order.id)}
+                      >
+                        Duplicate
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        onClick={() => removeOutsideOrder(order.id)}
+                      >
+                        Remove
+                      </Button>
                     </div>
                   </div>
-                )}
 
-                {internalReferral && (
-                  <div className="rounded-md border border-border bg-surface p-4">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="font-medium mb-1">Internal Referral</div>
-                        {internalReferral.type === "specialty" && internalReferral.specialty && (
+                  {/* Order content */}
+                  {order.external && (
+                    <div className="rounded-md border border-border bg-surface p-4">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <div className="font-medium mb-1">External Referral</div>
                           <div className="text-sm text-fg-muted leading-6">
-                            Specialty: {internalReferral.specialty}
+                            {order.external.content || "No content yet"}
                           </div>
-                        )}
-                        {internalReferral.type === "provider" && internalReferral.providers && (
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
-                            {internalReferral.providers.map((provider) => (
-                              <div key={provider.id} className="rounded-md border border-border bg-bg p-3">
-                                <div className="flex items-start gap-3">
-                                  <div className="w-8 h-8 rounded-full bg-surface-muted flex-shrink-0" />
-                                  <div className="flex-1 min-w-0">
-                                    <div className="text-sm font-medium">{provider.name}, {provider.degree}</div>
-                                    <div className="text-xs text-fg-muted mt-1">
-                                      <span className="inline-flex items-center px-2 py-1 rounded text-xs bg-surface-muted">
-                                        {provider.availability}
-                                      </span>
-                                    </div>
-                                    <div className="text-xs text-fg-muted mt-1 flex items-center gap-1">
-                                      <div className="w-1 h-1 rounded-full bg-fg-muted" />
-                                      <span>{provider.tokens}</span>
+                        </div>
+                        <div className="flex items-center gap-3 ml-4">
+                          <button 
+                            className="text-sm text-fg-muted hover:underline focus-visible:outline-none" 
+                            onClick={() => handleExternalEdit(order.id)}
+                          >
+                            Edit
+                          </button>
+                          <button 
+                            className="text-sm text-fg-muted hover:underline focus-visible:outline-none" 
+                            onClick={() => removeOutsideOrder(order.id)}
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {order.internal && (
+                    <div className="rounded-md border border-border bg-surface p-4">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <div className="font-medium mb-1">Internal Referral</div>
+                          {order.internal.type === "specialty" && order.internal.specialty && (
+                            <div className="text-sm text-fg-muted leading-6">
+                              Specialty: {order.internal.specialty}
+                            </div>
+                          )}
+                          {order.internal.type === "provider" && order.internal.providers && (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
+                              {order.internal.providers.map((provider) => (
+                                <div key={provider.id} className="rounded-md border border-border bg-bg p-3">
+                                  <div className="flex items-start gap-3">
+                                    <div className="w-8 h-8 rounded-full bg-surface-muted flex-shrink-0" />
+                                    <div className="flex-1 min-w-0">
+                                      <div className="text-sm font-medium">{provider.name}, {provider.degree}</div>
+                                      <div className="text-xs text-fg-muted mt-1">
+                                        <span className="inline-flex items-center px-2 py-1 rounded text-xs bg-surface-muted">
+                                          {provider.availability}
+                                        </span>
+                                      </div>
+                                      <div className="text-xs text-fg-muted mt-1 flex items-center gap-1">
+                                        <div className="w-1 h-1 rounded-full bg-fg-muted" />
+                                        <span>{provider.tokens}</span>
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                      <div className="flex items-center gap-3 ml-4">
-                        <button 
-                          className="text-sm text-fg-muted hover:underline focus-visible:outline-none" 
-                          onClick={handleInternalEdit}
-                        >
-                          Edit
-                        </button>
-                        <button 
-                          className="text-sm text-fg-muted hover:underline focus-visible:outline-none" 
-                          onClick={handleInternalRemove}
-                        >
-                          Remove
-                        </button>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-3 ml-4">
+                          <button 
+                            className="text-sm text-fg-muted hover:underline focus-visible:outline-none" 
+                            onClick={() => handleInternalEdit(order.id)}
+                          >
+                            Edit
+                          </button>
+                          <button 
+                            className="text-sm text-fg-muted hover:underline focus-visible:outline-none" 
+                            onClick={() => removeOutsideOrder(order.id)}
+                          >
+                            Remove
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                )}
-              </div>
+                  )}
 
-              {/* Bottom actions */}
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-border">
-                <Button variant="outline">Cancel</Button>
-                <Button>Save</Button>
-              </div>
-            </>
+                  {/* Separator between orders */}
+                  {orderIndex < outsideOrders.length - 1 && <Separator className="my-6" />}
+                </>
+              )}
+            </div>
+          ))}
+
+          {/* Add another order - only show if we have orders and not editing */}
+          {outsideOrders.length > 0 && !isEditing && (
+            <div className="mt-4">
+              <Button variant="outline" className="text-sm" onClick={addOutsideOrder}>
+                + Add another order
+              </Button>
+            </div>
           )}
         </div>
       </PageContainer>
 
-      {modalOpen && (
+      {modalOpen && modalOrderId && (
         <InternalReferralModal
-          onClose={() => setModalOpen(false)}
+          onClose={() => {
+            setModalOpen(false);
+            setModalOrderId(null);
+          }}
           onComplete={handleInternalComplete}
-          initialReferral={internalReferral}
+          initialReferral={outsideOrders.find(o => o.id === modalOrderId)?.internal || null}
         />
       )}
     </>
