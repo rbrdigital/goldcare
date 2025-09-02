@@ -2,10 +2,27 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
 // Types
-export type OutsideOrder = 
-  | { id: string; type: "external"; text: string }
-  | { id: string; type: "internal-specialty"; specialty: string }
-  | { id: string; type: "internal-providers"; service: string; providers: Array<{ id: string; name: string; avatar?: string; availability?: string }> };
+export type OutsideOrder = {
+  id: string;
+  type?: "external" | "internal";
+  external?: {
+    id: string;
+    content: string;
+  };
+  internal?: {
+    id: string;
+    type: "specialty" | "provider";
+    specialty?: string;
+    providers?: Array<{
+      id: string;
+      name: string;
+      degree: string;
+      availability: string;
+      tokens: string;
+      avatar?: string;
+    }>;
+  };
+};
 
 export type RxOrder = {
   id: string;

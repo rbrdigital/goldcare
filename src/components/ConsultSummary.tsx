@@ -491,36 +491,36 @@ export function ConsultSummary({ consultStore }: ConsultSummaryProps) {
                   <div className="space-y-2">
                     {outsideOrders.map((order) => (
                       <div key={order.id} className="p-3 bg-surface rounded-md">
-                        {order.type === "external" && (
+                        {order.external && (
                           <div className="text-sm">
                             <span className="font-medium">External referral: </span>
-                            <span className="text-fg-muted">{order.text}</span>
+                            <span className="text-fg-muted">{order.external.content}</span>
                           </div>
                         )}
-                        {order.type === "internal-specialty" && (
+                        {order.internal?.type === "specialty" && (
                           <div className="text-sm">
                             <span className="font-medium">Specialty: </span>
-                            <span className="text-fg-muted">{order.specialty}</span>
+                            <span className="text-fg-muted">{order.internal.specialty}</span>
                           </div>
                         )}
-                        {order.type === "internal-providers" && (
+                        {order.internal?.type === "provider" && order.internal.providers && (
                           <div className="text-sm">
-                            <span className="font-medium">{order.service}: </span>
+                            <span className="font-medium">Internal referral: </span>
                             <div className="flex flex-wrap gap-2 mt-1">
-                              {order.providers.slice(0, 5).map((provider) => (
-                                <div key={provider.id} className="flex items-center gap-1">
+                              {order.internal.providers.slice(0, 5).map((provider, providerIdx) => (
+                                <div key={provider.id || providerIdx} className="flex items-center gap-1">
                                   <Avatar className="h-5 w-5">
                                     <AvatarImage src={provider.avatar} />
                                     <AvatarFallback className="text-xs">
-                                      {provider.name.split(" ").map(n => n[0]).join("")}
+                                      {provider.name.split(" ").map((n, idx) => n[0]).join("")}
                                     </AvatarFallback>
                                   </Avatar>
                                   <span className="text-xs">{provider.name}</span>
                                 </div>
                               ))}
-                              {order.providers.length > 5 && (
+                              {order.internal.providers.length > 5 && (
                                 <span className="text-xs text-fg-muted">
-                                  +{order.providers.length - 5} more
+                                  +{order.internal.providers.length - 5} more
                                 </span>
                               )}
                             </div>
