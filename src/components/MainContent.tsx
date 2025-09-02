@@ -9,6 +9,7 @@ import { AIChipClosedSmart } from "@/components/ai/AIChipClosedSmart";
 import { InlineAddInput } from "@/components/ui/inline-add-input";
 import AddLabOrderScreen from "@/components/labs/AddLabOrderScreen";
 import ImagingOrdersSection from "@/components/imaging/ImagingOrdersSection";
+import OutsideOrdersSection from "@/components/outside-orders/OutsideOrdersSection";
 import { AppSidebar } from "@/components/AppSidebar";
 import { useState, useRef, useEffect } from "react";
 import { toast } from "@/hooks/use-toast";
@@ -42,6 +43,8 @@ export function MainContent({ activeSection }: MainContentProps) {
         return <LabOrdersSection />;
       case "imaging-orders":
         return <ImagingOrdersSectionWrapper />;
+      case "outside-orders":
+        return <OutsideOrdersSection />;
       case "intake":
         return <IntakeFormSection />;
       case "diagnoses":
