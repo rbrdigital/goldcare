@@ -8,6 +8,8 @@ import { PageHeader } from "@/components/ui/page-header";
 import { AIChipClosedSmart } from "@/components/ai/AIChipClosedSmart";
 import { InlineAddInput } from "@/components/ui/inline-add-input";
 import AddLabOrderScreen from "@/components/labs/AddLabOrderScreen";
+import ImagingOrdersSection from "@/components/imaging/ImagingOrdersSection";
+import { AppSidebar } from "@/components/AppSidebar";
 import { useState, useRef, useEffect } from "react";
 import { toast } from "@/hooks/use-toast";
 import { 
@@ -38,6 +40,8 @@ export function MainContent({ activeSection }: MainContentProps) {
         return <RXSection />;
       case "lab-orders":
         return <LabOrdersSection />;
+      case "imaging-orders":
+        return <ImagingOrdersSectionWrapper />;
       case "intake":
         return <IntakeFormSection />;
       case "diagnoses":
@@ -442,6 +446,10 @@ function RXSection() {
 
 function LabOrdersSection() {
   return <AddLabOrderScreen />;
+}
+
+function ImagingOrdersSectionWrapper() {
+  return <ImagingOrdersSection />;
 }
 
 function IntakeFormSection() {

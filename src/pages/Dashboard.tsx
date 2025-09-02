@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { AppSidebar } from "@/components/AppSidebar";
 import { MainContent } from "@/components/MainContent";
-import AddLabOrderScreen from "@/components/labs/AddLabOrderScreen";
 import { PatientProfileDrawer } from "@/components/PatientProfileDrawer";
 import { LabsImagingSideSheet } from "@/components/LabsImagingSideSheet";
 import { DiagnosesMedsAllergiesSideSheet } from "@/components/DiagnosesMedsAllergiesSideSheet";
@@ -44,7 +43,7 @@ export function Dashboard() {
     setGoldcareAIPanelOpen(false);
     setMedicationWorkspaceOpen(false);
     
-    // Open the selected panel
+    // Open the selected panel or change section
     if (itemId === "profile") {
       setPatientProfileDrawerOpen(true);
     } else if (itemId === "previous-results") {
@@ -54,6 +53,7 @@ export function Dashboard() {
     } else if (itemId === "goldcare-ai") {
       setGoldcareAIPanelOpen(true);
     } else {
+      // For all other items (soap, rx, lab-orders, imaging-orders, etc.), just change the active section
       setActiveSection(itemId);
     }
   };
@@ -126,11 +126,7 @@ export function Dashboard() {
           />
         </aside>
         <main className="min-w-0 py-6">
-          {new URLSearchParams(window.location.search).get("labs") === "add" ? (
-            <AddLabOrderScreen />
-          ) : (
-            <MainContent activeSection={activeSection} />
-          )}
+          <MainContent activeSection={activeSection} />
         </main>
         
         {/* Right Panel */}
