@@ -45,6 +45,7 @@ interface SidebarSection {
 }
 
 const clinicalItems: SidebarItem[] = [
+  { id: "summary", label: "Summary", icon: <ClipboardList className="h-4 w-4" />, href: "#summary" },
   { id: "soap", label: "SOAP Note", icon: <FileText className="h-4 w-4" />, href: "#soap", dirty: true },
   { id: "rx", label: "RX", icon: <Pill className="h-4 w-4" />, href: "#rx" },
   { id: "lab-orders", label: "Lab Orders", icon: <FlaskConical className="h-4 w-4" />, href: "#lab-orders", count: 2 },
