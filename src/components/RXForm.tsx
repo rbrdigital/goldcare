@@ -25,6 +25,7 @@ type RxFields = {
   refills: number | "";
   action: string;
   prn: boolean;
+  prnInstructions: string;
   location: string;
   subsAllowed: boolean;
   startDate: string;
@@ -60,6 +61,7 @@ function emptyRx(): RxFields {
     refills: "",
     action: "Take",
     prn: false,
+    prnInstructions: "",
     location: "",
     subsAllowed: true,
     startDate: "",
@@ -266,15 +268,24 @@ export default function RXForm() {
               </div>
 
               {/* PRN */}
-              <div className="md:col-span-3 flex items-end gap-2">
-                <input
-                  id={`prn-${i}`}
-                  type="checkbox"
-                  className="h-4 w-4"
-                  checked={rx.prn}
-                  onChange={(e) => patchItem(i, { prn: e.target.checked })}
+              <div className="md:col-span-3">
+                <div className="flex items-center gap-2 mb-2">
+                  <input
+                    id={`prn-${i}`}
+                    type="checkbox"
+                    className="h-4 w-4"
+                    checked={rx.prn}
+                    onChange={(e) => patchItem(i, { prn: e.target.checked, prnInstructions: e.target.checked ? rx.prnInstructions : "" })}
+                  />
+                  <Label htmlFor={`prn-${i}`}>PRN (as needed)</Label>
+                </div>
+                <Input
+                  id={`prn-instructions-${i}`}
+                  placeholder="e.g., for pain, for nausea"
+                  value={rx.prnInstructions}
+                  disabled={!rx.prn}
+                  onChange={(e) => patchItem(i, { prnInstructions: e.target.value })}
                 />
-                <Label htmlFor={`prn-${i}`} className="mb-0">PRN (as needed)</Label>
               </div>
 
               {/* Location */}
@@ -471,7 +482,7 @@ function renderSummary(rx: RxFields & { totalQty: number }) {
     rx.duration ? `for ${rx.duration} ${rx.durationUnit.toLowerCase()}` : "",
     Number.isFinite(rx.totalQty) ? `Total Qty: ${rx.totalQty} ${rx.totalQtyUnit.toLowerCase()}` : "",
     `Refills: ${rx.refills === "" ? "—" : rx.refills}`,
-    rx.prn ? "PRN" : "",
+    rx.prn ? `PRN${rx.prnInstructions ? ` (${rx.prnInstructions})` : ""}` : "",
     rx.subsAllowed ? "Substitutions allowed" : "No substitutions",
     rx.startDate ? `Start: ${rx.startDate}` : "",
     rx.earliestFill ? `Earliest fill: ${rx.earliestFill}` : ""
@@ -558,6 +569,7 @@ function applyTherapyInsight(
     durationUnit: "Days",
     totalQtyUnit: "Tablet",
     refills: 0,
-    prn: false
+    prn: false,
+    prnInstructions: ""
   });
 }
