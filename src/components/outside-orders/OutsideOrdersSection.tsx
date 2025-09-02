@@ -103,8 +103,16 @@ export default function OutsideOrdersSection() {
         order.id === orderId ? { ...order, type: "external" } : order
       ));
     } else {
-      // This should not happen - orderId should always be provided
-      console.warn("handleExternalSelect called without orderId");
+      // Initial state - create new order first
+      const newOrderId = crypto.randomUUID();
+      const newOrder: OutsideOrder = {
+        id: newOrderId,
+        type: "external"
+      };
+      setOutsideOrders(prev => [...prev, newOrder]);
+      setEditState("external-editor");
+      setEditingOrderId(newOrderId);
+      setExternalContent("");
     }
   };
 
@@ -118,8 +126,15 @@ export default function OutsideOrdersSection() {
         order.id === orderId ? { ...order, type: "internal" } : order
       ));
     } else {
-      // This should not happen - orderId should always be provided
-      console.warn("handleInternalSelect called without orderId");
+      // Initial state - create new order first
+      const newOrderId = crypto.randomUUID();
+      const newOrder: OutsideOrder = {
+        id: newOrderId,
+        type: "internal"
+      };
+      setOutsideOrders(prev => [...prev, newOrder]);
+      setModalOpen(true);
+      setModalOrderId(newOrderId);
     }
   };
 
@@ -217,7 +232,7 @@ export default function OutsideOrdersSection() {
                 >
                   <div className="w-4 h-4 rounded border-2 border-border bg-bg flex-shrink-0" />
                   <div className="flex-1">
-                    <div className="font-medium text-fg">Suggest an External referral</div>
+                    <div className="font-medium text-fg">External referral</div>
                   </div>
                   <div className="w-2 h-2 rounded-full bg-fg-muted flex-shrink-0" />
                 </button>
@@ -228,7 +243,7 @@ export default function OutsideOrdersSection() {
                 >
                   <div className="w-4 h-4 rounded border-2 border-border bg-bg flex-shrink-0" />
                   <div className="flex-1">
-                    <div className="font-medium text-fg">Suggest an Internal referral</div>
+                    <div className="font-medium text-fg">Internal referral</div>
                   </div>
                   <div className="w-2 h-2 rounded-full bg-fg-muted flex-shrink-0" />
                 </button>
@@ -281,7 +296,7 @@ export default function OutsideOrdersSection() {
                   >
                     <div className="w-4 h-4 rounded border-2 border-border bg-bg flex-shrink-0" />
                     <div className="flex-1">
-                      <div className="font-medium text-fg">Suggest an External referral</div>
+                      <div className="font-medium text-fg">External referral</div>
                     </div>
                     <div className="w-2 h-2 rounded-full bg-fg-muted flex-shrink-0" />
                   </button>
@@ -292,7 +307,7 @@ export default function OutsideOrdersSection() {
                   >
                     <div className="w-4 h-4 rounded border-2 border-border bg-bg flex-shrink-0" />
                     <div className="flex-1">
-                      <div className="font-medium text-fg">Suggest an Internal referral</div>
+                      <div className="font-medium text-fg">Internal referral</div>
                     </div>
                     <div className="w-2 h-2 rounded-full bg-fg-muted flex-shrink-0" />
                   </button>
