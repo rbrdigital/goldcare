@@ -94,7 +94,17 @@
 }
 
 :root[data-theme="dark"] {
-  /* Base colors */
+  /* New semantic tokens - dark mode */
+  --bg: #0b0f14;
+  --bg-muted: #1e293b;
+  --surface: #0f172a;
+  --surface-muted: #1e293b;
+  --fg: #e5e7eb;
+  --fg-muted: #9ca3af;
+  --border: #1f2937;
+  --divider: #1f2937;
+  
+  /* Legacy colors for backward compatibility */
   --color-bg: #0b0f14;
   --color-surface: #0f172a;
   --color-border: #1f2937;
