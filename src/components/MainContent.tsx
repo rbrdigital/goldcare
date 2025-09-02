@@ -28,21 +28,17 @@ import RXForm from "@/components/RXForm";
 import { copy } from "@/copy/en";
 import PageContainer from "@/components/layout/PageContainer";
 import { ConsultSummary } from "@/components/ConsultSummary";
-import { ConsultWorkspace } from "@/components/ConsultWorkspace";
-import { createConsultStore } from "@/store/useConsultStore";
+import { ConsultWorkspace, useConsult } from "@/components/ConsultWorkspace";
 
 interface MainContentProps {
   activeSection: string;
 }
 
 export function MainContent({ activeSection }: MainContentProps) {
-  // Create a shared consult store instance for the entire workspace
-  const consultStore = createConsultStore("patient-123", "encounter-456");
-
   const renderSection = () => {
     switch (activeSection) {
       case "summary":
-        return <ConsultSummary consultStore={consultStore} />;
+        return <ConsultSummaryWrapper />;
       case "soap":
         return <SOAPNoteSection />;
       case "rx":
@@ -66,11 +62,14 @@ export function MainContent({ activeSection }: MainContentProps) {
 
   return (
     <ConsultWorkspace patientId="patient-123" encounterId="encounter-456">
-      <PageContainer>
-        {renderSection()}
-      </PageContainer>
+      {renderSection()}
     </ConsultWorkspace>
   );
+}
+
+// Wrapper component that uses the context store
+function ConsultSummaryWrapper() {
+  return <ConsultSummary />;
 }
 
 function SOAPNoteSection() {

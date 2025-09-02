@@ -25,9 +25,7 @@ import {
 } from "lucide-react";
 import PageContainer from "@/components/layout/PageContainer";
 import { toast } from "@/hooks/use-toast";
-import { useStore } from "zustand";
 import { 
-  ConsultStore, 
   selectSoap, 
   selectRx, 
   selectLabs, 
@@ -38,30 +36,27 @@ import {
   selectPatientInfo,
   selectVisitInfo
 } from "@/store/useConsultStore";
+import { useConsult } from "./ConsultWorkspace";
 
-interface ConsultSummaryProps {
-  consultStore: ConsultStore;
-}
-
-export function ConsultSummary({ consultStore }: ConsultSummaryProps) {
+export function ConsultSummary() {
   const [previewModalOpen, setPreviewModalOpen] = React.useState(false);
   const [finishModalOpen, setFinishModalOpen] = React.useState(false);
   const [expandedSections, setExpandedSections] = React.useState<Set<string>>(
     new Set(["subjective", "assessment"])
   );
 
-  // Subscribe to store data
-  const soapData = useStore(consultStore, selectSoap);
-  const rxOrders = useStore(consultStore, selectRx);
-  const labOrders = useStore(consultStore, selectLabs);
-  const imagingOrders = useStore(consultStore, selectImaging);
-  const outsideOrders = useStore(consultStore, selectOutsideOrders);
-  const privateNotes = useStore(consultStore, selectPrivateNotes);
-  const followUp = useStore(consultStore, selectFollowUp);
-  const patientInfo = useStore(consultStore, selectPatientInfo);
-  const visitInfo = useStore(consultStore, selectVisitInfo);
-  const locked = useStore(consultStore, (state) => state.locked);
-  const lockConsult = useStore(consultStore, (state) => state.lockConsult);
+  // Subscribe to store data using context
+  const soapData = useConsult(selectSoap);
+  const rxOrders = useConsult(selectRx);
+  const labOrders = useConsult(selectLabs);
+  const imagingOrders = useConsult(selectImaging);
+  const outsideOrders = useConsult(selectOutsideOrders);
+  const privateNotes = useConsult(selectPrivateNotes);
+  const followUp = useConsult(selectFollowUp);
+  const patientInfo = useConsult(selectPatientInfo);
+  const visitInfo = useConsult(selectVisitInfo);
+  const locked = useConsult((state) => state.locked);
+  const lockConsult = useConsult((state) => state.lockConsult);
 
   const handleSave = () => {
     toast({
