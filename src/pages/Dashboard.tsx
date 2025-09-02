@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { AppSidebar } from "@/components/AppSidebar";
 import { MainContent } from "@/components/MainContent";
 import AddLabOrderScreen from "@/components/labs/AddLabOrderScreen";
@@ -21,7 +20,6 @@ const mockPatient = {
 };
 
 export function Dashboard() {
-  const navigate = useNavigate();
   const [activeSection, setActiveSection] = useState("soap");
   const [sidebarMini, setSidebarMini] = useState(false);
   const [patientProfileDrawerOpen, setPatientProfileDrawerOpen] = useState(false);
@@ -39,15 +37,6 @@ export function Dashboard() {
   };
 
   const handleItemClick = (itemId: string) => {
-    // Handle navigation to different pages
-    if (itemId === "imaging-orders") {
-      navigate("/imaging/add");
-      return;
-    } else if (itemId === "lab-orders") {
-      navigate("/labs/add");
-      return;
-    }
-    
     // Close all panels first
     setPatientProfileDrawerOpen(false);
     setLabsImagingSideSheetOpen(false);
