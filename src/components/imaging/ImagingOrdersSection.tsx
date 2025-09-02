@@ -7,12 +7,10 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { PageHeader } from "@/components/ui/page-header";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Activity } from "lucide-react";
 import PageContainer from "@/components/layout/PageContainer";
 import ComboboxChips from "@/components/ui/ComboboxChips";
 import OrderSetModal from "./OrderSetModal";
-import { AIChipClosedSmart } from "@/components/ai/AIChipClosedSmart";
 
 type Diagnosis = { code: string; label: string };
 type Request = { id: string; category: string; exams: string[] };
@@ -100,29 +98,41 @@ const IMAGING_SETS: Record<string, string[]> = {
   ],
 };
 
-export default function ImagingOrdersSection() {
-  const [imagingOrders, setImagingOrders] = React.useState<ImagingOrder[]>([
-    { id: "1", diagnoses: [], otherDx: "", requests: [] }
-  ]);
-  
-  // Modal state
-  const [modalOpen, setModalOpen] = React.useState(false);
-  const [selectedSet, setSelectedSet] = React.useState<string>("");
-  const [currentOrderIndex, setCurrentOrderIndex] = React.useState<number>(0);
-  const [currentRequestIndex, setCurrentRequestIndex] = React.useState<number>(-1);
+const ORDER_TABS = Object.keys(IMAGING_SETS);
 
-  // Memoized diagnosis options for ComboboxChips
-  const diagnosisOptions = React.useMemo(() => 
-    TOP_DIAGNOSES.map(d => ({ 
-      value: `${d.code} ${d.label}`, 
-      label: `${d.code} ${d.label}` 
+export default function ImagingOrdersSection() {  
+  // Multi-order state management like RX form
+  const [imagingOrders, setImagingOrders] = React.useState<ImagingOrder[]>([
+    {
+      id: crypto.randomUUID(),
+      diagnoses: [],
+      otherDx: "",
+      requests: []
+    }
+  ]);
+  const [modal, setModal] = React.useState<{ 
+    open: boolean; 
+    category: string | null;
+    orderIndex: number | null;
+  }>({ open: false, category: null, orderIndex: null });
+
+  // Convert TOP_DIAGNOSES to combobox format
+  const diagnosisOptions = React.useMemo(
+    () => TOP_DIAGNOSES.map(d => ({
+      value: `${d.label} (${d.code})`,
+      label: `${d.label} (${d.code})`
     })),
     []
   );
 
+  const handleSave = () => {
+    // Auto-save functionality placeholder
+  };
+
+  // Imaging order management functions
   const addImagingOrder = () => {
     const newOrder: ImagingOrder = {
-      id: Date.now().toString(),
+      id: crypto.randomUUID(),
       diagnoses: [],
       otherDx: "",
       requests: []
@@ -131,278 +141,212 @@ export default function ImagingOrdersSection() {
   };
 
   const removeImagingOrder = (index: number) => {
-    if (imagingOrders.length > 1) {
-      setImagingOrders(prev => prev.filter((_, i) => i !== index));
-    }
+    if (imagingOrders.length <= 1) return; // Keep at least one order
+    setImagingOrders(prev => prev.filter((_, i) => i !== index));
   };
 
   const duplicateImagingOrder = (index: number) => {
     const orderToDuplicate = imagingOrders[index];
     const duplicatedOrder: ImagingOrder = {
       ...orderToDuplicate,
-      id: Date.now().toString()
+      id: crypto.randomUUID()
     };
     setImagingOrders(prev => [...prev, duplicatedOrder]);
   };
 
-  const updateImagingOrder = (index: number, updatedOrder: Partial<ImagingOrder>) => {
+  const updateImagingOrder = (index: number, updates: Partial<ImagingOrder>) => {
     setImagingOrders(prev => prev.map((order, i) => 
-      i === index ? { ...order, ...updatedOrder } : order
+      i === index ? { ...order, ...updates } : order
     ));
   };
 
-  const openSet = (setName: string, orderIndex: number) => {
-    setSelectedSet(setName);
-    setCurrentOrderIndex(orderIndex);
-    setCurrentRequestIndex(-1);
-    setModalOpen(true);
-  };
+  const openSet = (category: string, orderIndex: number) => 
+    setModal({ open: true, category, orderIndex });
 
-  const confirmSet = (selectedExams: string[]) => {
-    const newRequest: Request = {
-      id: Date.now().toString(),
-      category: selectedSet,
-      exams: selectedExams
-    };
+  const confirmSet = (exams: string[]) => {
+    if (modal.category === null || modal.orderIndex === null) return;
     
-    const updatedOrder = { ...imagingOrders[currentOrderIndex] };
-    updatedOrder.requests = [...updatedOrder.requests, newRequest];
+    const orderIndex = modal.orderIndex;
+    const category = modal.category;
     
-    updateImagingOrder(currentOrderIndex, updatedOrder);
-    setModalOpen(false);
+    updateImagingOrder(orderIndex, {
+      requests: imagingOrders[orderIndex].requests.map(r => 
+        r.category === category ? { ...r, exams } : r
+      ).concat(
+        imagingOrders[orderIndex].requests.find(r => r.category === category) 
+          ? [] 
+          : [{ id: `${category}-${Date.now()}`, category, exams }]
+      ).filter(r => r.category !== category || exams.length > 0)
+    });
+    
+    setModal({ open: false, category: null, orderIndex: null });
   };
 
-  const editSet = (orderIndex: number, requestIndex: number) => {
-    const request = imagingOrders[orderIndex].requests[requestIndex];
-    setSelectedSet(request.category);
-    setCurrentOrderIndex(orderIndex);
-    setCurrentRequestIndex(requestIndex);
-    setModalOpen(true);
-  };
-
-  const removeSet = (orderIndex: number, requestIndex: number) => {
-    const updatedOrder = { ...imagingOrders[orderIndex] };
-    updatedOrder.requests = updatedOrder.requests.filter((_, i) => i !== requestIndex);
-    updateImagingOrder(orderIndex, updatedOrder);
-  };
-
-  const handleSave = () => {
-    console.log("Saving imaging orders:", imagingOrders);
+  const editSet = (category: string, orderIndex: number) => openSet(category, orderIndex);
+  
+  const removeSet = (category: string, orderIndex: number) => {
+    updateImagingOrder(orderIndex, {
+      requests: imagingOrders[orderIndex].requests.filter(r => r.category !== category)
+    });
   };
 
   return (
-    <div className="space-y-6">
-      <PageHeader
-        title="Imaging Orders"
-        description="Create and manage imaging orders for your patients"
-        icon={Activity}
-        onSave={handleSave}
-      >
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={() => duplicateImagingOrder(0)}>
-            Duplicate
-          </Button>
-          <Button 
-            variant="outline" 
-            onClick={() => removeImagingOrder(0)}
-            disabled={imagingOrders.length === 1}
-          >
-            Remove
-          </Button>
-        </div>
-      </PageHeader>
+    <>
+      <PageContainer>
+        <div className="space-y-6">
+        <PageHeader
+          title="Imaging orders"
+          description="Create and manage imaging orders for your patients"
+          icon={Activity}
+          onSave={handleSave}
+        />
 
-      <div className="space-y-8">
-        {modalOpen && (
-          <OrderSetModal
-            title={selectedSet}
-            options={IMAGING_SETS[selectedSet] || []}
-            selected={
-              currentRequestIndex >= 0 && currentOrderIndex >= 0
-                ? imagingOrders[currentOrderIndex].requests[currentRequestIndex]?.exams || []
-                : []
-            }
-            onClose={() => setModalOpen(false)}
-            onConfirm={confirmSet}
-          />
-        )}
-
+        {/* Render each imaging order */}
         {imagingOrders.map((order, orderIndex) => (
           <div key={order.id} className="space-y-6">
-            <div className="flex items-center gap-2">
-              <h3 className="text-sm font-medium text-fg">
-                Imaging order #{orderIndex + 1}
-              </h3>
-              {orderIndex > 0 && (
-                <div className="flex gap-2">
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => duplicateImagingOrder(orderIndex)}
-                  >
-                    Duplicate
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => removeImagingOrder(orderIndex)}
-                  >
-                    Remove
-                  </Button>
-                </div>
-              )}
+            {/* Imaging order section header */}
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-semibold">Imaging order #{orderIndex + 1}</h2>
+              <div className="flex items-center gap-2">
+                <Button 
+                  variant="outline" 
+                  onClick={() => duplicateImagingOrder(orderIndex)}
+                >
+                  Duplicate
+                </Button>
+                <Button 
+                  variant="outline" 
+                  onClick={() => removeImagingOrder(orderIndex)}
+                  disabled={imagingOrders.length <= 1}
+                >
+                  Remove
+                </Button>
+              </div>
             </div>
 
-            {/* Clinical Diagnosis */}
-            <div className="space-y-4">
-              <div>
-                <Label className="text-sm font-medium text-fg mb-2">
-                  Clinical diagnosis
-                </Label>
-                <div className="space-y-2">
-                  <Label className="text-xs text-fg-muted">
-                    Common diagnoses
-                  </Label>
-                  <ComboboxChips
-                    placeholder="Search diagnoses or add custom text..."
-                    options={diagnosisOptions}
-                    selected={order.diagnoses}
-                    onSelectionChange={(values) => updateImagingOrder(orderIndex, { diagnoses: values })}
-                  />
-                  <Label className="text-xs text-fg-muted">
-                    Other (free text)
-                  </Label>
+            {/* Clinical diagnosis */}
+            <section>
+              <h3 className="text-base font-medium mb-3">Clinical diagnosis</h3>
+              <div className="space-y-4">
+                <ComboboxChips
+                  id={`diagnoses-${orderIndex}`}
+                  label="Common diagnoses"
+                  placeholder="Search diagnoses or add custom text..."
+                  options={diagnosisOptions}
+                  selected={order.diagnoses}
+                  onSelectionChange={(diagnoses) => updateImagingOrder(orderIndex, { diagnoses })}
+                />
+
+                <div>
+                  <Label htmlFor={`other-${orderIndex}`}>Other (free text)</Label>
                   <AutosizeTextarea
+                    id={`other-${orderIndex}`}
+                    minRows={2}
+                    placeholder="Describe additional clinical context"
                     value={order.otherDx}
                     onChange={(e) => updateImagingOrder(orderIndex, { otherDx: e.target.value })}
-                    placeholder="Describe additional clinical context"
-                    minRows={2}
-                    maxRows={4}
-                    className="resize-none"
                   />
                 </div>
               </div>
+            </section>
 
-              <AIChipClosedSmart
-                text="R10.11 Right upper quadrant pain • J18.9 Community-acquired pneumonia • M54.50 Low back pain"
-                onInsert={() => {
-                  const suggestions = ["R10.11 Right upper quadrant pain", "J18.9 Community-acquired pneumonia", "M54.50 Low back pain"];
-                  updateImagingOrder(orderIndex, { 
-                    diagnoses: [...order.diagnoses, ...suggestions.filter(s => !order.diagnoses.includes(s))]
-                  });
-                }}
-              />
-            </div>
+            <Separator className="my-6" />
 
-            <Separator />
+            {/* Orders */}
+            <section>
+              <h2 className="text-lg font-semibold mb-3">Order</h2>
 
-            {/* Order Section */}
-            <div className="space-y-4">
-              <Label className="text-sm font-medium text-fg">
-                Order
-              </Label>
-              
               <div className="flex flex-wrap gap-2">
-                {Object.keys(IMAGING_SETS).map((setName) => (
-                  <Button
-                    key={setName}
-                    variant="secondary"
-                    size="sm"
-                    onClick={() => openSet(setName, orderIndex)}
+                {ORDER_TABS.map((cat) => (
+                  <button
+                    key={cat}
+                    type="button"
+                    className="rounded-full border border-border bg-surface px-3 py-1 text-sm hover:bg-surface-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                    onClick={() => openSet(cat, orderIndex)}
                   >
-                    {setName}
-                  </Button>
+                    {cat}
+                  </button>
                 ))}
               </div>
 
-              {/* Selected Sets */}
-              {order.requests.map((request, requestIndex) => (
-                <div key={request.id} className="border border-border rounded-lg p-4 bg-surface">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <h4 className="text-sm font-semibold text-fg mb-1">
-                        {request.category}
-                      </h4>
-                      <p className="text-sm text-fg-muted mb-2">
-                        {request.exams.join(" • ")}
-                      </p>
-                      <div className="flex gap-4 text-sm">
-                        <button 
-                          className="text-primary underline hover:no-underline"
-                          onClick={() => editSet(orderIndex, requestIndex)}
-                        >
-                          Edit
-                        </button>
-                        <button 
-                          className="text-primary underline hover:no-underline"
-                          onClick={() => removeSet(orderIndex, requestIndex)}
-                        >
-                          Remove
-                        </button>
-                      </div>
+              {/* Requests list */}
+              <div className="mt-4 divide-y divide-divider">
+                {order.requests.map((r) => (
+                  <div key={r.id} className="py-3 flex items-center justify-between">
+                    <div className="min-w-0">
+                      <div className="font-medium">{r.category}</div>
+                      <div className="text-sm text-fg-muted truncate">{r.exams.join(" • ")}</div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <button 
+                        className="text-sm text-fg-muted hover:underline focus-visible:outline-none" 
+                        onClick={() => editSet(r.category, orderIndex)}
+                      >
+                        Edit
+                      </button>
+                      <button 
+                        className="text-sm text-fg-muted hover:underline focus-visible:outline-none" 
+                        onClick={() => removeSet(r.category, orderIndex)}
+                      >
+                        Remove
+                      </button>
                     </div>
                   </div>
+                ))}
+                {order.requests.length === 0 && (
+                  <p className="text-sm text-fg-muted py-3">No imaging orders selected.</p>
+                )}
+              </div>
+            </section>
+
+            {/* Summary card for this order */}
+            <section>
+              <div className="rounded-md border border-border bg-surface p-4">
+                <div className="font-medium mb-1">Order summary</div>
+                <div className="text-sm text-fg-muted leading-6">
+                  {renderSummary(order.diagnoses, order.otherDx, order.requests)}
                 </div>
-              ))}
+              </div>
+            </section>
 
-              <AIChipClosedSmart
-                text="Chest X-ray, PA and lateral • Abdominal ultrasound, RUQ • CT head without contrast"
-                onInsert={() => {
-                  const suggestions = [
-                    { category: "Chest", exams: ["Chest X-ray, PA and lateral"] },
-                    { category: "Abdomen", exams: ["Abdominal ultrasound, RUQ"] },
-                    { category: "Head", exams: ["CT head without contrast"] }
-                  ];
-                  const newRequests = suggestions.map(s => ({
-                    id: Date.now().toString() + Math.random(),
-                    category: s.category,
-                    exams: s.exams
-                  }));
-                  updateImagingOrder(orderIndex, { 
-                    requests: [...order.requests, ...newRequests]
-                  });
-                }}
-              />
-            </div>
-
-            {/* Order Summary */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base">Order summary</CardTitle>
-              </CardHeader>
-              <CardContent className="text-sm text-fg-muted">
-                {renderSummary(order)}
-              </CardContent>
-            </Card>
+            {/* Separator between orders */}
+            {orderIndex < imagingOrders.length - 1 && <Separator className="my-6" />}
           </div>
         ))}
 
-        <Button variant="secondary" onClick={addImagingOrder}>
-          + Add another order
-        </Button>
-      </div>
-    </div>
+        {/* Add another order */}
+        <div className="mt-4">
+          <Button variant="outline" className="text-sm" onClick={addImagingOrder}>
+            + Add another order
+          </Button>
+        </div>
+        </div>
+      </PageContainer>
+
+      {/* Modal: preselect ALL items for the chosen set; user can uncheck then Confirm */}
+      {modal.open && modal.category && modal.orderIndex !== null ? (
+        <OrderSetModal
+          title={modal.category}
+          options={IMAGING_SETS[modal.category]}
+          selected={
+            imagingOrders[modal.orderIndex].requests.find((r) => r.category === modal.category)?.exams ??
+            IMAGING_SETS[modal.category]
+          }
+          onClose={() => setModal({ open: false, category: null, orderIndex: null })}
+          onConfirm={confirmSet}
+        />
+      ) : null}
+    </>
   );
 }
 
-// Helper function to render order summary
-function renderSummary(order: ImagingOrder): string {
-  const parts: string[] = [];
-  
-  if (order.diagnoses.length > 0 || order.otherDx) {
-    const diagnosesText = [
-      ...order.diagnoses,
-      ...(order.otherDx ? [order.otherDx] : [])
-    ].join("; ");
-    parts.push(`Diagnoses: ${diagnosesText}`);
-  }
-  
-  if (order.requests.length > 0) {
-    const requestsText = order.requests
-      .map(req => `${req.category}: ${req.exams.join(", ")}`)
-      .join("; ");
-    parts.push(`Orders: ${requestsText}`);
-  }
-  
-  return parts.length > 0 ? parts.join("; ") : "No content yet";
+function renderSummary(diagnoses: string[], other: string, reqs: Request[]) {
+  const dxPart = diagnoses.length > 0 
+    ? `Diagnoses: ${diagnoses.join("; ")}`
+    : "Diagnoses: —";
+  const otherPart = other.trim() ? `; Notes: ${other.trim()}` : "";
+  const orders = reqs.length > 0
+    ? reqs.map((r) => `${r.category}: ${r.exams.join(", ")}`).join("; ")
+    : "No imaging orders selected";
+  return `${dxPart}${otherPart}; Orders: ${orders}`;
 }
