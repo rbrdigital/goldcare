@@ -12,6 +12,46 @@ import { AIChipClosedSmart } from "@/components/ai/AIChipClosedSmart";
 import PharmacyPickerModal from "@/components/modals/PharmacyPickerModal";
 import { Pill } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import SelectedPharmacyCard from "./SelectedPharmacyCard";
+
+// Mock pharmacy data
+const MOCK_PHARMACIES = [
+  {
+    name: "CVS Pharmacy #1023", 
+    address: "123 Main St", 
+    city: "Naples", 
+    state: "FL", 
+    zip: "34102",
+    phone: "(239) 555-0123",
+    distance: "0.8 mi",
+    isOpen: true,
+    is24hr: false
+  },
+  {
+    name: "Walgreens #5541", 
+    address: "200 Pine Ave", 
+    city: "Naples", 
+    state: "FL", 
+    zip: "34103",
+    phone: "(239) 555-0456",
+    distance: "1.2 mi",
+    isOpen: false,
+    is24hr: true
+  },
+  {
+    name: "Publix Pharmacy", 
+    address: "901 Lake Dr", 
+    city: "Naples", 
+    state: "FL", 
+    zip: "34104",
+    phone: "(239) 555-0789",
+    distance: "2.1 mi",
+    isOpen: true,
+    is24hr: false
+  }
+];
 
 type RxFields = {
   medicine: string;
@@ -32,6 +72,19 @@ type RxFields = {
   earliestFill: string;
   notesPatient: string;
   notesPharmacy: string;
+  selectedPharmacy: SelectedPharmacy | null;
+};
+
+type SelectedPharmacy = {
+  name: string;
+  address: string;
+  city: string;
+  state: string;
+  zip: string;
+  phone?: string;
+  distance?: string;
+  isOpen?: boolean;
+  is24hr?: boolean;
 };
 
 type FrequencyKey = "qd" | "q12h" | "q8h" | "q6h" | "qod";
@@ -67,14 +120,14 @@ function emptyRx(): RxFields {
     startDate: "",
     earliestFill: "",
     notesPatient: "",
-    notesPharmacy: ""
+    notesPharmacy: "",
+    selectedPharmacy: null
   };
 }
 
 export default function RXForm() {
   const [items, setItems] = React.useState<RxFields[]>([emptyRx()]);
-  const [selectedPharmacy, setSelectedPharmacy] = React.useState<string | null>(null);
-  const [showPicker, setShowPicker] = React.useState(false);
+  const [showPicker, setShowPicker] = React.useState<{ rxIndex: number } | null>(null);
 
   const addItem = () => setItems((a) => [...a, emptyRx()]);
   const removeItem = (idx: number) =>
@@ -386,37 +439,85 @@ export default function RXForm() {
                 {renderSummary({ ...rx, totalQty })}
               </div>
             </div>
+
+            {/* Selected Pharmacy Card */}
+            {rx.selectedPharmacy && (
+              <div className="mt-6">
+                <SelectedPharmacyCard
+                  pharmacy={rx.selectedPharmacy}
+                  onChangePharmacy={() => setShowPicker({ rxIndex: i })}
+                  onRemovePharmacy={() => patchItem(i, { selectedPharmacy: null })}
+                />
+              </div>
+            )}
+
+            {/* Pharmacy Selection (Empty State) */}
+            {!rx.selectedPharmacy && (
+              <div className="mt-6">
+                <div className="space-y-3">
+                  <div className="text-sm font-medium">Choose pharmacy</div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <ChoiceCard
+                      label="Partell specialty pharmacy"
+                      sub="Freedom"
+                      selected={false}
+                      onClick={() => patchItem(i, { 
+                        selectedPharmacy: {
+                          name: "Partell specialty pharmacy",
+                          address: "1001 Freedom Blvd",
+                          city: "Naples", 
+                          state: "FL", 
+                          zip: "34102",
+                          phone: "(239) 555-0001",
+                          distance: "0.5 mi",
+                          isOpen: true,
+                          is24hr: false
+                        }
+                      })}
+                    />
+                    <ChoiceCard
+                      label="Walgreens"
+                      sub="Nearby"
+                      selected={false}
+                      onClick={() => patchItem(i, { 
+                        selectedPharmacy: {
+                          name: "Walgreens #5541",
+                          address: "200 Pine Ave",
+                          city: "Naples", 
+                          state: "FL", 
+                          zip: "34103",
+                          phone: "(239) 555-0456",
+                          distance: "1.2 mi",
+                          isOpen: false,
+                          is24hr: true
+                        }
+                      })}
+                    />
+                    <ChoiceCard
+                      label="Choose other pharmacy"
+                      selected={false}
+                      onClick={() => setShowPicker({ rxIndex: i })}
+                    />
+                    <ChoiceCard
+                      label="Send to manager"
+                      selected={false}
+                      onClick={() => patchItem(i, { 
+                        selectedPharmacy: {
+                          name: "Manager Review",
+                          address: "Pending Assignment",
+                          city: "Naples", 
+                          state: "FL", 
+                          zip: "34102"
+                        }
+                      })}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
           </section>
         );
       })}
-
-      {/* Pharmacy selector */}
-      <Separator className="my-6" />
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        <ChoiceCard
-          label="Partell specialty pharmacy"
-          sub="Freedom"
-          selected={selectedPharmacy === "Partell specialty pharmacy"}
-          onClick={() => setSelectedPharmacy("Partell specialty pharmacy")}
-        />
-        <ChoiceCard
-          label="Walgreens"
-          sub="Nearby"
-          selected={selectedPharmacy === "Walgreens"}
-          onClick={() => setSelectedPharmacy("Walgreens")}
-        />
-        <ChoiceCard
-          label="Choose other pharmacy"
-          selected={false}
-          onClick={() => setShowPicker(true)}
-        />
-        <ChoiceCard
-          label="Send to manager"
-          selected={selectedPharmacy === "Send to manager"}
-          onClick={() => setSelectedPharmacy("Send to manager")}
-        />
-      </div>
-
 
       {/* Add prescription */}
       <div className="mt-8">
@@ -424,15 +525,18 @@ export default function RXForm() {
       </div>
 
       {/* Pharmacy picker modal */}
-      {showPicker ? (
+      {showPicker && (
         <PharmacyPickerModal
-          onClose={() => setShowPicker(false)}
+          onClose={() => setShowPicker(null)}
           onSelect={(name) => {
-            setSelectedPharmacy(name);
-            setShowPicker(false);
+            const selectedMockPharmacy = MOCK_PHARMACIES.find(p => p.name === name) || MOCK_PHARMACIES[0];
+            if (showPicker) {
+              patchItem(showPicker.rxIndex, { selectedPharmacy: selectedMockPharmacy });
+            }
+            setShowPicker(null);
           }}
         />
-      ) : null}
+      )}
     </div>
   );
 }
@@ -485,7 +589,8 @@ function renderSummary(rx: RxFields & { totalQty: number }) {
     rx.prn ? `PRN${rx.prnInstructions ? ` (${rx.prnInstructions})` : ""}` : "",
     rx.subsAllowed ? "Substitutions allowed" : "No substitutions",
     rx.startDate ? `Start: ${rx.startDate}` : "",
-    rx.earliestFill ? `Earliest fill: ${rx.earliestFill}` : ""
+    rx.earliestFill ? `Earliest fill: ${rx.earliestFill}` : "",
+    rx.selectedPharmacy ? `Pharmacy: ${rx.selectedPharmacy.name} — ${rx.selectedPharmacy.city}, ${rx.selectedPharmacy.state} ${rx.selectedPharmacy.zip}` : ""
   ].filter(Boolean);
   return parts.join("; ");
 }
