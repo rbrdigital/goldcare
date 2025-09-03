@@ -28,12 +28,12 @@ const config: Config = {
         "fg-muted": "var(--fg-muted)",
         border: "var(--border)",
         divider: "var(--divider)",
-        primary: "var(--primary)",        /* Blue - text only */
+        primary: "var(--primary)",        /* ChatGPT Green - text only */
         "primary-50": "var(--primary-50)",    /* Light gray */
         "primary-100": "var(--primary-100)",  /* Darker gray */
         "primary/30": "var(--primary-30a)",   /* 10% black */
-        "medical-blue": "var(--medical-blue)",      /* Black */
-        "medical-blue-light": "var(--medical-blue-light)", /* Light gray */
+        "medical-blue": "var(--medical-blue)",      /* ChatGPT Green */
+        "medical-blue-light": "var(--medical-blue-light)", /* Tertiary background */
         "medical-green": "var(--medical-green)",
         "medical-green-light": "var(--medical-green-light)",
         "medical-amber": "var(--medical-amber)",
@@ -47,6 +47,7 @@ const config: Config = {
         secondary: "var(--color-secondary)",
         "secondary-fg": "var(--color-secondary-fg)",
         "button-primary": "var(--color-button-primary)",
+        "button-primary-hover": "var(--color-button-primary-hover)",
         "button-primary-text": "var(--color-button-primary-text)",
         success: "var(--color-success)",
         "success-fg": "var(--color-success-fg)",
