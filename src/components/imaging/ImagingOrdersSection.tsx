@@ -116,6 +116,7 @@ export default function ImagingOrdersSection() {
   // Handle order selection from category view
   const handleOrderToggle = (orderId: string, order: ImagingOrderData, orderIndex: number) => {
     const currentOrder = imagingOrders[orderIndex];
+    // Ensure selectedOrders exists as an array
     const existingOrders = currentOrder.selectedOrders || [];
     
     const orderExists = existingOrders.some(o => o.orderId === orderId);
@@ -140,6 +141,7 @@ export default function ImagingOrdersSection() {
 
   const handleOtherOrderAdd = (orderText: string, orderIndex: number) => {
     const currentOrder = imagingOrders[orderIndex];
+    // Ensure otherOrders exists as an array
     const existingOtherOrders = currentOrder.otherOrders || [];
     const updatedOtherOrders = [...existingOtherOrders, orderText];
     updateImagingOrderItem(orderIndex, { otherOrders: updatedOtherOrders });
@@ -147,13 +149,13 @@ export default function ImagingOrdersSection() {
 
   const removeSelectedOrder = (orderIndex: number, orderId: string) => {
     const currentOrder = imagingOrders[orderIndex];
-    const updatedOrders = currentOrder.selectedOrders.filter(o => o.orderId !== orderId);
+    const updatedOrders = (currentOrder.selectedOrders || []).filter(o => o.orderId !== orderId);
     updateImagingOrderItem(orderIndex, { selectedOrders: updatedOrders });
   };
 
   const removeOtherOrder = (orderIndex: number, otherOrderIndex: number) => {
     const currentOrder = imagingOrders[orderIndex];
-    const updatedOtherOrders = currentOrder.otherOrders.filter((_, idx) => idx !== otherOrderIndex);
+    const updatedOtherOrders = (currentOrder.otherOrders || []).filter((_, idx) => idx !== otherOrderIndex);
     updateImagingOrderItem(orderIndex, { otherOrders: updatedOtherOrders });
   };
 
@@ -161,7 +163,7 @@ export default function ImagingOrdersSection() {
   if (selectedCategory) {
     const currentOrderIndex = 0; // Always use first order for simplicity in this flow
     const currentOrder = imagingOrders[currentOrderIndex];
-    const selectedOrderIds = currentOrder.selectedOrders.map(o => o.orderId);
+    const selectedOrderIds = (currentOrder.selectedOrders || []).map(o => o.orderId);
 
     return (
       <div className="flex h-screen">
@@ -261,7 +263,7 @@ export default function ImagingOrdersSection() {
                   {/* Standard Orders */}
                   {order.selectedOrders && order.selectedOrders.length > 0 && (
                     <div className="space-y-2">
-                      {order.selectedOrders.map((selectedOrder) => (
+                      {(order.selectedOrders || []).map((selectedOrder) => (
                         <div key={selectedOrder.orderId} className="flex items-center justify-between p-3 border border-border rounded-md bg-surface">
                           <div>
                             <div className="text-sm font-medium">{selectedOrder.orderName}</div>
@@ -285,7 +287,7 @@ export default function ImagingOrdersSection() {
                   {/* Other Orders */}
                   {order.otherOrders && order.otherOrders.length > 0 && (
                     <div className="space-y-2">
-                      {order.otherOrders.map((otherOrder, otherIndex) => (
+                      {(order.otherOrders || []).map((otherOrder, otherIndex) => (
                         <div key={otherIndex} className="flex items-center justify-between p-3 border border-border rounded-md bg-surface">
                           <div className="text-sm">{otherOrder}</div>
                           <button 
