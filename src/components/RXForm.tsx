@@ -104,7 +104,6 @@ const ROUTES = ["Oral", "IM", "IV"] as const;
 const QTY_UNITS = ["Tablet", "Capsule", "mL"] as const;
 
 function emptyRx(): RxFields {
-  const today = new Date().toISOString().split('T')[0];
   return {
     medicine: "",
     qtyPerDose: "",
@@ -120,8 +119,8 @@ function emptyRx(): RxFields {
     prnInstructions: "",
     location: "",
     subsAllowed: true,
-    startDate: today,
-    earliestFill: today,
+    startDate: "",
+    earliestFill: "",
     notesPatient: "",
     notesPharmacy: "",
     selectedPharmacy: null
@@ -141,7 +140,6 @@ export default function RXForm() {
 
   React.useEffect(() => {
     if (prescriptions.length === 0) {
-      const today = new Date().toISOString().split('T')[0];
       const emptyPrescription: Prescription = {
         id: crypto.randomUUID(),
         medicine: "",
@@ -158,8 +156,8 @@ export default function RXForm() {
         prnInstructions: "",
         location: "",
         subsAllowed: true,
-        startDate: today,
-        earliestFill: today,
+        startDate: "",
+        earliestFill: "",
         notesPatient: "",
         notesPharmacy: "",
         selectedPharmacy: null
@@ -169,7 +167,6 @@ export default function RXForm() {
   }, [prescriptions.length, addPrescription]);
 
   const addItem = () => {
-    const today = new Date().toISOString().split('T')[0];
     const newPrescription: Prescription = {
       id: crypto.randomUUID(),
       medicine: "",
@@ -186,8 +183,8 @@ export default function RXForm() {
       prnInstructions: "",
       location: "",
       subsAllowed: true,
-      startDate: today,
-      earliestFill: today,
+      startDate: "",
+      earliestFill: "",
       notesPatient: "",
       notesPharmacy: "",
       selectedPharmacy: null
@@ -362,7 +359,7 @@ export default function RXForm() {
                   onChange={(v) =>
                     patchItem(i, { durationUnit: (v as Prescription["durationUnit"]) || "Days" })
                   }
-                  options={["Days"]}
+                  options={["Days", "Weeks"]}
                 />
               </div>
 
@@ -428,6 +425,16 @@ export default function RXForm() {
                 />
               </div>
 
+              {/* Location */}
+              <div className="md:col-span-3">
+                <Label htmlFor={`loc-${i}`}>Location</Label>
+                <Input
+                  id={`loc-${i}`}
+                  placeholder="e.g., Home"
+                  value={rx.location}
+                  onChange={(e) => patchItem(i, { location: e.target.value })}
+                />
+              </div>
 
               {/* Substitutions */}
               <div className="md:col-span-3">
@@ -638,8 +645,8 @@ function labelToKey(label: string): FrequencyKey | null {
     else if (frequency.includes("q6h")) perDay = 4;
     else if (frequency.includes("qod")) perDay = 0.5;
     
-    // Duration is always in days now
-    return Math.ceil(qtyPerDose * perDay * duration);
+    const daysMultiplier = rx.durationUnit === "Weeks" ? 7 : 1;
+    return Math.ceil(qtyPerDose * perDay * duration * daysMultiplier);
   };
 
 function toNumber(v: number | "" | string): number {
