@@ -237,7 +237,7 @@ export function AppSidebar({ mini = false, activeItem = "soap", onItemClick }: A
                     <div className="px-4 pb-2">
                       <SidebarItem
                         key={visitSummaryItem.id}
-                        item={{ ...visitSummaryItem, dirty: hasContent(visitSummaryItem.id) }}
+                        item={visitSummaryItem}
                         isActive={activeItem === visitSummaryItem.id}
                         onClick={() => handleItemClick(visitSummaryItem.id)}
                       />
