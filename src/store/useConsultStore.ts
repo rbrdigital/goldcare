@@ -388,6 +388,10 @@ export const useConsultStore = create<ConsultState & ConsultActions>()(
           labOrders: [...state.labOrders, labOrder],
           lastSaved: new Date().toISOString()
         }));
+        debouncedSave(() => {
+          // Debounced save will persist automatically via Zustand persist
+          console.log('Lab order saved');
+        });
       },
       
       updateLabOrder: (id, updates) => {
@@ -397,6 +401,10 @@ export const useConsultStore = create<ConsultState & ConsultActions>()(
           ),
           lastSaved: new Date().toISOString()
         }));
+        debouncedSave(() => {
+          // Debounced save will persist automatically via Zustand persist
+          console.log('Lab order updated');
+        });
       },
       
       removeLabOrder: (id) => {
@@ -404,6 +412,10 @@ export const useConsultStore = create<ConsultState & ConsultActions>()(
           labOrders: state.labOrders.filter(lab => lab.id !== id),
           lastSaved: new Date().toISOString()
         }));
+        debouncedSave(() => {
+          // Debounced save will persist automatically via Zustand persist
+          console.log('Lab order removed');
+        });
       },
       
       // Imaging actions
@@ -412,6 +424,10 @@ export const useConsultStore = create<ConsultState & ConsultActions>()(
           imagingOrders: [...state.imagingOrders, imagingOrder],
           lastSaved: new Date().toISOString()
         }));
+        debouncedSave(() => {
+          // Debounced save will persist automatically via Zustand persist
+          console.log('Imaging order saved');
+        });
       },
       
       updateImagingOrder: (id, updates) => {
@@ -421,6 +437,10 @@ export const useConsultStore = create<ConsultState & ConsultActions>()(
           ),
           lastSaved: new Date().toISOString()
         }));
+        debouncedSave(() => {
+          // Debounced save will persist automatically via Zustand persist
+          console.log('Imaging order updated');
+        });
       },
       
       removeImagingOrder: (id) => {
@@ -428,6 +448,10 @@ export const useConsultStore = create<ConsultState & ConsultActions>()(
           imagingOrders: state.imagingOrders.filter(imaging => imaging.id !== id),
           lastSaved: new Date().toISOString()
         }));
+        debouncedSave(() => {
+          // Debounced save will persist automatically via Zustand persist
+          console.log('Imaging order removed');
+        });
       },
       
       // Outside Orders actions
@@ -506,6 +530,23 @@ export const useConsultStore = create<ConsultState & ConsultActions>()(
   )
 );
 
+// Helper functions to check meaningful content
+const isMeaningfulLab = (lab: LabOrder): boolean => {
+  return !!(
+    lab.diagnoses?.length > 0 ||
+    lab.otherDx?.trim() ||
+    lab.requests?.some(r => r.exams?.length > 0)
+  );
+};
+
+const isMeaningfulImaging = (imaging: ImagingOrder): boolean => {
+  return !!(
+    imaging.diagnoses?.length > 0 ||
+    imaging.clinicalNotes?.trim() ||
+    imaging.studies?.length > 0
+  );
+};
+
 // Selectors for easy data access
 export const useConsultSelectors = () => {
   const store = useConsultStore();
@@ -524,14 +565,7 @@ export const useConsultSelectors = () => {
       soap.allergies?.length > 0 ||
       soap.diagnoses?.length > 0 ||
       soap.comorbidities?.length > 0 ||
-      soap.vitals.heightFt?.trim() ||
-      soap.vitals.heightIn?.trim() ||
-      soap.vitals.weightLbs?.trim() ||
-      soap.vitals.waist?.trim() ||
-      soap.vitals.hip?.trim() ||
-      soap.vitals.bloodPressure?.trim() ||
-      soap.vitals.heartRate?.trim() ||
-      soap.vitals.temperature?.trim()
+      Object.values(soap.vitals || {}).some(v => v?.trim())
     );
   };
   
@@ -557,19 +591,19 @@ export const useConsultSelectors = () => {
     finished: store.finished,
     lastSaved: store.lastSaved,
     
-    // Content detection selectors
+    // Content detection selectors (improved)
     hasSoapContent: hasSoapContent(),
     hasRxContent: store.prescriptions.length > 0,
-    hasLabContent: store.labOrders.length > 0,
-    hasImagingContent: store.imagingOrders.length > 0,
+    hasLabContent: store.labOrders.some(isMeaningfulLab),
+    hasImagingContent: store.imagingOrders.some(isMeaningfulImaging),
     hasOutsideOrdersContent: store.outsideOrders.length > 0,
     hasPrivateNotesContent: !!store.privateNotes?.trim(),
     
     // Overall data check
     hasData: hasSoapContent() || 
              store.prescriptions.length > 0 || 
-             store.labOrders.length > 0 || 
-             store.imagingOrders.length > 0 || 
+             store.labOrders.some(isMeaningfulLab) || 
+             store.imagingOrders.some(isMeaningfulImaging) || 
              store.outsideOrders.length > 0 || 
              !!store.privateNotes?.trim()
   };

@@ -10,6 +10,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import PageContainer from "@/components/layout/PageContainer";
 import ComboboxChips from "@/components/ui/ComboboxChips";
 import OrderSetModal from "./OrderSetModal";
+import { useConsultStore, type ImagingOrder } from "@/store/useConsultStore";
 
 // Imaging icon from sidebar
 const ImagingIcon = ({ className }: { className?: string }) => (
@@ -21,15 +22,6 @@ const ImagingIcon = ({ className }: { className?: string }) => (
 );
 
 type Diagnosis = { code: string; label: string };
-type Request = { id: string; category: string; exams: string[] };
-
-// Imaging order type
-interface ImagingOrder {
-  id: string;
-  diagnoses: string[];
-  otherDx: string;
-  requests: Request[];
-}
 
 // Top common ICD-10 diagnoses for imaging
 const TOP_DIAGNOSES: Diagnosis[] = [
@@ -109,15 +101,13 @@ const IMAGING_SETS: Record<string, string[]> = {
 const ORDER_TABS = Object.keys(IMAGING_SETS);
 
 export default function ImagingOrdersSection() {  
-  // Multi-order state management like RX form
-  const [imagingOrders, setImagingOrders] = React.useState<ImagingOrder[]>([
-    {
-      id: crypto.randomUUID(),
-      diagnoses: [],
-      otherDx: "",
-      requests: []
-    }
-  ]);
+  const { 
+    imagingOrders, 
+    addImagingOrder, 
+    updateImagingOrder, 
+    removeImagingOrder 
+  } = useConsultStore();
+  
   const [modal, setModal] = React.useState<{ 
     open: boolean; 
     category: string | null;
@@ -133,39 +123,53 @@ export default function ImagingOrdersSection() {
     []
   );
 
+  // Initialize with one empty order if no orders exist
+  React.useEffect(() => {
+    if (imagingOrders.length === 0) {
+      const newOrder: ImagingOrder = {
+        id: crypto.randomUUID(),
+        diagnoses: [],
+        studies: [],
+        urgency: "routine",
+        clinicalNotes: ""
+      };
+      addImagingOrder(newOrder);
+    }
+  }, [imagingOrders.length, addImagingOrder]);
+
   const handleSave = () => {
-    // Auto-save functionality placeholder
+    // Store updates automatically via direct store calls
   };
 
   // Imaging order management functions
-  const addImagingOrder = () => {
+  const addImagingOrderItem = () => {
     const newOrder: ImagingOrder = {
       id: crypto.randomUUID(),
       diagnoses: [],
-      otherDx: "",
-      requests: []
+      studies: [],
+      urgency: "routine",
+      clinicalNotes: ""
     };
-    setImagingOrders(prev => [...prev, newOrder]);
+    addImagingOrder(newOrder);
   };
 
-  const removeImagingOrder = (index: number) => {
-    if (imagingOrders.length <= 1) return; // Keep at least one order
-    setImagingOrders(prev => prev.filter((_, i) => i !== index));
+  const removeImagingOrderItem = (index: number) => {
+    const orderToRemove = imagingOrders[index];
+    removeImagingOrder(orderToRemove.id);
   };
 
-  const duplicateImagingOrder = (index: number) => {
+  const duplicateImagingOrderItem = (index: number) => {
     const orderToDuplicate = imagingOrders[index];
     const duplicatedOrder: ImagingOrder = {
       ...orderToDuplicate,
       id: crypto.randomUUID()
     };
-    setImagingOrders(prev => [...prev, duplicatedOrder]);
+    addImagingOrder(duplicatedOrder);
   };
 
-  const updateImagingOrder = (index: number, updates: Partial<ImagingOrder>) => {
-    setImagingOrders(prev => prev.map((order, i) => 
-      i === index ? { ...order, ...updates } : order
-    ));
+  const updateImagingOrderItem = (index: number, updates: Partial<ImagingOrder>) => {
+    const orderId = imagingOrders[index].id;
+    updateImagingOrder(orderId, updates);
   };
 
   const openSet = (category: string, orderIndex: number) => 
@@ -175,27 +179,22 @@ export default function ImagingOrdersSection() {
     if (modal.category === null || modal.orderIndex === null) return;
     
     const orderIndex = modal.orderIndex;
-    const category = modal.category;
+    const currentOrder = imagingOrders[orderIndex];
     
-    updateImagingOrder(orderIndex, {
-      requests: imagingOrders[orderIndex].requests.map(r => 
-        r.category === category ? { ...r, exams } : r
-      ).concat(
-        imagingOrders[orderIndex].requests.find(r => r.category === category) 
-          ? [] 
-          : [{ id: `${category}-${Date.now()}`, category, exams }]
-      ).filter(r => r.category !== category || exams.length > 0)
-    });
+    // Update the studies array directly with the selected exams
+    const existingStudies = currentOrder.studies || [];
+    const newStudies = [...existingStudies, ...exams];
     
+    updateImagingOrderItem(orderIndex, { studies: newStudies });
     setModal({ open: false, category: null, orderIndex: null });
   };
 
   const editSet = (category: string, orderIndex: number) => openSet(category, orderIndex);
   
-  const removeSet = (category: string, orderIndex: number) => {
-    updateImagingOrder(orderIndex, {
-      requests: imagingOrders[orderIndex].requests.filter(r => r.category !== category)
-    });
+  const removeStudy = (orderIndex: number, studyToRemove: string) => {
+    const currentOrder = imagingOrders[orderIndex];
+    const updatedStudies = currentOrder.studies.filter(study => study !== studyToRemove);
+    updateImagingOrderItem(orderIndex, { studies: updatedStudies });
   };
 
   return (
@@ -209,7 +208,7 @@ export default function ImagingOrdersSection() {
           onSave={handleSave}
         />
 
-        {/* Render each imaging order */}
+        {/* Always render orders - never show empty state */}
         {imagingOrders.map((order, orderIndex) => (
           <div key={order.id} className="space-y-6">
             {/* Imaging order section header */}
@@ -218,14 +217,13 @@ export default function ImagingOrdersSection() {
               <div className="flex items-center gap-2">
                 <Button 
                   variant="outline" 
-                  onClick={() => duplicateImagingOrder(orderIndex)}
+                  onClick={() => duplicateImagingOrderItem(orderIndex)}
                 >
                   Duplicate
                 </Button>
                 <Button 
                   variant="outline" 
-                  onClick={() => removeImagingOrder(orderIndex)}
-                  disabled={imagingOrders.length <= 1}
+                  onClick={() => removeImagingOrderItem(orderIndex)}
                 >
                   Remove
                 </Button>
@@ -242,7 +240,7 @@ export default function ImagingOrdersSection() {
                   placeholder="Search diagnoses or add custom text..."
                   options={diagnosisOptions}
                   selected={order.diagnoses}
-                  onSelectionChange={(diagnoses) => updateImagingOrder(orderIndex, { diagnoses })}
+                  onSelectionChange={(diagnoses) => updateImagingOrderItem(orderIndex, { diagnoses })}
                 />
 
                 <div>
@@ -251,8 +249,8 @@ export default function ImagingOrdersSection() {
                     id={`other-${orderIndex}`}
                     minRows={2}
                     placeholder="Describe additional clinical context"
-                    value={order.otherDx}
-                    onChange={(e) => updateImagingOrder(orderIndex, { otherDx: e.target.value })}
+                    value={order.clinicalNotes || ""}
+                    onChange={(e) => updateImagingOrderItem(orderIndex, { clinicalNotes: e.target.value })}
                   />
                 </div>
               </div>
@@ -277,32 +275,24 @@ export default function ImagingOrdersSection() {
                 ))}
               </div>
 
-              {/* Requests list */}
-              <div className="mt-4 divide-y divide-divider">
-                {order.requests.map((r) => (
-                  <div key={r.id} className="py-3 flex items-center justify-between">
-                    <div className="min-w-0">
-                      <div className="font-medium">{r.category}</div>
-                      <div className="text-sm text-fg-muted truncate">{r.exams.join(" • ")}</div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <button 
-                        className="text-sm text-fg-muted hover:underline focus-visible:outline-none" 
-                        onClick={() => editSet(r.category, orderIndex)}
-                      >
-                        Edit
-                      </button>
-                      <button 
-                        className="text-sm text-fg-muted hover:underline focus-visible:outline-none" 
-                        onClick={() => removeSet(r.category, orderIndex)}
-                      >
-                        Remove
-                      </button>
-                    </div>
+              {/* Studies list */}
+              <div className="mt-4">
+                {order.studies && order.studies.length > 0 ? (
+                  <div className="space-y-2">
+                    {order.studies.map((study, studyIndex) => (
+                      <div key={studyIndex} className="flex items-center justify-between p-2 border border-border rounded">
+                        <span className="text-sm">{study}</span>
+                        <button 
+                          className="text-sm text-fg-muted hover:underline focus-visible:outline-none" 
+                          onClick={() => removeStudy(orderIndex, study)}
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    ))}
                   </div>
-                ))}
-                {order.requests.length === 0 && (
-                  <p className="text-sm text-fg-muted py-3">No imaging orders selected.</p>
+                ) : (
+                  <p className="text-sm text-fg-muted py-3">No imaging studies selected.</p>
                 )}
               </div>
             </section>
@@ -312,7 +302,7 @@ export default function ImagingOrdersSection() {
               <div className="rounded-md border border-border bg-surface p-4">
                 <div className="font-medium mb-1">Order summary</div>
                 <div className="text-sm text-fg-muted leading-6">
-                  {renderSummary(order.diagnoses, order.otherDx, order.requests)}
+                  {renderSummary(order.diagnoses, order.clinicalNotes || "", order.studies || [])}
                 </div>
               </div>
             </section>
@@ -324,7 +314,7 @@ export default function ImagingOrdersSection() {
 
         {/* Add another order */}
         <div className="mt-4">
-          <Button variant="outline" className="text-sm" onClick={addImagingOrder}>
+          <Button variant="outline" className="text-sm" onClick={addImagingOrderItem}>
             + Add another order
           </Button>
         </div>
@@ -336,10 +326,7 @@ export default function ImagingOrdersSection() {
         <OrderSetModal
           title={modal.category}
           options={IMAGING_SETS[modal.category]}
-          selected={
-            imagingOrders[modal.orderIndex].requests.find((r) => r.category === modal.category)?.exams ??
-            IMAGING_SETS[modal.category]
-          }
+          selected={IMAGING_SETS[modal.category]}
           onClose={() => setModal({ open: false, category: null, orderIndex: null })}
           onConfirm={confirmSet}
         />
@@ -348,13 +335,13 @@ export default function ImagingOrdersSection() {
   );
 }
 
-function renderSummary(diagnoses: string[], other: string, reqs: Request[]) {
+function renderSummary(diagnoses: string[], clinicalNotes: string, studies: string[]) {
   const dxPart = diagnoses.length > 0 
     ? `Diagnoses: ${diagnoses.join("; ")}`
     : "Diagnoses: —";
-  const otherPart = other.trim() ? `; Notes: ${other.trim()}` : "";
-  const orders = reqs.length > 0
-    ? reqs.map((r) => `${r.category}: ${r.exams.join(", ")}`).join("; ")
-    : "No imaging orders selected";
-  return `${dxPart}${otherPart}; Orders: ${orders}`;
+  const notePart = clinicalNotes.trim() ? `; Notes: ${clinicalNotes.trim()}` : "";
+  const studiesPart = studies.length > 0
+    ? studies.join(", ")
+    : "No imaging studies selected";
+  return `${dxPart}${notePart}; Studies: ${studiesPart}`;
 }
