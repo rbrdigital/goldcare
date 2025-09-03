@@ -5,55 +5,12 @@ import { Badge } from "@/components/ui/badge";
 import { PageHeader } from "@/components/ui/page-header";
 import { FileBarChart, Calendar, User, Stethoscope, Pill, FlaskConical, Activity, Upload, StickyNote } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-
-// Mock data - in a real app this would come from a store/context
-const mockSummaryData = {
-  patient: {
-    name: "Sarah Johnson",
-    age: 34,
-    sex: "Female",
-    consultDate: "January 15, 2024"
-  },
-  soapNote: {
-    chiefComplaint: "Patient presents with intermittent chest tightness and shortness of breath for the past 3 weeks, worse at night and after exertion. Denies fever or cough.",
-    currentMedications: ["Lisinopril 10 mg once daily", "Atorvastatin 20 mg once nightly", "Albuterol inhaler PRN"],
-    supplements: ["Vitamin D3 2000 IU daily", "Magnesium glycinate 400 mg nightly"],
-    allergies: ["Penicillin — rash"],
-    vitals: {
-      height: "5'8\"",
-      weight: "165 lbs",
-      bmi: "25.1",
-      waist: "32\"",
-      hip: "38\""
-    },
-    observations: "Patient appears alert and oriented, in no acute distress. Lungs clear to auscultation, regular heart rhythm, no murmurs. Mildly elevated blood pressure noted.",
-    assessment: "Primary concerns include hypertension, possible early cardiovascular disease, and poor sleep contributing to fatigue.",
-    differential: "Hypertension with secondary cardiovascular risk • Obstructive sleep apnea • Anxiety-related chest tightness",
-    plan: "1) Order EKG, lipid panel, and basic metabolic panel. 2) Continue lisinopril and atorvastatin as prescribed. 3) Recommend sleep study referral to rule out OSA. 4) Follow-up in 6 weeks with lab results.",
-    diagnoses: ["I10 — Essential hypertension", "E78.5 — Hyperlipidemia, unspecified"]
-  },
-  prescriptions: [
-    {
-      medication: "Lisinopril 10mg",
-      instructions: "Take 1 tablet by mouth once daily",
-      quantity: "30 tablets",
-      refills: "5"
-    }
-  ],
-  labOrders: [
-    "Lipid Panel",
-    "Basic Metabolic Panel"
-  ],
-  imagingOrders: [
-    "EKG - 12 Lead"
-  ],
-  outsideOrders: [
-    "Sleep Study Referral - Pulmonology"
-  ],
-  privateNotes: "Patient seems motivated to make lifestyle changes. Consider discussing diet and exercise modifications at follow-up."
-};
+import { useConsultSelectors, useConsultStore } from "@/store/useConsultStore";
 
 export function SummarySection() {
+  const consultData = useConsultSelectors();
+  const { setFinished } = useConsultStore();
+
   const handleSave = () => {
     toast({
       title: "Summary Reviewed",
@@ -62,9 +19,70 @@ export function SummarySection() {
   };
 
   const handleFinishAppointment = () => {
+    setFinished(true);
     toast({
       title: "Appointment Finalized",
       description: "The consultation has been marked complete.",
+    });
+  };
+
+  // Patient info with fallback
+  const patientName = "Sarah Johnson"; // In real app, would come from patient context
+  const patientAge = 34;
+  const patientSex = "Female";
+  const consultDate = new Date(consultData.patientInfo.consultDate).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+
+  // Format height for display
+  const formatHeight = () => {
+    const { heightFt, heightIn } = consultData.soapNote.vitals;
+    if (heightFt || heightIn) {
+      return `${heightFt || 0}'${heightIn || 0}"`;
+    }
+    return "";
+  };
+
+  // Format prescriptions for display
+  const formatPrescriptions = () => {
+    return consultData.prescriptions.map(rx => ({
+      medication: `${rx.medicine} ${rx.qtyPerDose}${rx.formulation ? ` ${rx.formulation}` : ''}`,
+      instructions: `${rx.action || 'Take'} ${rx.qtyPerDose || 1} ${rx.route || 'by mouth'} ${rx.frequency || 'as directed'}${rx.prn ? ' as needed' : ''}${rx.prnInstructions ? ` for ${rx.prnInstructions}` : ''}`,
+      quantity: `${rx.duration || ''} ${rx.durationUnit || 'Days'}`.trim(),
+      refills: rx.refills?.toString() || "0"
+    }));
+  };
+
+  // Format lab orders for display
+  const formatLabOrders = () => {
+    return consultData.labOrders.flatMap(lab => 
+      lab.requests.flatMap(request => request.exams)
+    );
+  };
+
+  // Format imaging orders for display
+  const formatImagingOrders = () => {
+    return consultData.imagingOrders.flatMap(imaging => imaging.studies);
+  };
+
+  // Format outside orders for display
+  const formatOutsideOrders = () => {
+    return consultData.outsideOrders.map(order => {
+      if (order.type === 'external' && order.external) {
+        return order.external.content;
+      }
+      if (order.type === 'internal' && order.internal) {
+        if (order.internal.type === 'specialty') {
+          return `${order.internal.specialty} Referral`;
+        }
+        if (order.internal.type === 'provider' && order.internal.providers?.length) {
+          const providerNames = order.internal.providers.map(p => p.name).join(', ');
+          return `Provider Referral: ${providerNames}`;
+        }
+      }
+      return "External Order";
     });
   };
 
@@ -90,19 +108,19 @@ export function SummarySection() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
               <div>
                 <span className="text-fg-muted">Name:</span>
-                <div className="font-medium text-fg">{mockSummaryData.patient.name}</div>
+                <div className="font-medium text-fg">{patientName}</div>
               </div>
               <div>
                 <span className="text-fg-muted">Age:</span>
-                <div className="font-medium text-fg">{mockSummaryData.patient.age}</div>
+                <div className="font-medium text-fg">{patientAge}</div>
               </div>
               <div>
                 <span className="text-fg-muted">Sex:</span>
-                <div className="font-medium text-fg">{mockSummaryData.patient.sex}</div>
+                <div className="font-medium text-fg">{patientSex}</div>
               </div>
               <div>
                 <span className="text-fg-muted">Consult Date:</span>
-                <div className="font-medium text-fg">{mockSummaryData.patient.consultDate}</div>
+                <div className="font-medium text-fg">{consultDate}</div>
               </div>
             </div>
           </CardContent>
@@ -117,55 +135,92 @@ export function SummarySection() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div>
-              <h4 className="font-medium text-sm text-fg mb-2">Chief Complaint</h4>
-              <p className="text-sm text-fg-muted">{mockSummaryData.soapNote.chiefComplaint}</p>
-            </div>
+            {consultData.soapNote.chiefComplaint && (
+              <div>
+                <h4 className="font-medium text-sm text-fg mb-2">Chief Complaint</h4>
+                <p className="text-sm text-fg-muted">{consultData.soapNote.chiefComplaint}</p>
+              </div>
+            )}
             
-            <Separator />
+            {(consultData.soapNote.chiefComplaint || formatHeight() || consultData.soapNote.vitals.weightLbs || consultData.soapNote.currentMedications.length > 0) && <Separator />}
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <h4 className="font-medium text-sm text-fg mb-2">Vitals & Measurements</h4>
-                <div className="space-y-1 text-sm">
-                  <div>Height: <span className="text-fg">{mockSummaryData.soapNote.vitals.height}</span></div>
-                  <div>Weight: <span className="text-fg">{mockSummaryData.soapNote.vitals.weight}</span></div>
-                  <div>BMI: <span className="text-fg">{mockSummaryData.soapNote.vitals.bmi}</span></div>
-                  <div>Waist: <span className="text-fg">{mockSummaryData.soapNote.vitals.waist}</span></div>
+              {(formatHeight() || consultData.soapNote.vitals.weightLbs || consultData.soapNote.vitals.bmi || consultData.soapNote.vitals.waist) && (
+                <div>
+                  <h4 className="font-medium text-sm text-fg mb-2">Vitals & Measurements</h4>
+                  <div className="space-y-1 text-sm text-fg-muted">
+                    {formatHeight() && <div>Height: <span className="text-fg">{formatHeight()}</span></div>}
+                    {consultData.soapNote.vitals.weightLbs && <div>Weight: <span className="text-fg">{consultData.soapNote.vitals.weightLbs} lbs</span></div>}
+                    {consultData.soapNote.vitals.bmi && <div>BMI: <span className="text-fg">{consultData.soapNote.vitals.bmi}</span></div>}
+                    {consultData.soapNote.vitals.waist && <div>Waist: <span className="text-fg">{consultData.soapNote.vitals.waist}"</span></div>}
+                    {consultData.soapNote.vitals.hip && <div>Hip: <span className="text-fg">{consultData.soapNote.vitals.hip}"</span></div>}
+                  </div>
                 </div>
-              </div>
+              )}
               
+              {consultData.soapNote.currentMedications.length > 0 && (
+                <div>
+                  <h4 className="font-medium text-sm text-fg mb-2">Current Medications</h4>
+                  <div className="flex flex-wrap gap-1">
+                    {consultData.soapNote.currentMedications.map((med, idx) => (
+                      <Badge key={idx} variant="secondary" className="text-xs">{med}</Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              {consultData.soapNote.supplements.length > 0 && (
+                <div>
+                  <h4 className="font-medium text-sm text-fg mb-2">Supplements</h4>
+                  <div className="flex flex-wrap gap-1">
+                    {consultData.soapNote.supplements.map((supplement, idx) => (
+                      <Badge key={idx} variant="secondary" className="text-xs">{supplement}</Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              {consultData.soapNote.allergies.length > 0 && (
+                <div>
+                  <h4 className="font-medium text-sm text-fg mb-2">Allergies</h4>
+                  <div className="flex flex-wrap gap-1">
+                    {consultData.soapNote.allergies.map((allergy, idx) => (
+                      <Badge key={idx} variant="outline" className="text-xs text-danger border-danger">{allergy}</Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {consultData.soapNote.observations && (
+              <>
+                <Separator />
+                <div>
+                  <h4 className="font-medium text-sm text-fg mb-2">Clinical Observations</h4>
+                  <p className="text-sm text-fg-muted">{consultData.soapNote.observations}</p>
+                </div>
+              </>
+            )}
+
+            {(consultData.soapNote.assessment || consultData.soapNote.plan) && (
               <div>
-                <h4 className="font-medium text-sm text-fg mb-2">Current Medications</h4>
+                <h4 className="font-medium text-sm text-fg mb-2">Assessment & Plan</h4>
+                {consultData.soapNote.assessment && <p className="text-sm text-fg-muted mb-2">{consultData.soapNote.assessment}</p>}
+                {consultData.soapNote.differential && <p className="text-sm text-fg-muted mb-2"><strong>Differential:</strong> {consultData.soapNote.differential}</p>}
+                {consultData.soapNote.plan && <p className="text-sm text-fg-muted">{consultData.soapNote.plan}</p>}
+              </div>
+            )}
+
+            {consultData.soapNote.diagnoses.length > 0 && (
+              <div>
+                <h4 className="font-medium text-sm text-fg mb-2">Diagnoses</h4>
                 <div className="flex flex-wrap gap-1">
-                  {mockSummaryData.soapNote.currentMedications.map((med, idx) => (
-                    <Badge key={idx} variant="secondary" className="text-xs">{med}</Badge>
+                  {consultData.soapNote.diagnoses.map((diagnosis, idx) => (
+                    <Badge key={idx} variant="outline" className="text-xs">{diagnosis}</Badge>
                   ))}
                 </div>
               </div>
-            </div>
-
-            <Separator />
-
-            <div>
-              <h4 className="font-medium text-sm text-fg mb-2">Clinical Observations</h4>
-              <p className="text-sm text-fg-muted">{mockSummaryData.soapNote.observations}</p>
-            </div>
-
-            <div>
-              <h4 className="font-medium text-sm text-fg mb-2">Assessment & Plan</h4>
-              <p className="text-sm text-fg-muted mb-2">{mockSummaryData.soapNote.assessment}</p>
-              <p className="text-sm text-fg-muted">{mockSummaryData.soapNote.plan}</p>
-            </div>
-
-            <div>
-              <h4 className="font-medium text-sm text-fg mb-2">Diagnoses</h4>
-              <div className="flex flex-wrap gap-1">
-                {mockSummaryData.soapNote.diagnoses.map((diagnosis, idx) => (
-                  <Badge key={idx} variant="outline" className="text-xs">{diagnosis}</Badge>
-                ))}
-              </div>
-            </div>
+            )}
           </CardContent>
         </Card>
 
@@ -178,14 +233,14 @@ export function SummarySection() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {mockSummaryData.prescriptions.length > 0 ? (
+            {formatPrescriptions().length > 0 ? (
               <div className="space-y-3">
-                {mockSummaryData.prescriptions.map((rx, idx) => (
+                {formatPrescriptions().map((rx, idx) => (
                   <div key={idx} className="p-3 bg-surface-muted rounded-lg">
                     <div className="font-medium text-sm text-fg">{rx.medication}</div>
                     <div className="text-xs text-fg-muted mt-1">{rx.instructions}</div>
                     <div className="flex gap-4 mt-2 text-xs text-fg-muted">
-                      <span>Quantity: {rx.quantity}</span>
+                      <span>Duration: {rx.quantity}</span>
                       <span>Refills: {rx.refills}</span>
                     </div>
                   </div>
@@ -211,9 +266,9 @@ export function SummarySection() {
                 <FlaskConical className="h-4 w-4" />
                 Lab Orders
               </h4>
-              {mockSummaryData.labOrders.length > 0 ? (
+              {formatLabOrders().length > 0 ? (
                 <div className="flex flex-wrap gap-1">
-                  {mockSummaryData.labOrders.map((lab, idx) => (
+                  {formatLabOrders().map((lab, idx) => (
                     <Badge key={idx} variant="secondary" className="text-xs">{lab}</Badge>
                   ))}
                 </div>
@@ -227,9 +282,9 @@ export function SummarySection() {
                 <Activity className="h-4 w-4" />
                 Imaging Orders
               </h4>
-              {mockSummaryData.imagingOrders.length > 0 ? (
+              {formatImagingOrders().length > 0 ? (
                 <div className="flex flex-wrap gap-1">
-                  {mockSummaryData.imagingOrders.map((imaging, idx) => (
+                  {formatImagingOrders().map((imaging, idx) => (
                     <Badge key={idx} variant="secondary" className="text-xs">{imaging}</Badge>
                   ))}
                 </div>
@@ -243,9 +298,9 @@ export function SummarySection() {
                 <Upload className="h-4 w-4" />
                 Outside Orders
               </h4>
-              {mockSummaryData.outsideOrders.length > 0 ? (
+              {formatOutsideOrders().length > 0 ? (
                 <div className="flex flex-wrap gap-1">
-                  {mockSummaryData.outsideOrders.map((order, idx) => (
+                  {formatOutsideOrders().map((order, idx) => (
                     <Badge key={idx} variant="secondary" className="text-xs">{order}</Badge>
                   ))}
                 </div>
@@ -265,8 +320,8 @@ export function SummarySection() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {mockSummaryData.privateNotes ? (
-              <p className="text-sm text-fg-muted">{mockSummaryData.privateNotes}</p>
+            {consultData.privateNotes ? (
+              <p className="text-sm text-fg-muted">{consultData.privateNotes}</p>
             ) : (
               <p className="text-sm text-fg-muted">No private notes added</p>
             )}
@@ -301,8 +356,12 @@ export function SummarySection() {
 
         {/* Action Buttons */}
         <div className="flex gap-3 pt-4">
-          <Button onClick={handleFinishAppointment} className="flex-1">
-            Finalize & Finish Appointment
+          <Button 
+            onClick={handleFinishAppointment} 
+            className="flex-1"
+            disabled={consultData.finished}
+          >
+            {consultData.finished ? "Appointment Finalized" : "Finalize & Finish Appointment"}
           </Button>
           <Button variant="outline" onClick={handleSave}>
             Save Summary

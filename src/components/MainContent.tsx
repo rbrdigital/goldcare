@@ -22,12 +22,15 @@ import {
   FlaskConical, 
   Activity,
   User,
-  Save
+  Save,
+  StickyNote
 } from "lucide-react";
 import RXForm from "@/components/RXForm";
 import { SummarySection } from "@/components/SummarySection";
+import { PrivateNotesSection } from "@/components/PrivateNotesSection";
 import { copy } from "@/copy/en";
 import PageContainer from "@/components/layout/PageContainer";
+import { useConsultStore } from "@/store/useConsultStore";
 
 interface MainContentProps {
   activeSection: string;
@@ -52,8 +55,8 @@ export function MainContent({ activeSection }: MainContentProps) {
         return <IntakeFormSection />;
       case "diagnoses":
         return <DiagnosesSection />;
-      case "previous-results":
-        return <PreviousResultsSection />;
+      case "private-notes":
+        return <PrivateNotesSection />;
       default:
         return <SOAPNoteSection />;
     }
@@ -67,29 +70,21 @@ export function MainContent({ activeSection }: MainContentProps) {
 }
 
 function SOAPNoteSection() {
-  // State for measurements and calculations
-  const [heightFt, setHeightFt] = useState<string>("");
-  const [heightIn, setHeightIn] = useState<string>("");
-  const [weightLbs, setWeightLbs] = useState<string>("");
-  const [waist, setWaist] = useState<string>("");
-  const [hip, setHip] = useState<string>("");
-  const heightMeters = (Number(heightFt || 0) * 12 + Number(heightIn || 0)) * 0.0254;
-  const weightKg = Number(weightLbs || 0) * 0.453592;
-  const bmi = heightMeters > 0 ? (weightKg / (heightMeters * heightMeters)).toFixed(1) : "";
-
-  // State for lists
-  const [medications, setMedications] = useState<string[]>([]);
-  const [supplements, setSupplements] = useState<string[]>([]);
-  const [allergies, setAllergies] = useState<string[]>([]);
-  const [diagnoses, setDiagnoses] = useState<string[]>([]);
-  const [comorbidities, setComorbidities] = useState<string[]>([]);
-
-  // Form field values
-  const [chiefComplaint, setChiefComplaint] = useState("");
-  const [observations, setObservations] = useState("");
-  const [assessment, setAssessment] = useState("");
-  const [differential, setDifferential] = useState("");
-  const [plan, setPlan] = useState("");
+  const {
+    soapNote,
+    updateSOAPField,
+    updateVitals,
+    addMedication,
+    removeMedication,
+    addSupplement,
+    removeSupplement,
+    addAllergy,
+    removeAllergy,
+    addDiagnosis,
+    removeDiagnosis,
+    addComorbidity,
+    removeComorbidity
+  } = useConsultStore();
 
   // Auto-save functionality 
   const handleSave = () => {
@@ -100,8 +95,10 @@ function SOAPNoteSection() {
   };
 
   // Insert AI suggestion into focused field
-  const insertSuggestion = (text: string, targetSetter: React.Dispatch<React.SetStateAction<string>>) => {
-    targetSetter(prev => prev ? `${prev}\n\n${text}` : text);
+  const insertSuggestion = (text: string, field: keyof typeof soapNote) => {
+    const currentValue = soapNote[field] as string;
+    const newValue = currentValue ? `${currentValue}\n\n${text}` : text;
+    updateSOAPField(field, newValue);
   };
 
   return (
@@ -124,16 +121,16 @@ function SOAPNoteSection() {
                 {copy.chiefComplaint}
               </Label>
               <AutosizeTextarea
-                value={chiefComplaint}
-                onChange={(e) => setChiefComplaint(e.target.value)}
+                value={soapNote.chiefComplaint}
+                onChange={(e) => updateSOAPField('chiefComplaint', e.target.value)}
                 placeholder={copy.chiefComplaintPlaceholder}
                 minRows={3}
                 maxRows={8}
               />
               <AIChipClosedSmart
                 text="Patient presents with intermittent chest tightness and shortness of breath for the past 3 weeks, worse at night and after exertion. Denies fever or cough. Reports a history of elevated blood pressure and borderline cholesterol."
-                onInsert={() => insertSuggestion("Patient presents with intermittent chest tightness and shortness of breath for the past 3 weeks, worse at night and after exertion. Denies fever or cough. Reports a history of elevated blood pressure and borderline cholesterol.", setChiefComplaint)}
-                onGenerateInsert={(text) => insertSuggestion(text, setChiefComplaint)}
+                onInsert={() => insertSuggestion("Patient presents with intermittent chest tightness and shortness of breath for the past 3 weeks, worse at night and after exertion. Denies fever or cough. Reports a history of elevated blood pressure and borderline cholesterol.", 'chiefComplaint')}
+                onGenerateInsert={(text) => insertSuggestion(text, 'chiefComplaint')}
                 useCustomizable={true}
               />
             </div>
@@ -143,12 +140,12 @@ function SOAPNoteSection() {
               <Label className="text-sm font-medium text-fg mb-2">{copy.currentMedications}</Label>
               <InlineAddInput
                 placeholder={copy.currentMedsPlaceholder}
-                onAdd={(value) => setMedications(prev => [...prev, value])}
+                onAdd={(value) => addMedication(value)}
               />
-              {medications.length > 0 && (
+              {soapNote.currentMedications.length > 0 && (
                 <div className="flex flex-wrap gap-2 mt-3">
-                  {medications.map((med, idx) => (
-                    <Tag key={idx} text={med} onRemove={() => setMedications(medications.filter((_, i) => i !== idx))} />
+                  {soapNote.currentMedications.map((med, idx) => (
+                    <Tag key={idx} text={med} onRemove={() => removeMedication(idx)} />
                   ))}
                 </div>
               )}
@@ -156,7 +153,7 @@ function SOAPNoteSection() {
                 text="Lisinopril 10 mg once daily • Atorvastatin 20 mg once nightly • Albuterol inhaler PRN"
                 onInsert={() => {
                   const meds = ["Lisinopril 10 mg once daily", "Atorvastatin 20 mg once nightly", "Albuterol inhaler PRN"];
-                  setMedications(prev => [...prev, ...meds]);
+                  meds.forEach(med => addMedication(med));
                 }}
               />
             </div>
@@ -166,12 +163,12 @@ function SOAPNoteSection() {
               <Label className="text-sm font-medium text-fg mb-2">{copy.supplementsOtc}</Label>
               <InlineAddInput
                 placeholder={copy.supplementsPlaceholder}
-                onAdd={(value) => setSupplements(prev => [...prev, value])}
+                onAdd={(value) => addSupplement(value)}
               />
-              {supplements.length > 0 && (
+              {soapNote.supplements.length > 0 && (
                 <div className="flex flex-wrap gap-2 mt-3">
-                  {supplements.map((supp, idx) => (
-                    <Tag key={idx} text={supp} onRemove={() => setSupplements(supplements.filter((_, i) => i !== idx))} />
+                  {soapNote.supplements.map((supp, idx) => (
+                    <Tag key={idx} text={supp} onRemove={() => removeSupplement(idx)} />
                   ))}
                 </div>
               )}
@@ -179,7 +176,7 @@ function SOAPNoteSection() {
                 text="Vitamin D3 2000 IU daily • Magnesium glycinate 400 mg nightly"
                 onInsert={() => {
                   const supps = ["Vitamin D3 2000 IU daily", "Magnesium glycinate 400 mg nightly"];
-                  setSupplements(prev => [...prev, ...supps]);
+                  supps.forEach(supp => addSupplement(supp));
                 }}
               />
             </div>
@@ -189,12 +186,12 @@ function SOAPNoteSection() {
               <Label className="text-sm font-medium text-fg mb-2">{copy.allergies}</Label>
               <InlineAddInput
                 placeholder={copy.allergiesPlaceholder}
-                onAdd={(value) => setAllergies(prev => [...prev, value])}
+                onAdd={(value) => addAllergy(value)}
               />
-              {allergies.length > 0 && (
+              {soapNote.allergies.length > 0 && (
                 <div className="flex flex-wrap gap-2 mt-3">
-                  {allergies.map((allergy, idx) => (
-                    <Tag key={idx} text={allergy} onRemove={() => setAllergies(allergies.filter((_, i) => i !== idx))} />
+                  {soapNote.allergies.map((allergy, idx) => (
+                    <Tag key={idx} text={allergy} onRemove={() => removeAllergy(idx)} />
                   ))}
                 </div>
               )}
@@ -202,7 +199,7 @@ function SOAPNoteSection() {
                 text="Penicillin — rash • No food or environmental allergies reported"
                 onInsert={() => {
                   const allergyList = ["Penicillin — rash", "No food or environmental allergies reported"];
-                  setAllergies(prev => [...prev, ...allergyList]);
+                  allergyList.forEach(allergy => addAllergy(allergy));
                 }}
               />
             </div>
@@ -221,26 +218,26 @@ function SOAPNoteSection() {
                 <Label className="text-sm font-medium text-fg mb-1">{copy.waist}</Label>
                 <Input 
                   type="number" 
-                  value={waist} 
-                  onChange={e=>setWaist(e.target.value)}
+                  value={soapNote.vitals.waist} 
+                  onChange={e=>updateVitals('waist', e.target.value)}
                   placeholder="34" 
                 />
                 <AIChipClosedSmart
                   text="32"
-                  onInsert={() => setWaist("32")}
+                  onInsert={() => updateVitals('waist', "32")}
                 />
               </div>
               <div>
                 <Label className="text-sm font-medium text-fg mb-1">{copy.hip}</Label>
                 <Input 
                   type="number" 
-                  value={hip} 
-                  onChange={e=>setHip(e.target.value)}
+                  value={soapNote.vitals.hip} 
+                  onChange={e=>updateVitals('hip', e.target.value)}
                   placeholder="40" 
                 />
                 <AIChipClosedSmart
                   text="38"
-                  onInsert={() => setHip("38")}
+                  onInsert={() => updateVitals('hip', "38")}
                 />
               </div>
             </div>
@@ -251,8 +248,8 @@ function SOAPNoteSection() {
                 <div className="flex-1">
                   <Input 
                     type="number" 
-                    value={heightFt} 
-                    onChange={e=>setHeightFt(e.target.value)} 
+                    value={soapNote.vitals.heightFt} 
+                    onChange={e=>updateVitals('heightFt', e.target.value)} 
                     placeholder="5" 
                     min="0" 
                     max="8"
@@ -262,8 +259,8 @@ function SOAPNoteSection() {
                 <div className="flex-1">
                   <Input 
                     type="number" 
-                    value={heightIn} 
-                    onChange={e=>setHeightIn(e.target.value)} 
+                    value={soapNote.vitals.heightIn} 
+                    onChange={e=>updateVitals('heightIn', e.target.value)} 
                     placeholder="7" 
                     min="0" 
                     max="11"
@@ -274,8 +271,8 @@ function SOAPNoteSection() {
               <AIChipClosedSmart
                 text="5 feet 8 inches"
                 onInsert={() => {
-                  setHeightFt("5");
-                  setHeightIn("8");
+                  updateVitals('heightFt', "5");
+                  updateVitals('heightIn', "8");
                 }}
               />
             </div>
@@ -283,15 +280,15 @@ function SOAPNoteSection() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label className="text-sm font-medium text-fg mb-1">{copy.weight}</Label>
-                <Input type="number" value={weightLbs} onChange={e=>setWeightLbs(e.target.value)} placeholder="178" />
+                <Input type="number" value={soapNote.vitals.weightLbs} onChange={e=>updateVitals('weightLbs', e.target.value)} placeholder="178" />
                 <AIChipClosedSmart
                   text="165"
-                  onInsert={() => setWeightLbs("165")}
+                  onInsert={() => updateVitals('weightLbs', "165")}
                 />
               </div>
               <div>
                 <Label className="text-sm font-medium text-fg mb-1">{copy.bmi}</Label>
-                <Input disabled value={bmi} placeholder="—" className="bg-surface-muted text-fg-muted" />
+                <Input disabled value={soapNote.vitals.bmi} placeholder="—" className="bg-surface-muted text-fg-muted" />
                 <AIChipClosedSmart
                   text="BMI will be calculated automatically based on height and weight"
                   onInsert={() => {}} // BMI is auto-calculated, no insert action
@@ -306,16 +303,16 @@ function SOAPNoteSection() {
           <div>
             <Label className="text-sm font-medium text-fg mb-2">{copy.clinicalObservations}</Label>
             <AutosizeTextarea
-              value={observations}
-              onChange={(e) => setObservations(e.target.value)}
+              value={soapNote.observations}
+              onChange={(e) => updateSOAPField('observations', e.target.value)}
               placeholder={copy.observationsPlaceholder}
               minRows={3}
               maxRows={6}
             />
             <AIChipClosedSmart
               text="Patient appears alert and oriented, in no acute distress. Lungs clear to auscultation, regular heart rhythm, no murmurs. Mildly elevated blood pressure noted."
-              onInsert={() => insertSuggestion("Patient appears alert and oriented, in no acute distress. Lungs clear to auscultation, regular heart rhythm, no murmurs. Mildly elevated blood pressure noted.", setObservations)}
-              onGenerateInsert={(text) => insertSuggestion(text, setObservations)}
+              onInsert={() => insertSuggestion("Patient appears alert and oriented, in no acute distress. Lungs clear to auscultation, regular heart rhythm, no murmurs. Mildly elevated blood pressure noted.", 'observations')}
+              onGenerateInsert={(text) => insertSuggestion(text, 'observations')}
               useCustomizable={true}
             />
           </div>
@@ -330,16 +327,16 @@ function SOAPNoteSection() {
             <div>
               <Label className="text-sm font-medium text-fg mb-2">{copy.assessment}</Label>
               <AutosizeTextarea
-                value={assessment}
-                onChange={(e) => setAssessment(e.target.value)}
+                value={soapNote.assessment}
+                onChange={(e) => updateSOAPField('assessment', e.target.value)}
                 placeholder={copy.assessmentPlaceholder}
                 minRows={3}
                 maxRows={6}
               />
               <AIChipClosedSmart
                 text="Primary concerns include hypertension, possible early cardiovascular disease, and poor sleep contributing to fatigue."
-                onInsert={() => insertSuggestion("Primary concerns include hypertension, possible early cardiovascular disease, and poor sleep contributing to fatigue.", setAssessment)}
-                onGenerateInsert={(text) => insertSuggestion(text, setAssessment)}
+                onInsert={() => insertSuggestion("Primary concerns include hypertension, possible early cardiovascular disease, and poor sleep contributing to fatigue.", 'assessment')}
+                onGenerateInsert={(text) => insertSuggestion(text, 'assessment')}
                 useCustomizable={true}
               />
             </div>
@@ -347,16 +344,16 @@ function SOAPNoteSection() {
             <div>
               <Label className="text-sm font-medium text-fg mb-2">{copy.differential}</Label>
               <AutosizeTextarea
-                value={differential}
-                onChange={(e) => setDifferential(e.target.value)}
+                value={soapNote.differential}
+                onChange={(e) => updateSOAPField('differential', e.target.value)}
                 placeholder={copy.differentialPlaceholder}
                 minRows={2}
                 maxRows={5}
               />
               <AIChipClosedSmart
                 text="Hypertension with secondary cardiovascular risk • Obstructive sleep apnea • Anxiety-related chest tightness"
-                onInsert={() => insertSuggestion("Hypertension with secondary cardiovascular risk • Obstructive sleep apnea • Anxiety-related chest tightness", setDifferential)}
-                onGenerateInsert={(text) => insertSuggestion(text, setDifferential)}
+                onInsert={() => insertSuggestion("Hypertension with secondary cardiovascular risk • Obstructive sleep apnea • Anxiety-related chest tightness", 'differential')}
+                onGenerateInsert={(text) => insertSuggestion(text, 'differential')}
                 useCustomizable={true}
               />
             </div>
@@ -372,16 +369,16 @@ function SOAPNoteSection() {
             <div>
               <Label className="text-sm font-medium text-fg mb-2">{copy.plan}</Label>
               <AutosizeTextarea
-                value={plan}
-                onChange={(e) => setPlan(e.target.value)}
+                value={soapNote.plan}
+                onChange={(e) => updateSOAPField('plan', e.target.value)}
                 placeholder={copy.planPlaceholder}
                 minRows={4}
                 maxRows={8}
               />
               <AIChipClosedSmart
                 text="1) Order EKG, lipid panel, and basic metabolic panel. 2) Continue lisinopril and atorvastatin as prescribed. 3) Recommend sleep study referral to rule out OSA. 4) Follow-up in 6 weeks with lab results."
-                onInsert={() => insertSuggestion("1) Order EKG, lipid panel, and basic metabolic panel. 2) Continue lisinopril and atorvastatin as prescribed. 3) Recommend sleep study referral to rule out OSA. 4) Follow-up in 6 weeks with lab results.", setPlan)}
-                onGenerateInsert={(text) => insertSuggestion(text, setPlan)}
+                onInsert={() => insertSuggestion("1) Order EKG, lipid panel, and basic metabolic panel. 2) Continue lisinopril and atorvastatin as prescribed. 3) Recommend sleep study referral to rule out OSA. 4) Follow-up in 6 weeks with lab results.", 'plan')}
+                onGenerateInsert={(text) => insertSuggestion(text, 'plan')}
                 useCustomizable={true}
               />
             </div>
@@ -390,12 +387,12 @@ function SOAPNoteSection() {
               <Label className="text-sm font-medium text-fg mb-2">{copy.acuteDiagnosis}</Label>
               <InlineAddInput
                 placeholder={copy.acuteDiagnosisPlaceholder}
-                onAdd={(value) => setDiagnoses(prev => [...prev, value])}
+                onAdd={(value) => addDiagnosis(value)}
               />
-              {diagnoses.length > 0 && (
+              {soapNote.diagnoses.length > 0 && (
                 <div className="flex flex-wrap gap-2 mt-3">
-                  {diagnoses.map((diagnosis, idx) => (
-                    <Tag key={idx} text={diagnosis} onRemove={() => setDiagnoses(diagnoses.filter((_, i) => i !== idx))} />
+                  {soapNote.diagnoses.map((diagnosis, idx) => (
+                    <Tag key={idx} text={diagnosis} onRemove={() => removeDiagnosis(idx)} />
                   ))}
                 </div>
               )}
@@ -403,7 +400,7 @@ function SOAPNoteSection() {
                 text="I10 — Essential hypertension • E78.5 — Hyperlipidemia, unspecified"
                 onInsert={() => {
                   const diagList = ["I10 — Essential hypertension", "E78.5 — Hyperlipidemia, unspecified"];
-                  setDiagnoses(prev => [...prev, ...diagList]);
+                  diagList.forEach(diag => addDiagnosis(diag));
                 }}
               />
             </div>
@@ -412,20 +409,20 @@ function SOAPNoteSection() {
               <Label className="text-sm font-medium text-fg mb-2">{copy.comorbidities}</Label>
               <InlineAddInput
                 placeholder={copy.comorbiditiesPlaceholder}
-                onAdd={(value) => setComorbidities(prev => [...prev, value])}
+                onAdd={(value) => addComorbidity(value)}
               />
-              {comorbidities.length > 0 && (
+              {soapNote.comorbidities.length > 0 && (
                 <div className="flex flex-wrap gap-2 mt-3">
-                  {comorbidities.map((condition, idx) => (
-                    <Tag key={idx} text={condition} onRemove={() => setComorbidities(comorbidities.filter((_, i) => i !== idx))} />
+                  {soapNote.comorbidities.map((condition, idx) => (
+                    <Tag key={idx} text={condition} onRemove={() => removeComorbidity(idx)} />
                   ))}
                 </div>
               )}
               <AIChipClosedSmart
-                text="Overweight • Family history of premature CAD • Poor sleep hygiene"
+                text="Type 2 diabetes mellitus • Osteoarthritis of knee"
                 onInsert={() => {
-                  const conditions = ["Overweight", "Family history of premature CAD", "Poor sleep hygiene"];
-                  setComorbidities(prev => [...prev, ...conditions]);
+                  const comorbList = ["Type 2 diabetes mellitus", "Osteoarthritis of knee"];
+                  comorbList.forEach(comorb => addComorbidity(comorb));
                 }}
               />
             </div>

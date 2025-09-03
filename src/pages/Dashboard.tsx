@@ -9,6 +9,7 @@ import { PatientMiniCard } from "@/components/PatientMiniCard";
 import { MedicationWorkspace } from "@/components/MedicationWorkspace";
 import { RightPanel } from "@/components/layout/RightPanel";
 import { cn } from "@/lib/utils";
+import { useConsultStore } from "@/store/useConsultStore";
 
 const mockPatient = {
   name: "Sarah Johnson",
@@ -26,6 +27,16 @@ export function Dashboard() {
   const [diagnosesMedsAllergiesSideSheetOpen, setDiagnosesMedsAllergiesSideSheetOpen] = useState(false);
   const [goldcareAIPanelOpen, setGoldcareAIPanelOpen] = useState(false);
   const [medicationWorkspaceOpen, setMedicationWorkspaceOpen] = useState(false);
+
+  const { initializeSession } = useConsultStore();
+
+  // Initialize consult session on mount
+  useEffect(() => {
+    // In a real app, these would come from the patient context/route
+    const patientId = "patient-sarah-johnson";
+    const encounterId = `encounter-${Date.now()}`;
+    initializeSession(patientId, encounterId);
+  }, [initializeSession]);
 
   const handleJoinMeeting = () => {
     console.log("Joining meeting...");
