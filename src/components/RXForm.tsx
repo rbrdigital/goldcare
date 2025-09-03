@@ -423,7 +423,7 @@ export default function RXForm() {
                 <Label>Start date</Label>
                 <Input
                   type="date"
-                  value={rx.startDate}
+                  value={rx.startDate || new Date().toISOString().split('T')[0]}
                   onChange={(e) => patchItem(i, { startDate: e.target.value })}
                 />
               </div>
@@ -431,7 +431,7 @@ export default function RXForm() {
                 <Label>Earliest fill date</Label>
                 <Input
                   type="date"
-                  value={rx.earliestFill}
+                  value={rx.earliestFill || new Date().toISOString().split('T')[0]}
                   onChange={(e) => patchItem(i, { earliestFill: e.target.value })}
                 />
               </div>
