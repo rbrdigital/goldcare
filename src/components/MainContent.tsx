@@ -27,6 +27,7 @@ import {
   StickyNote
 } from "lucide-react";
 import RXForm from "@/components/RXForm";
+import { RXPanel } from "@/components/rx/RXPanel";
 import { SummarySection } from "@/components/SummarySection";
 import { PrivateNotesSection } from "@/components/PrivateNotesSection";
 import { copy } from "@/copy/en";
@@ -45,7 +46,7 @@ export function MainContent({ activeSection }: MainContentProps) {
       case "soap":
         return <SOAPNoteSection />;
       case "rx":
-        return <RXSection />;
+        return <RXPanel />;
       case "lab-orders":
         return <LabOrdersSection />;
       case "imaging-orders":

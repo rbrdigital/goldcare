@@ -214,7 +214,7 @@ export default function RXForm() {
 
   return (
     <TooltipProvider>
-      <div className="space-y-6">
+      <div className="space-y-6" data-testid="rx-form">
         <PageHeader
           title="Prescriptions"
           description="Create and manage prescription orders for your patients"
