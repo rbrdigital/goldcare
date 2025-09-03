@@ -96,12 +96,15 @@ export function parsePrescriptions(input: string): ParsedPrescription[] {
     const trimmed = line.trim();
     if (!trimmed) return;
 
+    const today = new Date().toISOString().split('T')[0];
     const rx: ParsedPrescription = {
       id: `rx-${Date.now()}-${index}`,
       medication: '',
       route: 'PO',
       refills: 0,
-      substitutions: true
+      substitutions: true,
+      startDate: today,
+      earliestFillDate: today
     };
 
     // Check for taper pattern
@@ -132,12 +135,23 @@ export function parsePrescriptions(input: string): ParsedPrescription[] {
         rx.frequency = frequency;
       }
 
-      // Extract duration
-      const durationMatch = trimmed.match(/x\s?(\d+)\s?(d|day|days|week|weeks|month|months)/i);
+      // Extract duration and convert to days
+      const durationMatch = trimmed.match(/x\s?(\d+)\s?(d|day|days|w|week|weeks|month|months)/i);
       if (durationMatch) {
-        rx.duration = durationMatch[0].replace('x', '').trim();
+        const value = parseInt(durationMatch[1]);
+        const unit = durationMatch[2].toLowerCase();
+        
+        if (unit.startsWith('w')) {
+          // Convert weeks to days
+          rx.duration = (value * 7).toString();
+        } else if (unit.startsWith('d')) {
+          rx.duration = value.toString();
+        } else if (unit.startsWith('m')) {
+          // Convert months to days (rough estimate)
+          rx.duration = (value * 30).toString();
+        }
       } else if (trimmed.toLowerCase().includes('long-term')) {
-        rx.duration = 'Long-term';
+        rx.duration = undefined; // Long-term has no specific duration
       }
 
       // Calculate quantity heuristic

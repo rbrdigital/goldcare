@@ -11,6 +11,7 @@ import { cn } from '@/lib/utils';
 import { ParsedPrescription, getGuidance, Alert } from './prescriptionParser';
 import { ChipEditor } from './ChipEditor';
 import { InlineAlert } from './InlineAlert';
+import { formatDateForDisplay, formatDuration } from '@/lib/dateUtils';
 
 interface PrescriptionCardProps {
   prescription: ParsedPrescription;
@@ -69,7 +70,7 @@ export function PrescriptionCard({
           </div>
           <div className="text-sm text-fg-muted">
             Take {prescription.dose || prescription.strength} {prescription.route} {prescription.frequency}
-            {prescription.duration && ` for ${prescription.duration}`}
+            {prescription.duration && ` for ${formatDuration(prescription.duration)}`}
           </div>
         </div>
 
@@ -108,6 +109,13 @@ export function PrescriptionCard({
             onSave={(value) => onUpdate({ substitutions: value === 'Allowed' })}
             isReadOnly={isReadOnly}
             type="toggle"
+          />
+          <ChipEditor
+            label="Duration (days)"
+            value={prescription.duration || ''}
+            onSave={(value) => onUpdate({ duration: value || undefined })}
+            isReadOnly={isReadOnly}
+            placeholder="0"
           />
           <ChipEditor
             label="Notes"
@@ -197,47 +205,49 @@ export function PrescriptionCard({
               </Label>
             </div>
 
+            {/* Duration Input */}
+            <div className="space-y-1">
+              <Label className="text-xs text-fg-muted">Duration (days)</Label>
+              <Input
+                type="number"
+                min="0"
+                step="1"
+                value={prescription.duration || ''}
+                onChange={(e) => onUpdate({ duration: e.target.value || undefined })}
+                disabled={isReadOnly}
+                className="text-sm"
+                placeholder="0"
+              />
+            </div>
+
             {/* Date Inputs */}
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1">
                 <Label className="text-xs text-fg-muted">Start Date</Label>
+                <div className="text-sm bg-surface border border-border rounded-md px-3 py-2">
+                  {formatDateForDisplay(prescription.startDate || '')}
+                </div>
                 <Input
                   type="date"
-                  value={prescription.startDate || new Date().toISOString().split('T')[0]}
+                  value={prescription.startDate || ''}
                   onChange={(e) => onUpdate({ startDate: e.target.value })}
                   disabled={isReadOnly}
-                  className="text-sm"
+                  className="text-xs"
                 />
               </div>
               <div className="space-y-1">
-                <Label className="text-xs text-fg-muted">Earliest Fill</Label>
+                <Label className="text-xs text-fg-muted">Earliest Fill Date</Label>
+                <div className="text-sm bg-surface border border-border rounded-md px-3 py-2">
+                  {formatDateForDisplay(prescription.earliestFillDate || '')}
+                </div>
                 <Input
                   type="date"  
-                  value={prescription.earliestFillDate || new Date().toISOString().split('T')[0]}
+                  value={prescription.earliestFillDate || ''}
                   onChange={(e) => onUpdate({ earliestFillDate: e.target.value })}
                   disabled={isReadOnly}
-                  className="text-sm"
+                  className="text-xs"
                 />
               </div>
-            </div>
-
-            {/* Location Select */}
-            <div className="space-y-1">
-              <Label className="text-xs text-fg-muted">Location</Label>
-              <Select
-                value={prescription.location || 'clinic'}
-                onValueChange={(value) => onUpdate({ location: value })}
-                disabled={isReadOnly}
-              >
-                <SelectTrigger className="text-sm">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="clinic">Clinic</SelectItem>
-                  <SelectItem value="hospital">Hospital</SelectItem>
-                  <SelectItem value="home">Home</SelectItem>
-                </SelectContent>
-              </Select>
             </div>
           </CollapsibleContent>
         </Collapsible>
