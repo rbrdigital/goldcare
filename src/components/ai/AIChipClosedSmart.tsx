@@ -2,6 +2,7 @@ import * as React from "react"
 import { cn } from "@/lib/utils"
 import AIChipPanel from "./AIChipPanel"
 import { AIChipPanelCustomizable } from "./AIChipPanelCustomizable"
+import { useConsultStore } from "@/store/useConsultStore"
 
 interface AIChipClosedSmartProps {
   text: string;
@@ -21,10 +22,16 @@ function truncateAtWord(input: string, max = 140): string {
 }
 
 export function AIChipClosedSmart({ text, onInsert, onGenerateInsert, useCustomizable = false, className }: AIChipClosedSmartProps) {
+  const { isAIVisible } = useConsultStore();
   const previewRef = React.useRef<HTMLSpanElement>(null);
   const [isOverflowing, setIsOverflowing] = React.useState(false);
   const [isExpanded, setIsExpanded] = React.useState(false);
   const [isHovered, setIsHovered] = React.useState(false);
+
+  // Hide the component if AI is not visible
+  if (!isAIVisible) {
+    return null;
+  }
 
   const measure = React.useCallback(() => {
     const el = previewRef.current;

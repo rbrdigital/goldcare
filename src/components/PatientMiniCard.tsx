@@ -3,6 +3,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import patientAvatar from "@/assets/patient-avatar.jpg";
 import { useTheme } from "@/hooks/use-theme";
+import { useConsultStore } from "@/store/useConsultStore";
+import { GoldCareAIIcon } from "@/components/icons/GoldCareAIIcon";
 
 interface PatientMiniCardProps {
   patient: {
@@ -30,6 +32,7 @@ export function PatientMiniCard({
   onProfileClick
 }: PatientMiniCardProps) {
   const { theme, toggleTheme } = useTheme();
+  const { isAIVisible, toggleAIVisibility } = useConsultStore();
   return (
     <div className="sticky top-0 z-40 bg-bg border-b border-border h-16">
       <div className="flex h-full items-center justify-between px-6">
@@ -50,6 +53,17 @@ export function PatientMiniCard({
             onClick={toggleTheme}
           >
             {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          </Button>
+          
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={toggleAIVisibility}
+            className="h-8 w-8"
+            style={{ opacity: isAIVisible ? 1 : 0.5 }}
+            aria-label={isAIVisible ? 'Hide AI suggestions' : 'Show AI suggestions'}
+          >
+            <GoldCareAIIcon className="h-4 w-4" />
           </Button>
           <div className="h-4 w-px bg-border" />
           <div className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity" onClick={onProfileClick}>

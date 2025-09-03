@@ -110,6 +110,9 @@ export interface ConsultState {
   outsideOrders: OutsideOrder[];
   privateNotes: string;
   
+  // UI state
+  isAIVisible: boolean;
+  
   // Status
   finished: boolean;
   lastSaved: string;
@@ -153,6 +156,9 @@ export interface ConsultActions {
   // Private Notes actions
   updatePrivateNotes: (notes: string) => void;
   
+  // AI visibility actions
+  toggleAIVisibility: () => void;
+  
   // Session actions
   initializeSession: (patientId: string, encounterId: string) => void;
   setFinished: (finished: boolean) => void;
@@ -191,6 +197,7 @@ const initialState: ConsultState = {
   imagingOrders: [],
   outsideOrders: [],
   privateNotes: "",
+  isAIVisible: true,
   finished: false,
   lastSaved: ""
 };
@@ -503,7 +510,15 @@ export const useConsultStore = create<ConsultState & ConsultActions>()(
           lastSaved: new Date().toISOString()
         }));
       },
-      
+
+      // AI visibility actions
+      toggleAIVisibility: () => {
+        set((state) => ({
+          isAIVisible: !state.isAIVisible,
+          lastSaved: new Date().toISOString()
+        }));
+      },
+
       // Session actions
       initializeSession: (patientId, encounterId) => {
         set((state) => ({
@@ -541,6 +556,7 @@ export const useConsultStore = create<ConsultState & ConsultActions>()(
         imagingOrders: state.imagingOrders,
         outsideOrders: state.outsideOrders,
         privateNotes: state.privateNotes,
+        isAIVisible: state.isAIVisible,
         finished: state.finished,
         lastSaved: state.lastSaved
       })
