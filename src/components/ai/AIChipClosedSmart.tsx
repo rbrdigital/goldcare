@@ -28,11 +28,6 @@ export function AIChipClosedSmart({ text, onInsert, onGenerateInsert, useCustomi
   const [isExpanded, setIsExpanded] = React.useState(false);
   const [isHovered, setIsHovered] = React.useState(false);
 
-  // Hide the component if AI is not visible
-  if (!isAIVisible) {
-    return null;
-  }
-
   const measure = React.useCallback(() => {
     const el = previewRef.current;
     if (!el) return;
@@ -57,6 +52,11 @@ export function AIChipClosedSmart({ text, onInsert, onGenerateInsert, useCustomi
       window.removeEventListener("resize", measure);
     };
   }, [measure]);
+
+  // Hide the component if AI is not visible
+  if (!isAIVisible) {
+    return null;
+  }
 
   // If overflowing and not expanded, pre-truncate to a pleasant word boundary
   const displayText = (isOverflowing && !isExpanded) ? truncateAtWord(text, 140) : text;
