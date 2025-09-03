@@ -3,13 +3,14 @@ import { Plus, Send, Archive, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
-import { AITextArea } from './AITextArea';
-import { PrescriptionCard } from './PrescriptionCard';
-import { PharmacySelector } from './PharmacySelector';
-import { ParsedPrescription, Alert } from '@/types/prescription';
-import { parsePrescription, checkInteractions, MOCK_PATIENT } from './prescriptionParser';
+import { AITextArea } from '../prescriptions/AITextArea';
+import { PrescriptionCard } from '../prescriptions/PrescriptionCard';
+import { PharmacySelector } from '../prescriptions/PharmacySelector';
+import { parsePrescription, checkInteractions, MOCK_PATIENT } from '../prescriptions/prescriptionParser';
+import { ParsedPrescription } from '@/types/prescription';
+import { getTodayISO } from '@/lib/dateUtils';
 
-export function PrescriptionsPanel() {
+export default function RXPanel() {
   const [inputValue, setInputValue] = useState('');
   const [prescriptions, setPrescriptions] = useState<ParsedPrescription[]>([]);
   const [selectedPharmacy, setSelectedPharmacy] = useState(MOCK_PATIENT.preferredPharmacy);
@@ -25,7 +26,15 @@ export function PrescriptionsPanel() {
     }
 
     const parsed = parsePrescription(input);
-    setPrescriptions(parsed);
+    // Apply field behavior fixes
+    const fixedPrescriptions = parsed.map(rx => ({
+      ...rx,
+      startDate: rx.startDate || getTodayISO(),
+      earliestFillDate: rx.earliestFillDate || getTodayISO(),
+      // Remove location field
+      location: undefined
+    }));
+    setPrescriptions(fixedPrescriptions);
   }, []);
 
   const updatePrescription = (index: number, updates: Partial<ParsedPrescription>) => {

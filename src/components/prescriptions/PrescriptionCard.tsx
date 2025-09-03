@@ -9,37 +9,20 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Checkbox } from '@/components/ui/checkbox';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Separator } from '@/components/ui/separator';
-import { ParsedPrescription, getGuidance } from './prescriptionParser';
+import { ParsedPrescription, Alert } from '@/types/prescription';
+import { getGuidance } from './prescriptionParser';
 import { InlineAlert } from './InlineAlert';
 import { cn } from '@/lib/utils';
+import { formatDateForDisplay, formatDuration } from '@/lib/dateUtils';
 
 interface PrescriptionCardProps {
   prescription: ParsedPrescription;
-  alerts: Array<{ type: 'allergy' | 'interaction' | 'duplicate'; message: string }>;
+  alerts: Alert[];
   onUpdate: (updates: Partial<ParsedPrescription>) => void;
   onRemove: () => void;
   onDuplicate: () => void;
   isReadOnly?: boolean;
 }
-
-const PRN_OPTIONS = [
-  { id: 'pain', label: 'Pain' },
-  { id: 'nausea', label: 'Nausea' },
-  { id: 'fever', label: 'Fever' },
-  { id: 'headache', label: 'Headache' },
-  { id: 'anxiety', label: 'Anxiety' }
-];
-
-const US_STATES = [
-  'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut',
-  'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa',
-  'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan',
-  'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire',
-  'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio',
-  'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota',
-  'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia',
-  'Wisconsin', 'Wyoming'
-];
 
 export function PrescriptionCard({ 
   prescription, 
@@ -57,15 +40,12 @@ export function PrescriptionCard({
   const guidance = getGuidance(prescription.medication);
 
   const formatSummary = () => {
-    if (prescription.isTaper && prescription.taperSteps) {
-      const steps = prescription.taperSteps.map(step => 
-        `${step.strength} for ${step.duration}`
-      ).join(', then ');
-      return `${prescription.medication} taper: ${steps}`;
+    if (prescription.isTaper) {
+      return `${prescription.medication} taper - see instructions below`;
     }
 
-    const medStr = `${prescription.medication}${prescription.strength ? ` ${prescription.strength}` : ''} ${prescription.formulation}`;
-    const takeStr = `Take by ${prescription.route.toLowerCase()} ${prescription.frequency.toLowerCase()}${prescription.duration ? ` for ${prescription.duration}` : ''}`;
+    const medStr = `${prescription.medication}${prescription.strength ? ` ${prescription.strength}` : ''} ${prescription.formulation || 'tablet'}`;
+    const takeStr = `Take by ${prescription.route.toLowerCase()} ${prescription.frequency?.toLowerCase() || ''}${prescription.duration ? ` for ${formatDuration(prescription.duration)}` : ''}`;
     
     return { medStr, takeStr };
   };
@@ -79,23 +59,17 @@ export function PrescriptionCard({
       onUpdate({ refills: parseInt(value) || 0 });
     } else if (chipType === 'notes') {
       onUpdate({ notes: value });
-    } else if (chipType === 'notesPharmacy') {
-      onUpdate({ notesPharmacy: value });
     }
     setEditingChip(null);
   };
 
-  const acceptSuggestion = (type: 'patient' | 'pharmacy', text: string) => {
+  const acceptSuggestion = (type: 'patient', text: string) => {
     const key = `${type}-${prescription.id}`;
-    if (type === 'patient') {
-      onUpdate({ notes: prescription.notes ? `${prescription.notes}. ${text}` : text });
-    } else {
-      onUpdate({ notesPharmacy: prescription.notesPharmacy ? `${prescription.notesPharmacy}. ${text}` : text });
-    }
+    onUpdate({ notes: prescription.notes ? `${prescription.notes}. ${text}` : text });
     setDismissedSuggestions(prev => new Set([...prev, key]));
   };
 
-  const dismissSuggestion = (type: 'patient' | 'pharmacy') => {
+  const dismissSuggestion = (type: 'patient') => {
     const key = `${type}-${prescription.id}`;
     setDismissedSuggestions(prev => new Set([...prev, key]));
   };
@@ -127,7 +101,7 @@ export function PrescriptionCard({
         <div className="flex flex-wrap gap-2">
           <ChipEditor
             label="Qty"
-            value={prescription.quantity.toString()}
+            value={prescription.quantity?.toString() || '0'}
             isEditing={editingChip === 'quantity'}
             onEdit={() => setEditingChip('quantity')}
             onSave={(value) => handleChipEdit('quantity', value)}
@@ -136,7 +110,7 @@ export function PrescriptionCard({
           />
           <ChipEditor
             label="Refills"
-            value={prescription.refills.toString()}
+            value={prescription.refills?.toString() || '0'}
             isEditing={editingChip === 'refills'}
             onEdit={() => setEditingChip('refills')}
             onSave={(value) => handleChipEdit('refills', value)}
@@ -146,6 +120,15 @@ export function PrescriptionCard({
           <Badge variant={prescription.substitutions ? "secondary" : "outline"}>
             Substitutions {prescription.substitutions ? 'Allowed' : 'Denied'}
           </Badge>
+          <ChipEditor
+            label="Duration (days)"
+            value={prescription.duration || '0'}
+            isEditing={editingChip === 'duration'}
+            onEdit={() => setEditingChip('duration')}
+            onSave={(value) => onUpdate({ duration: value || undefined })}
+            onCancel={() => setEditingChip(null)}
+            isReadOnly={isReadOnly}
+          />
           <ChipEditor
             label="Notes"
             value={prescription.notes || 'None'}
@@ -183,30 +166,6 @@ export function PrescriptionCard({
                 </div>
               </div>
             )}
-            
-            {guidance.pharmacy && !dismissedSuggestions.has(`pharmacy-${prescription.id}`) && (
-              <div className="flex items-center justify-between p-2 bg-surface rounded-md text-sm">
-                <span className="text-fg-muted">Pharmacy note: {guidance.pharmacy}</span>
-                <div className="flex gap-2">
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => acceptSuggestion('pharmacy', guidance.pharmacy!)}
-                    className="h-6 px-2 text-xs"
-                  >
-                    Accept
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => dismissSuggestion('pharmacy')}
-                    className="h-6 px-2 text-xs"
-                  >
-                    Dismiss
-                  </Button>
-                </div>
-              </div>
-            )}
           </div>
         )}
 
@@ -227,16 +186,16 @@ export function PrescriptionCard({
                     <Button
                       size="sm"
                       variant="outline"
-                      onClick={() => onUpdate({ refills: Math.max(0, prescription.refills - 1) })}
-                      disabled={prescription.refills <= 0}
+                      onClick={() => onUpdate({ refills: Math.max(0, (prescription.refills || 0) - 1) })}
+                      disabled={(prescription.refills || 0) <= 0}
                     >
                       -
                     </Button>
-                    <span className="w-8 text-center">{prescription.refills}</span>
+                    <span className="w-8 text-center">{prescription.refills || 0}</span>
                     <Button
                       size="sm"
                       variant="outline"
-                      onClick={() => onUpdate({ refills: prescription.refills + 1 })}
+                      onClick={() => onUpdate({ refills: (prescription.refills || 0) + 1 })}
                     >
                       +
                     </Button>
@@ -257,60 +216,57 @@ export function PrescriptionCard({
 
               <div className="space-y-2">
                 <label className="text-sm font-medium">PRN (As Needed)</label>
-                <div className="flex flex-wrap gap-2">
-                  {PRN_OPTIONS.map(option => (
-                    <div key={option.id} className="flex items-center gap-2">
-                      <Checkbox
-                        id={option.id}
-                        checked={prescription.prn?.includes(option.id) || false}
-                        onCheckedChange={(checked) => {
-                          const currentPrn = prescription.prn || [];
-                          const newPrn = checked
-                            ? [...currentPrn, option.id]
-                            : currentPrn.filter(p => p !== option.id);
-                          onUpdate({ prn: newPrn });
-                        }}
-                      />
-                      <label htmlFor={option.id} className="text-sm">{option.label}</label>
-                    </div>
-                  ))}
+                <div className="flex items-center gap-2">
+                  <Switch
+                    checked={prescription.prn || false}
+                    onCheckedChange={(checked) => onUpdate({ prn: checked })}
+                  />
+                  <span className="text-sm">{prescription.prn ? 'Yes' : 'No'}</span>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Duration (days only)</label>
+                <Input
+                  type="number"
+                  min="0"
+                  step="1"
+                  value={prescription.duration || ''}
+                  onChange={(e) => onUpdate({ duration: e.target.value || undefined })}
+                  placeholder="0"
+                  className="text-sm"
+                />
+                <div className="text-xs text-fg-muted">
+                  Display: {prescription.duration ? formatDuration(prescription.duration) : '0 days'}
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="text-sm font-medium">Start Date</label>
+                  <div className="text-sm bg-surface border border-border rounded-md px-3 py-2 mb-1">
+                    {formatDateForDisplay(prescription.startDate || '')}
+                  </div>
                   <Input
                     type="date"
-                    value={prescription.startDate}
+                    value={prescription.startDate || ''}
                     onChange={(e) => onUpdate({ startDate: e.target.value })}
-                    className="mt-1"
+                    className="text-sm"
                   />
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium">Earliest Fill</label>
+                  <label className="text-sm font-medium">Earliest Fill Date</label>
+                  <div className="text-sm bg-surface border border-border rounded-md px-3 py-2 mb-1">
+                    {formatDateForDisplay(prescription.earliestFillDate || '')}
+                  </div>
                   <Input
                     type="date"
-                    value={prescription.earlyFill}
-                    onChange={(e) => onUpdate({ earlyFill: e.target.value })}
-                    className="mt-1"
+                    value={prescription.earliestFillDate || ''}
+                    onChange={(e) => onUpdate({ earliestFillDate: e.target.value })}
+                    className="text-sm"
                   />
                 </div>
-              </div>
-
-              <div>
-                <label className="text-sm font-medium">Location Override</label>
-                <Select onValueChange={(value) => onUpdate({ location: value })}>
-                  <SelectTrigger className="mt-1">
-                    <SelectValue placeholder="Select state" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {US_STATES.map(state => (
-                      <SelectItem key={state} value={state}>{state}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
               </div>
             </CollapsibleContent>
           </Collapsible>

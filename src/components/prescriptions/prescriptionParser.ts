@@ -1,23 +1,6 @@
-export interface ParsedPrescription {
-  id: string;
-  medication: string;
-  strength: string;
-  formulation: string;
-  route: string;
-  frequency: string;
-  duration: string;
-  quantity: number;
-  refills: number;
-  substitutions: boolean;
-  notes: string;
-  notesPharmacy: string;
-  startDate: string;
-  earlyFill: string;
-  prn?: string[];
-  isTaper?: boolean;
-  taperSteps?: Array<{ strength: string; duration: string }>;
-  location?: string;
-}
+// Import unified interface
+import { ParsedPrescription, Alert } from '@/types/prescription';
+import { getTodayISO } from '@/lib/dateUtils';
 
 // Mock patient data for interactions
 export const MOCK_PATIENT = {
@@ -71,9 +54,8 @@ export function parsePrescription(input: string): ParsedPrescription[] {
       refills: 0,
       substitutions: true,
       notes: '',
-      notesPharmacy: '',
-      startDate: new Date().toISOString().split('T')[0],
-      earlyFill: new Date().toISOString().split('T')[0]
+      startDate: getTodayISO(),
+      earliestFillDate: getTodayISO()
     };
 
     // Handle taper patterns (e.g., "prednisone taper 40mg 5d, 20mg 5d, 10mg 5d")
@@ -82,22 +64,12 @@ export function parsePrescription(input: string): ParsedPrescription[] {
       const taperMatch = line.match(/(\w+)\s+taper\s+(.*)/i);
       if (taperMatch) {
         parsed.medication = taperMatch[1];
-        const steps = taperMatch[2].split(',').map(step => {
-          const stepMatch = step.trim().match(/(\d+\w+)\s+(\d+d?)/);
-          if (stepMatch) {
-            return { strength: stepMatch[1], duration: stepMatch[2] };
-          }
-          return null;
-        }).filter(Boolean);
-        parsed.taperSteps = steps as Array<{ strength: string; duration: string }>;
-        if (steps.length > 0) {
-          parsed.strength = steps[0]?.strength || '';
-          parsed.duration = steps.map(s => s?.duration).join(' then ');
-        }
+        parsed.notes = line; // Store full taper instructions in notes
+        parsed.duration = 'See instructions';
+        parsed.frequency = 'As directed';
       }
     } else {
       // Extract medication name (first meaningful word)
-      const words = line.toLowerCase().split(/\s+/);
       const medMatch = line.match(/^(\w+(?:-\w+)*)/);
       if (medMatch) {
         parsed.medication = medMatch[1];
@@ -116,25 +88,37 @@ export function parsePrescription(input: string): ParsedPrescription[] {
         parsed.frequency = freq.includes('DAILY') ? freq : freq;
       }
 
-      // Extract duration
-      const durMatch = line.match(/\b(?:x|for)\s*(\d+)\s*(d|days?|weeks?|months?)\b/i);
+      // Extract duration and convert to days only
+      const durMatch = line.match(/\b(?:x|for)\s*(\d+)\s*(d|days?|w|weeks?|m|months?)\b/i);
       if (durMatch) {
-        parsed.duration = `${durMatch[1]} ${durMatch[2]}`;
+        const value = parseInt(durMatch[1]);
+        const unit = durMatch[2].toLowerCase();
+        
+        if (unit.startsWith('w')) {
+          // Convert weeks to days
+          parsed.duration = (value * 7).toString();
+        } else if (unit.startsWith('d')) {
+          parsed.duration = value.toString();
+        } else if (unit.startsWith('m')) {
+          // Convert months to days (rough estimate)
+          parsed.duration = (value * 30).toString();
+        }
       } else if (line.toLowerCase().includes('long-term')) {
-        parsed.duration = 'long-term';
+        parsed.duration = undefined; // Long-term has no specific duration
       }
 
       // Calculate quantity (simple heuristic)
-      if (parsed.frequency && parsed.duration && !parsed.duration.includes('long-term')) {
+      if (parsed.frequency && parsed.duration && !line.toLowerCase().includes('long-term')) {
         const freqPerDay = parsed.frequency === 'QD' || parsed.frequency.includes('once') ? 1 : 
                          parsed.frequency === 'BID' || parsed.frequency.includes('twice') ? 2 :
                          parsed.frequency === 'TID' || parsed.frequency.includes('three') ? 3 :
                          parsed.frequency === 'QID' ? 4 : 1;
         
-        const daysMatch = parsed.duration.match(/(\d+)/);
-        const days = daysMatch ? parseInt(daysMatch[1]) : 7;
-        parsed.quantity = freqPerDay * days;
-      } else if (parsed.duration.includes('long-term')) {
+        const days = parseInt(parsed.duration);
+        if (!isNaN(days)) {
+          parsed.quantity = freqPerDay * days;
+        }
+      } else if (line.toLowerCase().includes('long-term')) {
         parsed.quantity = 90; // 90-day supply for maintenance
         parsed.refills = 5;
       }
@@ -145,16 +129,8 @@ export function parsePrescription(input: string): ParsedPrescription[] {
 }
 
 // Check for drug interactions and allergies
-export function checkInteractions(prescriptions: ParsedPrescription[]): Array<{
-  type: 'allergy' | 'interaction' | 'duplicate';
-  message: string;
-  prescriptionId: string;
-}> {
-  const alerts: Array<{
-    type: 'allergy' | 'interaction' | 'duplicate';
-    message: string;
-    prescriptionId: string;
-  }> = [];
+export function checkInteractions(prescriptions: ParsedPrescription[]): Alert[] {
+  const alerts: Alert[] = [];
 
   // Check allergies
   prescriptions.forEach(rx => {

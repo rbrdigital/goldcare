@@ -1,28 +1,6 @@
-export interface ParsedPrescription {
-  id: string;
-  medication: string;
-  strength?: string;
-  formulation?: string;
-  dose?: string;
-  route: string;
-  frequency?: string;
-  duration?: string;
-  quantity?: number;
-  refills: number;
-  substitutions: boolean;
-  prn?: boolean;
-  notes?: string;
-  startDate?: string;
-  earliestFillDate?: string;
-  location?: string;
-  isTaper?: boolean;
-}
-
-export interface Alert {
-  type: 'allergy' | 'interaction' | 'duplicate';
-  message: string;
-  prescriptionId: string;
-}
+// Import unified interface
+import { ParsedPrescription, Alert } from '@/types/prescription';
+import { getTodayISO } from '@/lib/dateUtils';
 
 export const MOCK_DATA = {
   patient: {
@@ -90,90 +68,92 @@ const GUIDANCE: Record<string, { patient?: string; pharmacy?: string }> = {
 
 export function parsePrescriptions(input: string): ParsedPrescription[] {
   const lines = input.split('\n').filter(line => line.trim());
-  const prescriptions: ParsedPrescription[] = [];
-
-  lines.forEach((line, index) => {
-    const trimmed = line.trim();
-    if (!trimmed) return;
-
-    const today = new Date().toISOString().split('T')[0];
-    const rx: ParsedPrescription = {
+  
+  return lines.map((line, index) => {
+    const parsed: ParsedPrescription = {
       id: `rx-${Date.now()}-${index}`,
       medication: '',
+      strength: '',
+      formulation: 'tablet',
       route: 'PO',
+      frequency: '',
+      duration: '',
+      quantity: 0,
       refills: 0,
       substitutions: true,
-      startDate: today,
-      earliestFillDate: today
+      notes: '',
+      startDate: getTodayISO(),
+      earliestFillDate: getTodayISO()
     };
 
-    // Check for taper pattern
-    if (trimmed.toLowerCase().includes('taper') || /\d+mg\s+\d+d/i.test(trimmed)) {
-      rx.isTaper = true;
-      const medication = trimmed.split(/\s+/)[0];
-      rx.medication = medication;
-      rx.duration = 'See taper schedule';
-      rx.frequency = 'As directed';
-      rx.notes = trimmed;
+    // Handle taper patterns (e.g., "prednisone taper 40mg 5d, 20mg 5d, 10mg 5d")
+    if (line.toLowerCase().includes('taper')) {
+      parsed.isTaper = true;
+      const taperMatch = line.match(/(\w+)\s+taper\s+(.*)/i);
+      if (taperMatch) {
+        parsed.medication = taperMatch[1];
+        parsed.notes = line; // Store full taper instructions in notes
+        parsed.duration = 'See instructions';
+        parsed.frequency = 'As directed';
+      }
     } else {
-      // Parse regular prescription
-      const parts = trimmed.split(/\s+/);
-      
-      // Extract medication (first word)
-      rx.medication = parts[0] || '';
+      // Extract medication name (first meaningful word)
+      const medMatch = line.match(/^(\w+(?:-\w+)*)/);
+      if (medMatch) {
+        parsed.medication = medMatch[1];
+      }
 
-      // Extract strength (number + unit pattern)
-      const strengthMatch = trimmed.match(/(\d+\.?\d*)\s?(mg|mcg|g|ml|units?)/i);
+      // Extract strength (numbers followed by mg, etc.)
+      const strengthMatch = line.match(/(\d+(?:\/\d+)?)\s*(mg|g|mcg|units?)/i);
       if (strengthMatch) {
-        rx.strength = strengthMatch[0];
+        parsed.strength = `${strengthMatch[1]} ${strengthMatch[2]}`;
       }
 
       // Extract frequency
-      const frequencies = ['QD', 'BID', 'TID', 'QID', 'Q4H', 'Q6H', 'Q8H', 'Q12H', 'QPM', 'QAM'];
-      const frequency = frequencies.find(f => trimmed.toUpperCase().includes(f));
-      if (frequency) {
-        rx.frequency = frequency;
+      const freqMatch = line.match(/\b(QD|BID|TID|QID|once\s+daily|twice\s+daily|three\s+times\s+daily)\b/i);
+      if (freqMatch) {
+        const freq = freqMatch[1].toUpperCase();
+        parsed.frequency = freq.includes('DAILY') ? freq : freq;
       }
 
-      // Extract duration and convert to days
-      const durationMatch = trimmed.match(/x\s?(\d+)\s?(d|day|days|w|week|weeks|month|months)/i);
-      if (durationMatch) {
-        const value = parseInt(durationMatch[1]);
-        const unit = durationMatch[2].toLowerCase();
+      // Extract duration and convert to days only
+      const durMatch = line.match(/\b(?:x|for)\s*(\d+)\s*(d|days?|w|weeks?|m|months?)\b/i);
+      if (durMatch) {
+        const value = parseInt(durMatch[1]);
+        const unit = durMatch[2].toLowerCase();
         
         if (unit.startsWith('w')) {
           // Convert weeks to days
-          rx.duration = (value * 7).toString();
+          parsed.duration = (value * 7).toString();
         } else if (unit.startsWith('d')) {
-          rx.duration = value.toString();
+          parsed.duration = value.toString();
         } else if (unit.startsWith('m')) {
           // Convert months to days (rough estimate)
-          rx.duration = (value * 30).toString();
+          parsed.duration = (value * 30).toString();
         }
-      } else if (trimmed.toLowerCase().includes('long-term')) {
-        rx.duration = undefined; // Long-term has no specific duration
+      } else if (line.toLowerCase().includes('long-term')) {
+        parsed.duration = undefined; // Long-term has no specific duration
       }
 
-      // Calculate quantity heuristic
-      if (rx.frequency && rx.duration && !rx.isTaper) {
-        const freqMultiplier = {
-          'QD': 1, 'BID': 2, 'TID': 3, 'QID': 4,
-          'Q4H': 6, 'Q6H': 4, 'Q8H': 3, 'Q12H': 2,
-          'QPM': 1, 'QAM': 1
-        };
+      // Calculate quantity (simple heuristic)
+      if (parsed.frequency && parsed.duration && !line.toLowerCase().includes('long-term')) {
+        const freqPerDay = parsed.frequency === 'QD' || parsed.frequency.includes('once') ? 1 : 
+                         parsed.frequency === 'BID' || parsed.frequency.includes('twice') ? 2 :
+                         parsed.frequency === 'TID' || parsed.frequency.includes('three') ? 3 :
+                         parsed.frequency === 'QID' ? 4 : 1;
         
-        const durationMatch = rx.duration.match(/(\d+)/);
-        if (durationMatch && freqMultiplier[rx.frequency]) {
-          const days = parseInt(durationMatch[1]);
-          rx.quantity = days * freqMultiplier[rx.frequency];
+        const days = parseInt(parsed.duration);
+        if (!isNaN(days)) {
+          parsed.quantity = freqPerDay * days;
         }
+      } else if (line.toLowerCase().includes('long-term')) {
+        parsed.quantity = 90; // 90-day supply for maintenance
+        parsed.refills = 5;
       }
     }
 
-    prescriptions.push(rx);
+    return parsed;
   });
-
-  return prescriptions;
 }
 
 export function checkInteractions(prescriptions: ParsedPrescription[]): Alert[] {
