@@ -28,12 +28,12 @@ const config: Config = {
         "fg-muted": "var(--fg-muted)",
         border: "var(--border)",
         divider: "var(--divider)",
-        primary: "var(--primary)",        /* ChatGPT Green - text only */
+        primary: "var(--primary)",        /* Blue - text only */
         "primary-50": "var(--primary-50)",    /* Light gray */
         "primary-100": "var(--primary-100)",  /* Darker gray */
         "primary/30": "var(--primary-30a)",   /* 10% black */
-        "medical-blue": "var(--medical-blue)",      /* ChatGPT Green */
-        "medical-blue-light": "var(--medical-blue-light)", /* Tertiary background */
+        "medical-blue": "var(--medical-blue)",      /* Black */
+        "medical-blue-light": "var(--medical-blue-light)", /* Light gray */
         "medical-green": "var(--medical-green)",
         "medical-green-light": "var(--medical-green-light)",
         "medical-amber": "var(--medical-amber)",
@@ -47,7 +47,6 @@ const config: Config = {
         secondary: "var(--color-secondary)",
         "secondary-fg": "var(--color-secondary-fg)",
         "button-primary": "var(--color-button-primary)",
-        "button-primary-hover": "var(--color-button-primary-hover)",
         "button-primary-text": "var(--color-button-primary-text)",
         success: "var(--color-success)",
         "success-fg": "var(--color-success-fg)",
@@ -110,11 +109,31 @@ const config: Config = {
           to: {
             height: '0'
           }
+        },
+        // AI Glow effects - subtle and medical-appropriate
+        'ai-glow': {
+          '0%, 100%': {
+            boxShadow: '0 0 8px hsl(var(--primary) / 0.15), 0 0 16px hsl(var(--primary) / 0.1), inset 0 1px 0 hsl(var(--primary) / 0.1)'
+          },
+          '50%': {
+            boxShadow: '0 0 12px hsl(var(--primary) / 0.25), 0 0 24px hsl(var(--primary) / 0.15), inset 0 1px 0 hsl(var(--primary) / 0.15)'
+          }
+        },
+        'ai-glow-hover': {
+          '0%, 100%': {
+            boxShadow: '0 0 12px hsl(var(--primary) / 0.25), 0 0 24px hsl(var(--primary) / 0.15), inset 0 1px 0 hsl(var(--primary) / 0.15)'
+          },
+          '50%': {
+            boxShadow: '0 0 16px hsl(var(--primary) / 0.35), 0 0 32px hsl(var(--primary) / 0.2), inset 0 1px 0 hsl(var(--primary) / 0.2)'
+          }
         }
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
-        'accordion-up': 'accordion-up 0.2s ease-out'
+        'accordion-up': 'accordion-up 0.2s ease-out',
+        // AI Glow animations - gentle and professional
+        'ai-glow': 'ai-glow 3s ease-in-out infinite',
+        'ai-glow-hover': 'ai-glow-hover 2s ease-in-out infinite'
       }
     }
   },

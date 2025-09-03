@@ -94,84 +94,83 @@
 }
 
 :root[data-theme="dark"] {
-  /* ChatGPT Dark Mode Palette */
-  --bg: hsl(225, 9%, 24%);           /* #343541 - Primary background */
-  --bg-muted: hsl(225, 9%, 31%);    /* #444654 - Secondary background */
-  --surface: hsl(225, 9%, 31%);     /* #444654 - Secondary background (panels, cards) */
-  --surface-muted: hsl(225, 10%, 37%); /* #565869 - Tertiary background (inputs, highlights) */
-  --fg: hsl(240, 21%, 93%);         /* #ECECF1 - Primary text */
-  --fg-muted: hsl(240, 4%, 62%);    /* #9A9B9F - Secondary text */
-  --border: hsl(225, 10%, 37%);     /* #565869 - Borders & dividers */
-  --divider: hsl(225, 10%, 37%);    /* #565869 - Borders & dividers */
+  /* New semantic tokens - dark mode (Lovable dashboard style) */
+  --bg: #0a0a0a;
+  --bg-muted: #161616;
+  --surface: #111111;
+  --surface-muted: #1a1a1a;
+  --fg: #ffffff;
+  --fg-muted: #a3a3a3;
+  --border: #262626;
+  --divider: #262626;
   
   /* Legacy colors for backward compatibility */
-  --color-bg: hsl(225, 9%, 24%);
-  --color-surface: hsl(225, 9%, 31%);
-  --color-border: hsl(225, 10%, 37%);
-  --color-fg: hsl(240, 21%, 93%);
-  --color-fg-muted: hsl(240, 4%, 62%);
+  --color-bg: #0a0a0a;
+  --color-surface: #111111;
+  --color-border: #262626;
+  --color-fg: #ffffff;
+  --color-fg-muted: #a3a3a3;
 
-  /* Brand colors - ChatGPT green accent */
-  --color-primary: hsl(162, 83%, 35%);    /* #10A37F - ChatGPT green */
-  --color-primary-fg: hsl(0, 0%, 100%);   /* #FFFFFF */
-  --color-on-primary: hsl(0, 0%, 100%);   /* #FFFFFF */
-  --color-secondary: hsl(225, 10%, 37%);  /* #565869 - Transparent with border */
-  --color-secondary-fg: hsl(240, 21%, 93%); /* #ECECF1 */
+  /* Brand colors - keep primary blue for text links */
+  --color-primary: #3b82f6;
+  --color-primary-fg: #ffffff;
+  --color-on-primary: #ffffff;
+  --color-secondary: #1a1a1a;
+  --color-secondary-fg: #ffffff;
 
-  /* Button-specific colors - ChatGPT style */
-  --color-button-primary: hsl(162, 83%, 35%);    /* #10A37F */
-  --color-button-primary-hover: hsl(162, 61%, 31%); /* #1A7F64 - ChatGPT hover green */
-  --color-button-primary-text: hsl(0, 0%, 100%); /* #FFFFFF */
+  /* Button-specific colors - white buttons on dark */
+  --color-button-primary: #ffffff;
+  --color-button-primary-text: #0a0a0a;
 
   /* Status colors */
-  --color-success: hsl(162, 83%, 35%);    /* #10A37F - Use ChatGPT green */
-  --color-success-fg: hsl(0, 0%, 100%);
-  --color-danger: hsl(0, 84%, 60%);       /* #ef4444 */
-  --color-danger-fg: hsl(0, 0%, 100%);
-  --color-warning: hsl(43, 96%, 56%);     /* #f59e0b */
-  --color-warning-fg: hsl(0, 0%, 0%);
+  --color-success: #22c55e;
+  --color-success-fg: #ffffff;
+  --color-danger: #ef4444;
+  --color-danger-fg: #ffffff;
+  --color-warning: #f59e0b;
+  --color-warning-fg: #000000;
 
-  /* Medical colors - ChatGPT palette */
-  --color-medical-blue: hsl(162, 83%, 35%);      /* #10A37F - Primary green */
-  --color-medical-blue-light: hsl(225, 10%, 37%); /* #565869 - Tertiary background */
-  --color-medical-green: hsl(162, 83%, 35%);     /* #10A37F */
-  --color-medical-green-light: hsl(225, 10%, 37%); /* #565869 */
-  --color-medical-amber: hsl(43, 96%, 56%);      /* #f59e0b */
-  --color-medical-amber-light: hsl(225, 10%, 37%); /* #565869 */
-  --color-medical-red: hsl(0, 84%, 60%);         /* #ef4444 */
-  --color-medical-red-light: hsl(225, 10%, 37%);  /* #565869 */
+  /* Medical colors - clean grays */
+  --color-medical-blue: #ffffff;
+  --color-medical-blue-light: #1a1a1a;
+  --color-medical-green: #22c55e;
+  --color-medical-green-light: #0a1a0a;
+  --color-medical-amber: #f59e0b;
+  --color-medical-amber-light: #1a1a0a;
+  --color-medical-red: #ef4444;
+  --color-medical-red-light: #1a0a0a;
 
   /* Checkbox tokens */
-  --surface-inverse: hsl(240, 21%, 93%);   /* #ECECF1 - Primary text for checked */
-  --content-inverse: hsl(225, 9%, 24%);    /* #343541 - Primary bg for checkmark */
-  --surface-base: hsl(225, 9%, 31%);       /* #444654 - Secondary bg for unchecked */
-  --border-subtle: hsl(225, 10%, 37%);     /* #565869 - Subtle border */
-  --border-strong: hsl(240, 4%, 62%);      /* #9A9B9F - Stronger border for hover */
-  --surface-disabled: hsl(225, 10%, 37%);  /* #565869 - Disabled background */
-  --content-disabled: hsl(240, 3%, 43%);   /* #6B6C70 - Disabled text */
+  --surface-inverse: #ffffff;
+  --content-inverse: #0a0a0a;
+  --surface-base: #111111;
+  --border-subtle: #262626;
+  --border-strong: #404040;
+  --surface-disabled: #1a1a1a;
+  --content-disabled: #737373;
 
   /* UI elements */
-  --color-muted: hsl(225, 10%, 37%);       /* #565869 - Tertiary background */
-  --color-muted-fg: hsl(240, 4%, 62%);     /* #9A9B9F - Secondary text */
-  --color-accent: hsl(225, 10%, 37%);      /* #565869 - Tertiary background */
-  --color-accent-fg: hsl(240, 21%, 93%);   /* #ECECF1 - Primary text */
-  --color-popover: hsl(225, 9%, 31%);      /* #444654 - Secondary background */
-  --color-popover-fg: hsl(240, 21%, 93%);  /* #ECECF1 - Primary text */
-  --color-card: hsl(225, 9%, 31%);         /* #444654 - Secondary background */
-  --color-card-fg: hsl(240, 21%, 93%);     /* #ECECF1 - Primary text */
+  --color-muted: #1a1a1a;
+  --color-muted-fg: #a3a3a3;
+  --color-accent: #1a1a1a;
+  --color-accent-fg: #ffffff;
+  --color-popover: #111111;
+  --color-popover-fg: #ffffff;
+  --color-card: #111111;
+  --color-card-fg: #ffffff;
 
   /* Input elements */
-  --color-input: hsl(225, 10%, 37%);       /* #565869 - Tertiary background */
-  --color-input-border: hsl(225, 10%, 37%); /* #565869 - Border */
-  --color-ring: hsl(162, 83%, 35%);        /* #10A37F - ChatGPT green focus ring */
+  --color-input: #111111;
+  --color-input-border: #262626;
+  --color-ring: #404040;
 
   /* Sidebar */
-  --color-sidebar-bg: hsl(225, 9%, 31%);   /* #444654 - Secondary background */
-  --color-sidebar-fg: hsl(240, 21%, 93%);  /* #ECECF1 - Primary text */
-  --color-sidebar-primary: hsl(162, 83%, 35%); /* #10A37F - ChatGPT green */
-  --color-sidebar-primary-fg: hsl(0, 0%, 100%); /* #FFFFFF */
-  --color-sidebar-accent: hsl(225, 10%, 37%);   /* #565869 - Tertiary background */
-  --color-sidebar-accent-fg: hsl(240, 21%, 93%); /* #ECECF1 - Primary text */
-  --color-sidebar-border: hsl(225, 10%, 37%);    /* #565869 - Border */
-  --color-sidebar-ring: hsl(162, 83%, 35%);      /* #10A37F - ChatGPT green focus ring */
+  --color-sidebar-bg: #111111;
+  --color-sidebar-fg: #ffffff;
+  --color-sidebar-primary: #ffffff;
+  --color-sidebar-primary-fg: #0a0a0a;
+  --color-sidebar-accent: #1a1a1a;
+  --color-sidebar-accent-fg: #ffffff;
+  --color-sidebar-border: #262626;
+  --color-sidebar-ring: #404040;
 }

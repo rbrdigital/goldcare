@@ -10,8 +10,8 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-medical-blue text-white hover:bg-button-primary-hover",
-        primary: "bg-medical-blue text-white hover:bg-button-primary-hover focus-visible:ring-border",
+        default: "bg-medical-blue text-white hover:opacity-95",
+        primary: "bg-medical-blue text-white hover:opacity-95 focus-visible:ring-border",
         destructive: "bg-medical-red text-white hover:opacity-95 focus-visible:ring-medical-red/30",
         outline: "border border-border bg-surface hover:bg-surface-muted text-fg",
         secondary: "bg-surface border border-border text-fg hover:bg-surface-muted",
