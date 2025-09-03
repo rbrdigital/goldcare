@@ -19,7 +19,8 @@ import {
   XCircle,
   Search,
   ChevronDown,
-  ChevronRight
+  ChevronRight,
+  ClipboardCheck
 } from "lucide-react";
 import { GoldCareAIIcon } from "@/components/icons/GoldCareAIIcon";
 import { cn } from "@/lib/utils";
@@ -45,8 +46,14 @@ interface SidebarSection {
   defaultOpen?: boolean;
 }
 
+const visitSummaryItem: SidebarItem = {
+  id: "summary", 
+  label: "Visit Summary", 
+  icon: <ClipboardCheck className="h-4 w-4" />, 
+  href: "#summary"
+};
+
 const clinicalItems: SidebarItem[] = [
-  { id: "summary", label: "Summary", icon: <FileBarChart className="h-4 w-4" />, href: "#summary" },
   { id: "soap", label: "SOAP Note", icon: <FileText className="h-4 w-4" />, href: "#soap" },
   { id: "rx", label: "RX", icon: <Pill className="h-4 w-4" />, href: "#rx" },
   { id: "lab-orders", label: "Lab Orders", icon: <FlaskConical className="h-4 w-4" />, href: "#lab-orders" },
@@ -74,7 +81,7 @@ const manageApptItems: SidebarItem[] = [
 ];
 
 const sections: SidebarSection[] = [
-  { id: "chart", title: "Patient Chart", items: [...clinicalItems, ...patientDataItems], defaultOpen: true },
+  { id: "chart", title: "Patient Chart", items: [visitSummaryItem, ...clinicalItems, ...patientDataItems], defaultOpen: true },
   { id: "appointment", title: "Manage Appointment", items: manageApptItems, defaultOpen: false }
 ];
 
@@ -144,7 +151,7 @@ export function AppSidebar({ mini = false, activeItem = "soap", onItemClick }: A
     return (
       <aside className="w-16 border-r bg-background flex flex-col">
         <div className="p-2 space-y-1">
-          {clinicalItems.slice(0, 6).map((item) => (
+          {[visitSummaryItem, ...clinicalItems].slice(0, 6).map((item) => (
             <button
               key={item.id}
               onClick={() => handleItemClick(item.id)}
@@ -215,6 +222,14 @@ export function AppSidebar({ mini = false, activeItem = "soap", onItemClick }: A
               <div className="pb-2">
                 {section.id === "chart" && (
                   <>
+                    <div className="px-4 pb-2">
+                      <SidebarItem
+                        key={visitSummaryItem.id}
+                        item={{ ...visitSummaryItem, dirty: hasContent(visitSummaryItem.id) }}
+                        isActive={activeItem === visitSummaryItem.id}
+                        onClick={() => handleItemClick(visitSummaryItem.id)}
+                      />
+                    </div>
                     <div className="px-4 pb-2">
                       <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground mb-2">
                         Clinical Entries
