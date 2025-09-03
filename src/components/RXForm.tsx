@@ -387,27 +387,6 @@ export default function RXForm() {
                 />
               </div>
 
-              {/* PRN */}
-              <div className="md:col-span-3">
-                <div className="flex items-center gap-2 mb-2">
-                  <input
-                    id={`prn-${i}`}
-                    type="checkbox"
-                    className="h-4 w-4"
-                    checked={rx.prn}
-                    onChange={(e) => patchItem(i, { prn: e.target.checked, prnInstructions: e.target.checked ? rx.prnInstructions : "" })}
-                  />
-                  <Label htmlFor={`prn-${i}`}>PRN (as needed)</Label>
-                </div>
-                <Input
-                  id={`prn-instructions-${i}`}
-                  placeholder="e.g., for pain, for nausea"
-                  value={rx.prnInstructions}
-                  disabled={!rx.prn}
-                  onChange={(e) => patchItem(i, { prnInstructions: e.target.value })}
-                />
-              </div>
-
               {/* Substitutions */}
               <div className="md:col-span-3">
                 <Label>Substitutions</Label>
@@ -435,6 +414,27 @@ export default function RXForm() {
                   onChange={(e) => patchItem(i, { earliestFill: e.target.value })}
                 />
               </div>
+            </div>
+
+            {/* PRN - Full Width */}
+            <div className="mt-4">
+              <div className="flex items-center gap-2 mb-2">
+                <input
+                  id={`prn-${i}`}
+                  type="checkbox"
+                  className="h-4 w-4"
+                  checked={rx.prn}
+                  onChange={(e) => patchItem(i, { prn: e.target.checked, prnInstructions: e.target.checked ? rx.prnInstructions : "" })}
+                />
+                <Label htmlFor={`prn-${i}`}>PRN (as needed)</Label>
+              </div>
+              <Input
+                id={`prn-instructions-${i}`}
+                placeholder="e.g., for pain, for nausea"
+                value={rx.prnInstructions}
+                disabled={!rx.prn}
+                onChange={(e) => patchItem(i, { prnInstructions: e.target.value })}
+              />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
