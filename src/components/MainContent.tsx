@@ -27,21 +27,14 @@ import {
 import RXForm from "@/components/RXForm";
 import { copy } from "@/copy/en";
 import PageContainer from "@/components/layout/PageContainer";
-import { ConsultSummary } from "@/components/ConsultSummary";
-import { ConsultWorkspace, useConsult } from "@/components/ConsultWorkspace";
-import ErrorBoundary from "@/components/ErrorBoundary";
 
 interface MainContentProps {
   activeSection: string;
 }
 
 export function MainContent({ activeSection }: MainContentProps) {
-  console.log('🔧 MainContent rendering with activeSection:', activeSection);
-  
   const renderSection = () => {
     switch (activeSection) {
-      case "summary":
-        return <ConsultSummaryWrapper />;
       case "soap":
         return <SOAPNoteSection />;
       case "rx":
@@ -64,23 +57,9 @@ export function MainContent({ activeSection }: MainContentProps) {
   };
 
   return (
-    <ErrorBoundary>
-      <ConsultWorkspace patientId="patient-123" encounterId="encounter-456">
-        <ErrorBoundary>
-          {renderSection()}
-        </ErrorBoundary>
-      </ConsultWorkspace>
-    </ErrorBoundary>
-  );
-}
-
-// Wrapper component that uses the context store
-function ConsultSummaryWrapper() {
-  console.log('🔧 ConsultSummaryWrapper rendering');
-  return (
-    <ErrorBoundary>
-      <ConsultSummary />
-    </ErrorBoundary>
+    <PageContainer>
+      {renderSection()}
+    </PageContainer>
   );
 }
 

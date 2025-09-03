@@ -8,7 +8,6 @@ import { GoldCareAIPanel } from "@/components/GoldCareAIPanel";
 import { PatientMiniCard } from "@/components/PatientMiniCard";
 import { MedicationWorkspace } from "@/components/MedicationWorkspace";
 import { RightPanel } from "@/components/layout/RightPanel";
-import ErrorBoundary from "@/components/ErrorBoundary";
 import { cn } from "@/lib/utils";
 
 const mockPatient = {
@@ -20,7 +19,6 @@ const mockPatient = {
 };
 
 export function Dashboard() {
-  console.log('🔧 Dashboard rendering');
   const [activeSection, setActiveSection] = useState("soap");
   const [sidebarMini, setSidebarMini] = useState(false);
   const [patientProfileDrawerOpen, setPatientProfileDrawerOpen] = useState(false);
@@ -101,73 +99,67 @@ export function Dashboard() {
   const hasRightSheet = labsImagingSideSheetOpen || diagnosesMedsAllergiesSideSheetOpen || patientProfileDrawerOpen || goldcareAIPanelOpen || medicationWorkspaceOpen;
 
   return (
-    <ErrorBoundary>
-      <div className="min-h-screen grid grid-rows-[auto_1fr]">
-        {/* Patient Mini Card */}
-        <PatientMiniCard
-          sidebarMini={sidebarMini}
-          onToggleSidebar={() => setSidebarMini(!sidebarMini)}
-          patient={mockPatient}
-          timeLeft="45 minutes"
-          onJoinMeeting={handleJoinMeeting}
-          onFinishAppointment={handleFinishAppointment}
-          onProfileClick={() => handleItemClick("profile")}
-        />
+    <div className="min-h-screen grid grid-rows-[auto_1fr]">
+      {/* Patient Mini Card */}
+      <PatientMiniCard
+        sidebarMini={sidebarMini}
+        onToggleSidebar={() => setSidebarMini(!sidebarMini)}
+        patient={mockPatient}
+        timeLeft="45 minutes"
+        onJoinMeeting={handleJoinMeeting}
+        onFinishAppointment={handleFinishAppointment}
+        onProfileClick={() => handleItemClick("profile")}
+      />
 
-        {/* Main Layout */}
-        <div className={cn(
-          "grid grid-cols-1",
-          hasRightSheet 
-            ? "md:grid-cols-[280px_minmax(0,1fr)_auto]" 
-            : "md:grid-cols-[280px_minmax(0,1fr)]"
-        )}>
-          <aside className="md:w-[280px] shrink-0 border-r border-border">
-            <AppSidebar 
-              mini={sidebarMini}
-              activeItem={activeSection}
-              onItemClick={handleItemClick}
+      {/* Main Layout */}
+      <div className={cn(
+        "grid grid-cols-1",
+        hasRightSheet 
+          ? "md:grid-cols-[280px_minmax(0,1fr)_auto]" 
+          : "md:grid-cols-[280px_minmax(0,1fr)]"
+      )}>
+        <aside className="md:w-[280px] shrink-0 border-r border-border">
+          <AppSidebar 
+            mini={sidebarMini}
+            activeItem={activeSection}
+            onItemClick={handleItemClick}
+          />
+        </aside>
+        <main className="min-w-0 py-6">
+          <MainContent activeSection={activeSection} />
+        </main>
+        
+        {/* Right Panel */}
+        <RightPanel isOpen={hasRightSheet}>
+          {patientProfileDrawerOpen && (
+            <PatientProfileDrawer
+              isOpen={true}
+              onClose={() => setPatientProfileDrawerOpen(false)}
             />
-          </aside>
-          <main className="min-w-0 py-6">
-            <ErrorBoundary>
-              <MainContent activeSection={activeSection} />
-            </ErrorBoundary>
-          </main>
-          
-          {/* Right Panel */}
-          <RightPanel isOpen={hasRightSheet}>
-            <ErrorBoundary>
-              {patientProfileDrawerOpen && (
-                <PatientProfileDrawer
-                  isOpen={true}
-                  onClose={() => setPatientProfileDrawerOpen(false)}
-                />
-              )}
-              {labsImagingSideSheetOpen && (
-                <LabsImagingSideSheet
-                  isOpen={true}
-                  onClose={() => setLabsImagingSideSheetOpen(false)}
-                />
-              )}
-              {diagnosesMedsAllergiesSideSheetOpen && (
-                <DiagnosesMedsAllergiesSideSheet
-                  isOpen={true}
-                  onClose={() => setDiagnosesMedsAllergiesSideSheetOpen(false)}
-                />
-              )}
-              {goldcareAIPanelOpen && (
-                <GoldCareAIPanel />
-              )}
-              {medicationWorkspaceOpen && (
-                <MedicationWorkspace
-                  isOpen={true}
-                  onClose={() => setMedicationWorkspaceOpen(false)}
-                />
-              )}
-            </ErrorBoundary>
-          </RightPanel>
-        </div>
+          )}
+          {labsImagingSideSheetOpen && (
+            <LabsImagingSideSheet
+              isOpen={true}
+              onClose={() => setLabsImagingSideSheetOpen(false)}
+            />
+          )}
+          {diagnosesMedsAllergiesSideSheetOpen && (
+            <DiagnosesMedsAllergiesSideSheet
+              isOpen={true}
+              onClose={() => setDiagnosesMedsAllergiesSideSheetOpen(false)}
+            />
+          )}
+          {goldcareAIPanelOpen && (
+            <GoldCareAIPanel />
+          )}
+          {medicationWorkspaceOpen && (
+            <MedicationWorkspace
+              isOpen={true}
+              onClose={() => setMedicationWorkspaceOpen(false)}
+            />
+          )}
+        </RightPanel>
       </div>
-    </ErrorBoundary>
+    </div>
   );
 }
