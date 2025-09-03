@@ -5,7 +5,9 @@ import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import { AITextArea } from '../prescriptions/AITextArea';
 import { PrescriptionCard } from '../prescriptions/PrescriptionCard';
-import { PharmacySelector } from '../prescriptions/PharmacySelector';
+import { PrescriptionHeader } from '../shared/prescriptions/ui/PrescriptionHeader';
+import { PharmacyLine } from '../shared/prescriptions/ui/PharmacyLine';
+import { PharmacyInlineSelector } from '../shared/prescriptions/ui/PharmacyInlineSelector';
 import { parsePrescription, checkInteractions, MOCK_PATIENT } from '../prescriptions/prescriptionParser';
 import { ParsedPrescription } from '@/types/prescription';
 import { getTodayISO } from '@/lib/dateUtils';
@@ -16,6 +18,7 @@ export default function RXPanel() {
   const [selectedPharmacy, setSelectedPharmacy] = useState(MOCK_PATIENT.preferredPharmacy);
   const [isSuccess, setIsSuccess] = useState(false);
   const [successTimer, setSuccessTimer] = useState<NodeJS.Timeout | null>(null);
+  const [showPharmacySelector, setShowPharmacySelector] = useState(false);
 
   const { toast } = useToast();
 
@@ -138,6 +141,15 @@ export default function RXPanel() {
     if (successTimer) clearTimeout(successTimer);
   };
 
+  const handlePharmacySelect = (pharmacy: any) => {
+    setSelectedPharmacy(pharmacy);
+    setShowPharmacySelector(false);
+    toast({
+      title: "Pharmacy set",
+      description: `Pharmacy set to ${pharmacy.name}`,
+    });
+  };
+
   // Get alerts for all prescriptions
   const allAlerts = checkInteractions(prescriptions);
   const getAlertsForPrescription = (prescriptionId: string) => {
@@ -180,21 +192,28 @@ export default function RXPanel() {
 
         <Separator />
 
-        {/* Prescription Cards Stack */}
+        {/* Premium Prescription Headers */}
         {prescriptions.length > 0 && (
           <div className="space-y-4">
             <h2 className="text-base font-medium">Prescriptions</h2>
             <div className="space-y-4">
               {prescriptions.map((prescription, index) => (
-                <PrescriptionCard
-                  key={prescription.id}
-                  prescription={prescription}
-                  alerts={getAlertsForPrescription(prescription.id)}
-                  onUpdate={(updates) => updatePrescription(index, updates)}
-                  onRemove={() => removePrescription(index)}
-                  onDuplicate={() => duplicatePrescription(index)}
-                  isReadOnly={isSuccess}
-                />
+                <div key={prescription.id} className="space-y-4">
+                  <PrescriptionHeader
+                    prescription={prescription}
+                    alerts={getAlertsForPrescription(prescription.id)}
+                    onCopy={() => toast({ title: "Copied to clipboard" })}
+                    onPreviewPDF={() => toast({ title: "PDF preview opened" })}
+                  />
+                  <PrescriptionCard
+                    prescription={prescription}
+                    alerts={getAlertsForPrescription(prescription.id)}
+                    onUpdate={(updates) => updatePrescription(index, updates)}
+                    onRemove={() => removePrescription(index)}
+                    onDuplicate={() => duplicatePrescription(index)}
+                    isReadOnly={isSuccess}
+                  />
+                </div>
               ))}
             </div>
           </div>
@@ -202,24 +221,25 @@ export default function RXPanel() {
 
         {prescriptions.length > 0 && <Separator />}
 
-        {/* Routing & Actions Row */}
+        {/* Premium Pharmacy Section */}
         <div className="space-y-4">
-          <PharmacySelector
+          <PharmacyLine
             selectedPharmacy={selectedPharmacy}
-            onPharmacyChange={setSelectedPharmacy}
+            onChangePharmacy={() => setShowPharmacySelector(!showPharmacySelector)}
+            onSendToManager={handleSendToManager}
           />
+          
+          {showPharmacySelector && (
+            <PharmacyInlineSelector
+              selectedPharmacy={selectedPharmacy}
+              onSelect={handlePharmacySelect}
+              onCancel={() => setShowPharmacySelector(false)}
+              medicationName={prescriptions[0]?.medication}
+            />
+          )}
 
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-end">
             <div className="flex gap-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleSendToManager}
-                className="text-fg-muted hover:text-fg"
-              >
-                <Users className="h-4 w-4 mr-2" />
-                Send to manager
-              </Button>
               <Button
                 variant="ghost"
                 size="sm"
@@ -229,16 +249,16 @@ export default function RXPanel() {
                 <Archive className="h-4 w-4 mr-2" />
                 Save as draft
               </Button>
-            </div>
 
-            <Button
-              onClick={handleSend}
-              disabled={prescriptions.length === 0 || isSuccess}
-              className="min-w-24"
-            >
-              <Send className="h-4 w-4 mr-2" />
-              Send
-            </Button>
+              <Button
+                onClick={handleSend}
+                disabled={prescriptions.length === 0 || isSuccess}
+                className="min-w-24"
+              >
+                <Send className="h-4 w-4 mr-2" />
+                Send
+              </Button>
+            </div>
           </div>
         </div>
 

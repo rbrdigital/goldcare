@@ -126,6 +126,11 @@ const config: Config = {
           '50%': {
             boxShadow: '0 0 16px hsl(var(--primary) / 0.35), 0 0 32px hsl(var(--primary) / 0.2), inset 0 1px 0 hsl(var(--primary) / 0.2)'
           }
+        },
+        'shimmer': {
+          '0%': { opacity: '0.5' },
+          '50%': { opacity: '1' },
+          '100%': { opacity: '0.5' }
         }
       },
       animation: {
@@ -133,7 +138,8 @@ const config: Config = {
         'accordion-up': 'accordion-up 0.2s ease-out',
         // AI Glow animations - gentle and professional
         'ai-glow': 'ai-glow 3s ease-in-out infinite',
-        'ai-glow-hover': 'ai-glow-hover 2s ease-in-out infinite'
+        'ai-glow-hover': 'ai-glow-hover 2s ease-in-out infinite',
+        'shimmer': 'shimmer 1.5s ease-in-out infinite'
       }
     }
   },

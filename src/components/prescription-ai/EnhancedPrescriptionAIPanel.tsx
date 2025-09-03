@@ -6,7 +6,9 @@ import { useToast } from '@/hooks/use-toast';
 import { ParsedPrescription, Alert } from '@/types/prescription';
 import { parsePrescriptions, checkInteractions, MOCK_DATA } from './prescriptionParser';
 import { PrescriptionCard } from './PrescriptionCard';
-import { PharmacySelector } from './PharmacySelector';
+import { PrescriptionHeader } from '../shared/prescriptions/ui/PrescriptionHeader';
+import { PharmacyLine } from '../shared/prescriptions/ui/PharmacyLine';
+import { PharmacyInlineSelector } from '../shared/prescriptions/ui/PharmacyInlineSelector';
 import { AIPromptBox } from './AIPromptBox';
 import { AIConversation } from './AIConversation';
 import { getTodayISO } from '@/lib/dateUtils';
@@ -20,6 +22,7 @@ export function PrescriptionAIPanel() {
   const [successTimer, setSuccessTimer] = useState<NodeJS.Timeout | null>(null);
   const [showManualForm, setShowManualForm] = useState(false);
   const [focusedCardIndex, setFocusedCardIndex] = useState<number>(-1);
+  const [showPharmacySelector, setShowPharmacySelector] = useState(false);
 
   const { toast } = useToast();
 
@@ -158,6 +161,26 @@ export function PrescriptionAIPanel() {
     if (successTimer) clearTimeout(successTimer);
   };
 
+  const handlePharmacySelect = (pharmacy: any) => {
+    setSelectedPharmacy(pharmacy);
+    setShowPharmacySelector(false);
+    toast({
+      title: "Pharmacy set",
+      description: `Pharmacy set to ${pharmacy.name}`,
+    });
+  };
+
+  const handleEditWithAI = () => {
+    setShowManualForm(false);
+    if (prescriptions.length > 0) {
+      // Pre-fill prompt with current prescription details
+      const summaryText = prescriptions.map(rx => 
+        `${rx.medication} ${rx.strength} ${rx.frequency} for ${rx.duration} days`
+      ).join('; ');
+      setPromptValue(summaryText);
+    }
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'ArrowUp' && focusedCardIndex > 0) {
       setFocusedCardIndex(focusedCardIndex - 1);
@@ -240,23 +263,32 @@ export function PrescriptionAIPanel() {
           <>
             <Separator />
             
-            {/* Prescription Cards Stack */}
+            {/* Premium Prescription Headers */}
             {prescriptions.length > 0 && (
               <div className="space-y-4">
                 <h2 className="text-base font-medium text-fg">Prescriptions</h2>
                 <div className="space-y-4">
                   {prescriptions.map((prescription, index) => (
-                    <PrescriptionCard
-                      key={prescription.id}
-                      prescription={prescription}
-                      alerts={getAlertsForPrescription(prescription.id)}
-                      onUpdate={(updates) => updatePrescription(index, updates)}
-                      onRemove={() => removePrescription(index)}
-                      onDuplicate={() => duplicatePrescription(index)}
-                      isReadOnly={isSuccess}
-                      isFocused={focusedCardIndex === index}
-                      onFocus={() => setFocusedCardIndex(index)}
-                    />
+                    <div key={prescription.id} className="space-y-4">
+                      <PrescriptionHeader
+                        prescription={prescription}
+                        alerts={getAlertsForPrescription(prescription.id)}
+                        showEditWithAI={true}
+                        onEditWithAI={handleEditWithAI}
+                        onCopy={() => toast({ title: "Copied to clipboard" })}
+                        onPreviewPDF={() => toast({ title: "PDF preview opened" })}
+                      />
+                      <PrescriptionCard
+                        prescription={prescription}
+                        alerts={getAlertsForPrescription(prescription.id)}
+                        onUpdate={(updates) => updatePrescription(index, updates)}
+                        onRemove={() => removePrescription(index)}
+                        onDuplicate={() => duplicatePrescription(index)}
+                        isReadOnly={isSuccess}
+                        isFocused={focusedCardIndex === index}
+                        onFocus={() => setFocusedCardIndex(index)}
+                      />
+                    </div>
                   ))}
                 </div>
               </div>
@@ -264,24 +296,25 @@ export function PrescriptionAIPanel() {
 
             {prescriptions.length > 0 && <Separator />}
 
-            {/* Routing & Actions Row */}
+            {/* Premium Pharmacy Section */}
             <div className="space-y-4">
-              <PharmacySelector
+              <PharmacyLine
                 selectedPharmacy={selectedPharmacy}
-                onPharmacyChange={setSelectedPharmacy}
+                onChangePharmacy={() => setShowPharmacySelector(!showPharmacySelector)}
+                onSendToManager={handleSendToManager}
               />
+              
+              {showPharmacySelector && (
+                <PharmacyInlineSelector
+                  selectedPharmacy={selectedPharmacy}
+                  onSelect={handlePharmacySelect}
+                  onCancel={() => setShowPharmacySelector(false)}
+                  medicationName={prescriptions[0]?.medication}
+                />
+              )}
 
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-end">
                 <div className="flex gap-2">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={handleSendToManager}
-                    className="text-fg-muted hover:text-fg"
-                  >
-                    <Users className="h-4 w-4 mr-2" />
-                    Send to manager
-                  </Button>
                   <Button
                     variant="ghost"
                     size="sm"
@@ -291,16 +324,16 @@ export function PrescriptionAIPanel() {
                     <Archive className="h-4 w-4 mr-2" />
                     Save as draft
                   </Button>
-                </div>
 
-                <Button
-                  onClick={handleSend}
-                  disabled={prescriptions.length === 0 || isSuccess || !validatePrescriptions()}
-                  className="min-w-24"
-                >
-                  <Send className="h-4 w-4 mr-2" />
-                  Send
-                </Button>
+                  <Button
+                    onClick={handleSend}
+                    disabled={prescriptions.length === 0 || isSuccess || !validatePrescriptions()}
+                    className="min-w-24"
+                  >
+                    <Send className="h-4 w-4 mr-2" />
+                    Send
+                  </Button>
+                </div>
               </div>
             </div>
 
