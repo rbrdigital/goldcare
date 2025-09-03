@@ -65,8 +65,16 @@ export interface LabOrder {
 export interface ImagingOrder {
   id: string;
   diagnoses: string[];
-  studies: string[];
+  selectedOrders: Array<{
+    orderId: string;
+    orderName: string;
+    modality: string;
+    contrast: string;
+    laterality: string;
+  }>;
+  otherOrders: string[];
   urgency: string;
+  indication: string;
   clinicalNotes: string;
 }
 
@@ -576,7 +584,9 @@ const isMeaningfulImaging = (imaging: ImagingOrder): boolean => {
   return !!(
     imaging.diagnoses?.length > 0 ||
     imaging.clinicalNotes?.trim() ||
-    imaging.studies?.length > 0
+    imaging.indication?.trim() ||
+    imaging.selectedOrders?.length > 0 ||
+    imaging.otherOrders?.length > 0
   );
 };
 

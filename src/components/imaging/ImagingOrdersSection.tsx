@@ -2,15 +2,14 @@
 
 import * as React from "react";
 import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { PageHeader } from "@/components/ui/page-header";
-import PageContainer from "@/components/layout/PageContainer";
 import ComboboxChips from "@/components/ui/ComboboxChips";
-import OrderSetModal from "./OrderSetModal";
 import { useConsultStore, type ImagingOrder } from "@/store/useConsultStore";
+import ImagingCategorySidebar from "./ImagingCategorySidebar";
+import ImagingCategoryView from "./ImagingCategoryView";
+import { type ImagingOrderData } from "@/data/imagingOrders";
 
 // Imaging icon from sidebar
 const ImagingIcon = ({ className }: { className?: string }) => (
@@ -42,64 +41,6 @@ const TOP_DIAGNOSES: Diagnosis[] = [
   { code: "R06.02", label: "Shortness of breath" },
 ];
 
-// Imaging sets organized by category
-const IMAGING_SETS: Record<string, string[]> = {
-  "Chest": [
-    "Chest X-ray, PA and lateral",
-    "Chest X-ray, single view",
-    "Chest CT without contrast",
-    "Chest CT with contrast",
-    "Chest CT angiography",
-  ],
-  "Abdomen": [
-    "Abdominal ultrasound, RUQ",
-    "Abdominal ultrasound, complete",
-    "CT abdomen/pelvis without contrast",
-    "CT abdomen/pelvis with contrast",
-    "Abdominal X-ray (KUB)",
-  ],
-  "Head": [
-    "CT head without contrast",
-    "CT head with contrast",
-    "MRI brain without contrast",
-    "MRI brain with contrast",
-  ],
-  "Spine": [
-    "Lumbar spine X-ray, 2–3 views",
-    "Cervical spine X-ray",
-    "Thoracic spine X-ray",
-    "MRI lumbar spine",
-    "MRI cervical spine",
-  ],
-  "Extremities": [
-    "X-ray hand/wrist",
-    "X-ray foot/ankle",
-    "X-ray knee",
-    "X-ray shoulder",
-    "MRI knee",
-    "MRI shoulder",
-  ],
-  "Vascular": [
-    "Venous duplex ultrasound, lower extremity (DVT)",
-    "Carotid duplex ultrasound",
-    "Arterial duplex ultrasound, lower extremity",
-    "Echocardiogram",
-  ],
-  "Urological": [
-    "CT KUB (non-contrast) for suspected nephrolithiasis",
-    "Renal ultrasound",
-    "Bladder ultrasound with post-void residual",
-  ],
-  "Emergency": [
-    "CT head without contrast (trauma)",
-    "CT cervical spine",
-    "FAST exam (focused assessment with sonography for trauma)",
-    "Chest X-ray (trauma)",
-  ],
-};
-
-const ORDER_TABS = Object.keys(IMAGING_SETS);
-
 export default function ImagingOrdersSection() {  
   const { 
     imagingOrders, 
@@ -108,11 +49,7 @@ export default function ImagingOrdersSection() {
     removeImagingOrder 
   } = useConsultStore();
   
-  const [modal, setModal] = React.useState<{ 
-    open: boolean; 
-    category: string | null;
-    orderIndex: number | null;
-  }>({ open: false, category: null, orderIndex: null });
+  const [selectedCategory, setSelectedCategory] = React.useState<string | null>(null);
 
   // Convert TOP_DIAGNOSES to combobox format
   const diagnosisOptions = React.useMemo(
@@ -129,8 +66,10 @@ export default function ImagingOrdersSection() {
       const newOrder: ImagingOrder = {
         id: crypto.randomUUID(),
         diagnoses: [],
-        studies: [],
+        selectedOrders: [],
+        otherOrders: [],
         urgency: "routine",
+        indication: "",
         clinicalNotes: ""
       };
       addImagingOrder(newOrder);
@@ -146,8 +85,10 @@ export default function ImagingOrdersSection() {
     const newOrder: ImagingOrder = {
       id: crypto.randomUUID(),
       diagnoses: [],
-      studies: [],
+      selectedOrders: [],
+      otherOrders: [],
       urgency: "routine",
+      indication: "",
       clinicalNotes: ""
     };
     addImagingOrder(newOrder);
@@ -172,176 +113,238 @@ export default function ImagingOrdersSection() {
     updateImagingOrder(orderId, updates);
   };
 
-  const openSet = (category: string, orderIndex: number) => 
-    setModal({ open: true, category, orderIndex });
-
-  const confirmSet = (exams: string[]) => {
-    if (modal.category === null || modal.orderIndex === null) return;
-    
-    const orderIndex = modal.orderIndex;
+  // Handle order selection from category view
+  const handleOrderToggle = (orderId: string, order: ImagingOrderData, orderIndex: number) => {
     const currentOrder = imagingOrders[orderIndex];
+    const existingOrders = currentOrder.selectedOrders || [];
     
-    // Update the studies array directly with the selected exams
-    const existingStudies = currentOrder.studies || [];
-    const newStudies = [...existingStudies, ...exams];
+    const orderExists = existingOrders.some(o => o.orderId === orderId);
     
-    updateImagingOrderItem(orderIndex, { studies: newStudies });
-    setModal({ open: false, category: null, orderIndex: null });
+    if (orderExists) {
+      // Remove the order
+      const updatedOrders = existingOrders.filter(o => o.orderId !== orderId);
+      updateImagingOrderItem(orderIndex, { selectedOrders: updatedOrders });
+    } else {
+      // Add the order
+      const newOrder = {
+        orderId: order.OrderID,
+        orderName: order.OrderName,
+        modality: order.Modality,
+        contrast: order.Contrast,
+        laterality: order.Laterality
+      };
+      const updatedOrders = [...existingOrders, newOrder];
+      updateImagingOrderItem(orderIndex, { selectedOrders: updatedOrders });
+    }
   };
 
-  const editSet = (category: string, orderIndex: number) => openSet(category, orderIndex);
-  
-  const removeStudy = (orderIndex: number, studyToRemove: string) => {
+  const handleOtherOrderAdd = (orderText: string, orderIndex: number) => {
     const currentOrder = imagingOrders[orderIndex];
-    const updatedStudies = currentOrder.studies.filter(study => study !== studyToRemove);
-    updateImagingOrderItem(orderIndex, { studies: updatedStudies });
+    const existingOtherOrders = currentOrder.otherOrders || [];
+    const updatedOtherOrders = [...existingOtherOrders, orderText];
+    updateImagingOrderItem(orderIndex, { otherOrders: updatedOtherOrders });
   };
+
+  const removeSelectedOrder = (orderIndex: number, orderId: string) => {
+    const currentOrder = imagingOrders[orderIndex];
+    const updatedOrders = currentOrder.selectedOrders.filter(o => o.orderId !== orderId);
+    updateImagingOrderItem(orderIndex, { selectedOrders: updatedOrders });
+  };
+
+  const removeOtherOrder = (orderIndex: number, otherOrderIndex: number) => {
+    const currentOrder = imagingOrders[orderIndex];
+    const updatedOtherOrders = currentOrder.otherOrders.filter((_, idx) => idx !== otherOrderIndex);
+    updateImagingOrderItem(orderIndex, { otherOrders: updatedOtherOrders });
+  };
+
+  // Show category view when a category is selected
+  if (selectedCategory) {
+    const currentOrderIndex = 0; // Always use first order for simplicity in this flow
+    const currentOrder = imagingOrders[currentOrderIndex];
+    const selectedOrderIds = currentOrder.selectedOrders.map(o => o.orderId);
+
+    return (
+      <div className="flex h-screen">
+        <ImagingCategorySidebar
+          selectedCategory={selectedCategory}
+          onCategorySelect={setSelectedCategory}
+        />
+        <ImagingCategoryView
+          category={selectedCategory}
+          selectedOrders={selectedOrderIds}
+          onOrderToggle={(orderId, order) => handleOrderToggle(orderId, order, currentOrderIndex)}
+          onOtherOrderAdd={(orderText) => handleOtherOrderAdd(orderText, currentOrderIndex)}
+        />
+      </div>
+    );
+  }
 
   return (
-    <>
-      <PageContainer>
+    <div className="flex h-screen">
+      <ImagingCategorySidebar
+        selectedCategory={selectedCategory}
+        onCategorySelect={setSelectedCategory}
+      />
+      
+      <div className="flex-1 p-6">
         <div className="space-y-6">
-        <PageHeader
-          title="Imaging orders"
-          description="Create and manage imaging orders for your patients"
-          icon={ImagingIcon}
-          onSave={handleSave}
-        />
+          <PageHeader
+            title="Imaging orders"
+            description="Create and manage imaging orders for your patients"
+            icon={ImagingIcon}
+            onSave={handleSave}
+          />
 
-        {/* Always render orders - never show empty state */}
-        {imagingOrders.map((order, orderIndex) => (
-          <div key={order.id} className="space-y-6">
-            {/* Imaging order section header */}
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold">Imaging order #{orderIndex + 1}</h2>
-              <div className="flex items-center gap-2">
-                <Button 
-                  variant="outline" 
-                  onClick={() => duplicateImagingOrderItem(orderIndex)}
-                >
-                  Duplicate
-                </Button>
-                <Button 
-                  variant="outline" 
-                  onClick={() => removeImagingOrderItem(orderIndex)}
-                >
-                  Remove
-                </Button>
-              </div>
-            </div>
-
-            {/* Clinical diagnosis */}
-            <section>
-              <h3 className="text-base font-medium mb-3">Clinical diagnosis</h3>
-              <div className="space-y-4">
-                <ComboboxChips
-                  id={`diagnoses-${orderIndex}`}
-                  label="Common diagnoses"
-                  placeholder="Search diagnoses or add custom text..."
-                  options={diagnosisOptions}
-                  selected={order.diagnoses}
-                  onSelectionChange={(diagnoses) => updateImagingOrderItem(orderIndex, { diagnoses })}
-                />
-
-                <div>
-                  <Label htmlFor={`other-${orderIndex}`}>Other (free text)</Label>
-                  <AutosizeTextarea
-                    id={`other-${orderIndex}`}
-                    minRows={2}
-                    placeholder="Describe additional clinical context"
-                    value={order.clinicalNotes || ""}
-                    onChange={(e) => updateImagingOrderItem(orderIndex, { clinicalNotes: e.target.value })}
-                  />
-                </div>
-              </div>
-            </section>
-
-            <Separator className="my-6" />
-
-            {/* Orders */}
-            <section>
-              <h2 className="text-lg font-semibold mb-3">Order</h2>
-
-              <div className="flex flex-wrap gap-2">
-                {ORDER_TABS.map((cat) => (
-                  <button
-                    key={cat}
-                    type="button"
-                    className="rounded-full border border-border bg-surface px-3 py-1 text-sm hover:bg-surface-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                    onClick={() => openSet(cat, orderIndex)}
+          {/* Always render orders - never show empty state */}
+          {imagingOrders.map((order, orderIndex) => (
+            <div key={order.id} className="space-y-6">
+              {/* Imaging order section header */}
+              <div className="flex items-center justify-between">
+                <h2 className="text-lg font-semibold">Imaging order #{orderIndex + 1}</h2>
+                <div className="flex items-center gap-2">
+                  <Button 
+                    variant="outline" 
+                    onClick={() => duplicateImagingOrderItem(orderIndex)}
                   >
-                    {cat}
-                  </button>
-                ))}
-              </div>
-
-              {/* Studies list */}
-              <div className="mt-4">
-                {order.studies && order.studies.length > 0 ? (
-                  <div className="space-y-2">
-                    {order.studies.map((study, studyIndex) => (
-                      <div key={studyIndex} className="flex items-center justify-between p-2 border border-border rounded">
-                        <span className="text-sm">{study}</span>
-                        <button 
-                          className="text-sm text-fg-muted hover:underline focus-visible:outline-none" 
-                          onClick={() => removeStudy(orderIndex, study)}
-                        >
-                          Remove
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-sm text-fg-muted py-3">No imaging studies selected.</p>
-                )}
-              </div>
-            </section>
-
-            {/* Summary card for this order */}
-            <section>
-              <div className="rounded-md border border-border bg-surface p-4">
-                <div className="font-medium mb-1">Order summary</div>
-                <div className="text-sm text-fg-muted leading-6">
-                  {renderSummary(order.diagnoses, order.clinicalNotes || "", order.studies || [])}
+                    Duplicate
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    onClick={() => removeImagingOrderItem(orderIndex)}
+                  >
+                    Remove
+                  </Button>
                 </div>
               </div>
-            </section>
 
-            {/* Separator between orders */}
-            {orderIndex < imagingOrders.length - 1 && <Separator className="my-6" />}
+              {/* Clinical diagnosis */}
+              <section>
+                <h3 className="text-base font-medium mb-3">Clinical diagnosis</h3>
+                <div className="space-y-4">
+                  <ComboboxChips
+                    id={`diagnoses-${orderIndex}`}
+                    label="Common diagnoses"
+                    placeholder="Search diagnoses or add custom text..."
+                    options={diagnosisOptions}
+                    selected={order.diagnoses}
+                    onSelectionChange={(diagnoses) => updateImagingOrderItem(orderIndex, { diagnoses })}
+                  />
+
+                  <div>
+                    <Label htmlFor={`indication-${orderIndex}`}>Indication/Reason</Label>
+                    <AutosizeTextarea
+                      id={`indication-${orderIndex}`}
+                      minRows={2}
+                      placeholder="Enter indication or reason for imaging..."
+                      value={order.indication || ""}
+                      onChange={(e) => updateImagingOrderItem(orderIndex, { indication: e.target.value })}
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor={`notes-${orderIndex}`}>Clinical Notes</Label>
+                    <AutosizeTextarea
+                      id={`notes-${orderIndex}`}
+                      minRows={2}
+                      placeholder="Additional clinical context..."
+                      value={order.clinicalNotes || ""}
+                      onChange={(e) => updateImagingOrderItem(orderIndex, { clinicalNotes: e.target.value })}
+                    />
+                  </div>
+                </div>
+              </section>
+
+              {/* Selected Orders */}
+              <section>
+                <h3 className="text-base font-medium mb-3">Selected Studies</h3>
+                <div className="space-y-4">
+                  {/* Standard Orders */}
+                  {order.selectedOrders && order.selectedOrders.length > 0 && (
+                    <div className="space-y-2">
+                      {order.selectedOrders.map((selectedOrder) => (
+                        <div key={selectedOrder.orderId} className="flex items-center justify-between p-3 border border-border rounded-md bg-surface">
+                          <div>
+                            <div className="text-sm font-medium">{selectedOrder.orderName}</div>
+                            <div className="text-xs text-fg-muted">
+                              {selectedOrder.modality}
+                              {selectedOrder.contrast && selectedOrder.contrast !== 'N/A' && ` • ${selectedOrder.contrast}`}
+                              {selectedOrder.laterality && ` • ${selectedOrder.laterality}`}
+                            </div>
+                          </div>
+                          <button 
+                            className="text-sm text-fg-muted hover:underline focus-visible:outline-none" 
+                            onClick={() => removeSelectedOrder(orderIndex, selectedOrder.orderId)}
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Other Orders */}
+                  {order.otherOrders && order.otherOrders.length > 0 && (
+                    <div className="space-y-2">
+                      {order.otherOrders.map((otherOrder, otherIndex) => (
+                        <div key={otherIndex} className="flex items-center justify-between p-3 border border-border rounded-md bg-surface">
+                          <div className="text-sm">{otherOrder}</div>
+                          <button 
+                            className="text-sm text-fg-muted hover:underline focus-visible:outline-none" 
+                            onClick={() => removeOtherOrder(orderIndex, otherIndex)}
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {(!order.selectedOrders || order.selectedOrders.length === 0) && 
+                   (!order.otherOrders || order.otherOrders.length === 0) && (
+                    <p className="text-sm text-fg-muted py-3">No imaging studies selected. Choose a category to add studies.</p>
+                  )}
+                </div>
+              </section>
+
+              {/* Summary card for this order */}
+              <section>
+                <div className="rounded-md border border-border bg-surface p-4">
+                  <div className="font-medium mb-1">Order summary</div>
+                  <div className="text-sm text-fg-muted leading-6">
+                    {renderSummary(order)}
+                  </div>
+                </div>
+              </section>
+            </div>
+          ))}
+
+          {/* Add another order */}
+          <div className="mt-4">
+            <Button variant="outline" className="text-sm" onClick={addImagingOrderItem}>
+              + Add another order
+            </Button>
           </div>
-        ))}
-
-        {/* Add another order */}
-        <div className="mt-4">
-          <Button variant="outline" className="text-sm" onClick={addImagingOrderItem}>
-            + Add another order
-          </Button>
         </div>
-        </div>
-      </PageContainer>
-
-      {/* Modal: preselect ALL items for the chosen set; user can uncheck then Confirm */}
-      {modal.open && modal.category && modal.orderIndex !== null ? (
-        <OrderSetModal
-          title={modal.category}
-          options={IMAGING_SETS[modal.category]}
-          selected={IMAGING_SETS[modal.category]}
-          onClose={() => setModal({ open: false, category: null, orderIndex: null })}
-          onConfirm={confirmSet}
-        />
-      ) : null}
-    </>
+      </div>
+    </div>
   );
 }
 
-function renderSummary(diagnoses: string[], clinicalNotes: string, studies: string[]) {
-  const dxPart = diagnoses.length > 0 
-    ? `Diagnoses: ${diagnoses.join("; ")}`
+function renderSummary(order: ImagingOrder) {
+  const dxPart = order.diagnoses.length > 0 
+    ? `Diagnoses: ${order.diagnoses.join("; ")}`
     : "Diagnoses: —";
-  const notePart = clinicalNotes.trim() ? `; Notes: ${clinicalNotes.trim()}` : "";
-  const studiesPart = studies.length > 0
-    ? studies.join(", ")
+  
+  const indicationPart = order.indication?.trim() ? `; Indication: ${order.indication.trim()}` : "";
+  const notePart = order.clinicalNotes?.trim() ? `; Notes: ${order.clinicalNotes.trim()}` : "";
+  
+  const selectedStudies = order.selectedOrders?.map(o => o.orderName) || [];
+  const otherStudies = order.otherOrders || [];
+  const allStudies = [...selectedStudies, ...otherStudies];
+  
+  const studiesPart = allStudies.length > 0
+    ? allStudies.join(", ")
     : "No imaging studies selected";
-  return `${dxPart}${notePart}; Studies: ${studiesPart}`;
+    
+  return `${dxPart}${indicationPart}${notePart}; Studies: ${studiesPart}`;
 }

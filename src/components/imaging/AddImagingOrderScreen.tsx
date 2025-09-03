@@ -11,19 +11,10 @@ import { Scan } from "lucide-react";
 import PageContainer from "@/components/layout/PageContainer";
 import ComboboxChips from "@/components/ui/ComboboxChips";
 import OrderSetModal from "./OrderSetModal";
-import { useConsultStore } from "@/store/useConsultStore";
-import { toast } from "@/hooks/use-toast";
+// Remove the conflicting interface and import from store
+import { useConsultStore, type ImagingOrder } from "@/store/useConsultStore";
 
 type Diagnosis = { code: string; label: string };
-type Request = { id: string; category: string; exams: string[] };
-
-// Imaging order type
-interface ImagingOrder {
-  id: string;
-  diagnoses: string[];
-  otherDx: string;
-  requests: Request[];
-}
 
 // Top ~30 common ICD-10 (clinically popular; no backend)
 const TOP_DIAGNOSES: Diagnosis[] = [
@@ -142,11 +133,13 @@ export default function AddImagingOrderScreen() {
 
   // Imaging order management functions
   const addImagingOrderItem = () => {
-    const newOrder = {
+    const newOrder: ImagingOrder = {
       id: crypto.randomUUID(),
       diagnoses: [],
-      studies: [],
-      urgency: "routine" as const,
+      selectedOrders: [],
+      otherOrders: [],
+      urgency: "routine",
+      indication: "",
       clinicalNotes: ""
     };
     addImagingOrder(newOrder);
@@ -181,11 +174,11 @@ export default function AddImagingOrderScreen() {
     const category = modal.category;
     const currentOrder = imagingOrders[orderIndex];
     
-    // Update the studies array directly
-    const existingStudies = currentOrder.studies || [];
-    const newStudies = [...existingStudies, ...exams];
+    // Update the otherOrders array directly with the selected exams
+    const existingOtherOrders = currentOrder.otherOrders || [];
+    const newOtherOrders = [...existingOtherOrders, ...exams];
     
-    updateImagingOrderItem(orderIndex, { studies: newStudies });
+    updateImagingOrderItem(orderIndex, { otherOrders: newOtherOrders });
     setModal({ open: false, category: null, orderIndex: null });
   };
 
@@ -193,8 +186,8 @@ export default function AddImagingOrderScreen() {
   
   const removeStudy = (orderIndex: number, studyToRemove: string) => {
     const currentOrder = imagingOrders[orderIndex];
-    const updatedStudies = currentOrder.studies.filter(study => study !== studyToRemove);
-    updateImagingOrderItem(orderIndex, { studies: updatedStudies });
+    const updatedOtherOrders = currentOrder.otherOrders.filter(study => study !== studyToRemove);
+    updateImagingOrderItem(orderIndex, { otherOrders: updatedOtherOrders });
   };
 
   return (
@@ -277,26 +270,49 @@ export default function AddImagingOrderScreen() {
                     ))}
                   </div>
 
-                  {/* Studies list */}
-                  <div className="mt-4">
-                    {order.studies && order.studies.length > 0 ? (
-                      <div className="space-y-2">
-                        {order.studies.map((study, studyIndex) => (
-                          <div key={studyIndex} className="flex items-center justify-between p-2 border border-border rounded">
-                            <span className="text-sm">{study}</span>
-                            <button 
-                              className="text-sm text-fg-muted hover:underline focus-visible:outline-none" 
-                              onClick={() => removeStudy(orderIndex, study)}
-                            >
-                              Remove
-                            </button>
-                          </div>
-                        ))}
+              {/* Studies list */}
+              <div className="mt-4">
+                {/* Selected Orders */}
+                {order.selectedOrders && order.selectedOrders.length > 0 && (
+                  <div className="space-y-2 mb-4">
+                    <h4 className="text-sm font-medium">Selected Studies</h4>
+                    {order.selectedOrders.map((selectedOrder) => (
+                      <div key={selectedOrder.orderId} className="flex items-center justify-between p-2 border border-border rounded">
+                        <span className="text-sm">{selectedOrder.orderName}</span>
+                        <button 
+                          className="text-sm text-fg-muted hover:underline focus-visible:outline-none" 
+                          onClick={() => removeStudy(orderIndex, selectedOrder.orderName)}
+                        >
+                          Remove
+                        </button>
                       </div>
-                    ) : (
-                      <p className="text-sm text-fg-muted py-3">No imaging studies selected.</p>
-                    )}
+                    ))}
                   </div>
+                )}
+
+                {/* Other Orders */}
+                {order.otherOrders && order.otherOrders.length > 0 && (
+                  <div className="space-y-2">
+                    <h4 className="text-sm font-medium">Other Studies</h4>
+                    {order.otherOrders.map((study, studyIndex) => (
+                      <div key={studyIndex} className="flex items-center justify-between p-2 border border-border rounded">
+                        <span className="text-sm">{study}</span>
+                        <button 
+                          className="text-sm text-fg-muted hover:underline focus-visible:outline-none" 
+                          onClick={() => removeStudy(orderIndex, study)}
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {(!order.selectedOrders || order.selectedOrders.length === 0) && 
+                 (!order.otherOrders || order.otherOrders.length === 0) && (
+                  <p className="text-sm text-fg-muted py-3">No imaging studies selected.</p>
+                )}
+              </div>
                 </section>
 
                 {/* Summary card for this order */}
@@ -304,7 +320,7 @@ export default function AddImagingOrderScreen() {
                   <div className="rounded-md border border-border bg-surface p-4">
                     <div className="font-medium mb-1">Order summary</div>
                     <div className="text-sm text-fg-muted leading-6">
-                      {renderSummary(order.diagnoses, order.clinicalNotes || "", order.studies || [])}
+                      {renderSummary(order.diagnoses, order.clinicalNotes || "", order)}
                     </div>
                   </div>
                 </section>
@@ -347,13 +363,18 @@ export default function AddImagingOrderScreen() {
   );
 }
 
-function renderSummary(diagnoses: string[], clinicalNotes: string, studies: string[]) {
+function renderSummary(diagnoses: string[], clinicalNotes: string, order: ImagingOrder) {
   const dxPart = diagnoses.length > 0 
     ? `Diagnoses: ${diagnoses.join("; ")}`
     : "Diagnoses: —";
   const notePart = clinicalNotes.trim() ? `; Notes: ${clinicalNotes.trim()}` : "";
-  const studiesPart = studies.length > 0
-    ? studies.join(", ")
+  
+  const selectedStudies = order.selectedOrders?.map(o => o.orderName) || [];
+  const otherStudies = order.otherOrders || [];
+  const allStudies = [...selectedStudies, ...otherStudies];
+  
+  const studiesPart = allStudies.length > 0
+    ? allStudies.join(", ")
     : "No imaging studies selected";
   return `${dxPart}${notePart}; Studies: ${studiesPart}`;
 }
