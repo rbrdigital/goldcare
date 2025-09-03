@@ -348,66 +348,18 @@ const createActions = (set: any, get: any) => ({
   },
 });
 
-export const createConsultStore = (patientId: string, encounterId: string) =>
-  create<ConsultState>()(
-    persist(
-      (set, get) => ({
-        ...createInitialState(patientId, encounterId),
-        ...createActions(set, get),
-      }),
-      {
-        name: makeConsultKey(patientId, encounterId),
-        storage: createJSONStorage(() => {
-          try { 
-            return window.localStorage; 
-          } catch { 
-            return {
-              getItem: () => null,
-              setItem: () => {},
-              removeItem: () => {},
-              clear: () => {},
-              key: () => null,
-              length: 0
-            } as unknown as Storage;
-          }
-        }),
-        // Only persist meaningful fields
-        partialize: (state) => ({
-          patientName: state.patientName,
-          patientAge: state.patientAge,
-          patientSex: state.patientSex,
-          visitDate: state.visitDate,
-          provider: state.provider,
-          reasonForVisit: state.reasonForVisit,
-          subjective: state.subjective,
-          objective: state.objective,
-          assessment: state.assessment,
-          plan: state.plan,
-          differential: state.differential,
-          currentMeds: state.currentMeds,
-          supplements: state.supplements,
-          otcs: state.otcs,
-          allergies: state.allergies,
-          vitals: state.vitals,
-          observations: state.observations,
-          diagnoses: state.diagnoses,
-          comorbidities: state.comorbidities,
-          rxOrders: state.rxOrders,
-          labOrders: state.labOrders,
-          imagingOrders: state.imagingOrders,
-          outsideOrders: state.outsideOrders,
-          privateNotes: state.privateNotes,
-          followUp: state.followUp,
-          locked: state.locked,
-        }),
-        version: STORAGE_VERSION,
-        migrate: (persisted: any, version) => {
-          // Add migrations here when version bumps
-          return persisted;
-        },
-      }
-    )
-  );
+// Temporarily remove persistence to fix infinite loop
+export const createConsultStore = (patientId: string, encounterId: string) => {
+  console.log('🔧 Creating ConsultStore for:', { patientId, encounterId });
+  
+  return create<ConsultState>()((set, get) => {
+    console.log('🔧 Initializing store state');
+    return {
+      ...createInitialState(patientId, encounterId),
+      ...createActions(set, get),
+    };
+  });
+};
 
 export type ConsultStore = ReturnType<typeof createConsultStore>;
 

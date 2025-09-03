@@ -12,7 +12,12 @@ interface ConsultWorkspaceProps {
 }
 
 export function ConsultWorkspace({ patientId, encounterId, children }: ConsultWorkspaceProps) {
-  const store = useMemo(() => createConsultStore(patientId, encounterId), [patientId, encounterId]);
+  console.log('🔧 ConsultWorkspace rendering for:', { patientId, encounterId });
+  
+  const store = useMemo(() => {
+    console.log('🔧 Creating new store in ConsultWorkspace');
+    return createConsultStore(patientId, encounterId);
+  }, [patientId, encounterId]);
 
   return (
     <ConsultContext.Provider value={store}>
