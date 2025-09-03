@@ -53,8 +53,15 @@ const visitSummaryItem: SidebarItem = {
   href: "#summary"
 };
 
+const goldcareAIItem: SidebarItem = {
+  id: "goldcare-ai", 
+  label: "GoldCare AI", 
+  icon: <GoldCareAIIcon className="h-4 w-4" />, 
+  href: "#goldcare-ai", 
+  isNew: true
+};
+
 const clinicalItems: SidebarItem[] = [
-  { id: "goldcare-ai", label: "GoldCare AI", icon: <GoldCareAIIcon className="h-4 w-4" />, href: "#goldcare-ai", isNew: true },
   { id: "soap", label: "SOAP Note", icon: <FileText className="h-4 w-4" />, href: "#soap" },
   { id: "rx", label: "RX", icon: <Pill className="h-4 w-4" />, href: "#rx" },
   { id: "lab-orders", label: "Lab Orders", icon: <FlaskConical className="h-4 w-4" />, href: "#lab-orders" },
@@ -151,7 +158,7 @@ export function AppSidebar({ mini = false, activeItem = "soap", onItemClick }: A
     return (
       <aside className="w-16 border-r bg-background flex flex-col">
         <div className="p-2 space-y-1">
-          {[visitSummaryItem, ...clinicalItems].slice(0, 6).map((item) => (
+          {[visitSummaryItem, goldcareAIItem, ...clinicalItems].slice(0, 6).map((item) => (
             <button
               key={item.id}
               onClick={() => handleItemClick(item.id)}
@@ -170,6 +177,11 @@ export function AppSidebar({ mini = false, activeItem = "soap", onItemClick }: A
               {item.count && (
                 <Badge className="absolute -top-2 -right-2 h-5 min-w-5 text-xs p-0 flex items-center justify-center">
                   {item.count}
+                </Badge>
+              )}
+              {item.isNew && (
+                <Badge className="absolute -top-2 -right-2 h-5 min-w-5 text-xs p-0 flex items-center justify-center bg-medical-green text-white">
+                  New
                 </Badge>
               )}
             </button>
@@ -228,6 +240,14 @@ export function AppSidebar({ mini = false, activeItem = "soap", onItemClick }: A
                         item={{ ...visitSummaryItem, dirty: hasContent(visitSummaryItem.id) }}
                         isActive={activeItem === visitSummaryItem.id}
                         onClick={() => handleItemClick(visitSummaryItem.id)}
+                      />
+                    </div>
+                    <div className="px-4 pb-2">
+                      <SidebarItem
+                        key={goldcareAIItem.id}
+                        item={goldcareAIItem}
+                        isActive={activeItem === goldcareAIItem.id}
+                        onClick={() => handleItemClick(goldcareAIItem.id)}
                       />
                     </div>
                     <div className="px-4 pb-2">
