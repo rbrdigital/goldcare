@@ -94,83 +94,101 @@
 }
 
 :root[data-theme="dark"] {
-  /* New semantic tokens - dark mode (Lovable dashboard style) */
-  --bg: #0a0a0a;
-  --bg-muted: #161616;
-  --surface: #111111;
-  --surface-muted: #1a1a1a;
-  --fg: #ffffff;
-  --fg-muted: #a3a3a3;
-  --border: #262626;
-  --divider: #262626;
-  
-  /* Legacy colors for backward compatibility */
-  --color-bg: #0a0a0a;
-  --color-surface: #111111;
-  --color-border: #262626;
-  --color-fg: #ffffff;
-  --color-fg-muted: #a3a3a3;
+  /* ChatGPT-style dark theme - theme.dark.v2 */
+  --bg: hsl(225, 7%, 13%);              /* #202123 - app background */
+  --bg-muted: hsl(225, 6%, 18%);        /* #2B2C2F - panels/secondary surfaces */
+  --surface: hsl(225, 6%, 18%);         /* #2B2C2F - cards/modals */
+  --surface-muted: hsl(225, 5%, 24%);   /* #3A3B3F - inputs/hover/elevations */
+  --fg: hsl(225, 20%, 93%);             /* #EDEEF1 - main text */
+  --fg-muted: hsl(225, 4%, 66%);        /* #A6A7AB - muted labels/placeholders */
+  --border: hsl(225, 4%, 26%);          /* #3F4046 - card/input borders */
+  --divider: hsl(225, 4%, 26%);         /* #3F4046 - dividers */
 
-  /* Brand colors - keep primary blue for text links */
-  --color-primary: #3b82f6;
-  --color-primary-fg: #ffffff;
-  --color-on-primary: #ffffff;
-  --color-secondary: #1a1a1a;
-  --color-secondary-fg: #ffffff;
+  /* ChatGPT semantic tokens */
+  --bg-primary: hsl(225, 7%, 13%);      /* #202123 */
+  --bg-secondary: hsl(225, 6%, 18%);    /* #2B2C2F */
+  --bg-tertiary: hsl(225, 5%, 24%);     /* #3A3B3F */
+  --text-primary: hsl(225, 20%, 93%);   /* #EDEEF1 */
+  --text-secondary: hsl(225, 4%, 66%);  /* #A6A7AB */
+  --text-disabled: hsl(225, 4%, 50%);   /* #7A7B80 */
+  --border-subtle: hsl(225, 4%, 26%);   /* #3F4046 */
+  --border-strong: hsl(225, 4%, 37%);   /* #5A5B61 */
+  --chip-bg: hsl(225, 5%, 24%);         /* #3A3B3F */
+  --chip-text: hsl(225, 20%, 93%);      /* #EDEEF1 */
+  --danger-bg: hsl(353, 42%, 21%);      /* #4B1F23 */
+  --danger-text: hsl(353, 78%, 88%);    /* #F7C4C9 */
+  --accent-primary: hsl(166, 82%, 35%); /* #10A37F */
+  --accent-primary-hover: hsl(166, 82%, 30%); /* #0E8C6E */
+  --accent-on: hsl(0, 0%, 100%);        /* #FFFFFF */
+  --focus-ring: hsl(166, 42%, 67%);     /* #8AC7B6 */
 
-  /* Button-specific colors - white buttons on dark */
-  --color-button-primary: #ffffff;
-  --color-button-primary-text: #0a0a0a;
+  /* Legacy colors mapped to new semantic tokens */
+  --color-bg: var(--bg-primary);
+  --color-surface: var(--bg-secondary);
+  --color-border: var(--border-subtle);
+  --color-fg: var(--text-primary);
+  --color-fg-muted: var(--text-secondary);
+
+  /* Brand colors */
+  --color-primary: hsl(166, 82%, 35%);  /* Green accent for links */
+  --color-primary-fg: var(--accent-on);
+  --color-on-primary: var(--accent-on);
+  --color-secondary: var(--bg-tertiary);
+  --color-secondary-fg: var(--text-primary);
+
+  /* Button colors */
+  --color-button-primary: var(--accent-primary);
+  --color-button-primary-text: var(--accent-on);
 
   /* Status colors */
-  --color-success: #22c55e;
-  --color-success-fg: #ffffff;
-  --color-danger: #ef4444;
-  --color-danger-fg: #ffffff;
-  --color-warning: #f59e0b;
-  --color-warning-fg: #000000;
+  --color-success: hsl(166, 82%, 35%);  /* #10A37F */
+  --color-success-fg: var(--accent-on);
+  --color-danger: hsl(0, 84%, 60%);     /* #ef4444 */
+  --color-danger-fg: var(--accent-on);
+  --color-warning: hsl(43, 96%, 56%);   /* #f59e0b */
+  --color-warning-fg: hsl(0, 0%, 0%);
 
-  /* Medical colors - clean grays */
-  --color-medical-blue: #ffffff;
-  --color-medical-blue-light: #1a1a1a;
-  --color-medical-green: #22c55e;
-  --color-medical-green-light: #0a1a0a;
-  --color-medical-amber: #f59e0b;
-  --color-medical-amber-light: #1a1a0a;
-  --color-medical-red: #ef4444;
-  --color-medical-red-light: #1a0a0a;
+  /* Medical colors using new palette */
+  --color-medical-blue: var(--text-primary);
+  --color-medical-blue-light: var(--bg-tertiary);
+  --color-medical-green: var(--accent-primary);
+  --color-medical-green-light: hsl(166, 20%, 15%);
+  --color-medical-amber: hsl(43, 96%, 56%);
+  --color-medical-amber-light: hsl(43, 20%, 15%);
+  --color-medical-red: hsl(0, 84%, 60%);
+  --color-medical-red-light: var(--danger-bg);
 
   /* Checkbox tokens */
-  --surface-inverse: #ffffff;
-  --content-inverse: #0a0a0a;
-  --surface-base: #111111;
-  --border-subtle: #262626;
-  --border-strong: #404040;
-  --surface-disabled: #1a1a1a;
-  --content-disabled: #737373;
+  --surface-inverse: var(--text-primary);
+  --content-inverse: var(--bg-primary);
+  --surface-base: var(--bg-secondary);
+  --border-subtle: var(--border-subtle);
+  --border-strong: var(--border-strong);
+  --surface-disabled: var(--bg-tertiary);
+  --content-disabled: var(--text-disabled);
 
   /* UI elements */
-  --color-muted: #1a1a1a;
-  --color-muted-fg: #a3a3a3;
-  --color-accent: #1a1a1a;
-  --color-accent-fg: #ffffff;
-  --color-popover: #111111;
-  --color-popover-fg: #ffffff;
-  --color-card: #111111;
-  --color-card-fg: #ffffff;
+  --color-muted: var(--bg-tertiary);
+  --color-muted-fg: var(--text-secondary);
+  --color-accent: var(--bg-tertiary);
+  --color-accent-fg: var(--text-primary);
+  --color-popover: var(--bg-secondary);
+  --color-popover-fg: var(--text-primary);
+  --color-card: var(--bg-secondary);
+  --color-card-fg: var(--text-primary);
 
   /* Input elements */
-  --color-input: #111111;
-  --color-input-border: #262626;
-  --color-ring: #404040;
+  --color-input: var(--bg-tertiary);
+  --color-input-border: var(--border-subtle);
+  --color-ring: var(--focus-ring);
 
   /* Sidebar */
-  --color-sidebar-bg: #111111;
-  --color-sidebar-fg: #ffffff;
-  --color-sidebar-primary: #ffffff;
-  --color-sidebar-primary-fg: #0a0a0a;
-  --color-sidebar-accent: #1a1a1a;
-  --color-sidebar-accent-fg: #ffffff;
-  --color-sidebar-border: #262626;
-  --color-sidebar-ring: #404040;
+  --color-sidebar-bg: var(--bg-secondary);
+  --color-sidebar-fg: var(--text-primary);
+  --color-sidebar-primary: var(--text-primary);
+  --color-sidebar-primary-fg: var(--bg-primary);
+  --color-sidebar-accent: var(--bg-tertiary);
+  --color-sidebar-accent-fg: var(--text-primary);
+  --color-sidebar-border: var(--border-subtle);
+  --color-sidebar-ring: var(--focus-ring);
 }
