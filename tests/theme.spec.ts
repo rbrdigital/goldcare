@@ -18,7 +18,7 @@ test("theme switching works", async ({ page }) => {
   // Switch to dark theme (assuming there's a theme toggle)
   await page.evaluate(() => document.documentElement.setAttribute("data-theme", "dark"));
   
-  // Check dark theme - ChatGPT style colors
+  // Check dark theme - ChatGPT exact colors
   const darkBg = await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--color-bg").trim());
-  expect(darkBg).toBe("hsl(225, 7%, 13%)"); // #202123
+  expect(darkBg).toBe("#202123"); // ChatGPT exact background
 });

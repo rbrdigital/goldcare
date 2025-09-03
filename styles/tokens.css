@@ -94,101 +94,85 @@
 }
 
 :root[data-theme="dark"] {
-  /* ChatGPT-style dark theme - theme.dark.v2 */
-  --bg: hsl(225, 7%, 13%);              /* #202123 - app background */
-  --bg-muted: hsl(225, 6%, 18%);        /* #2B2C2F - panels/secondary surfaces */
-  --surface: hsl(225, 6%, 18%);         /* #2B2C2F - cards/modals */
-  --surface-muted: hsl(225, 5%, 24%);   /* #3A3B3F - inputs/hover/elevations */
-  --fg: hsl(225, 20%, 93%);             /* #EDEEF1 - main text */
-  --fg-muted: hsl(225, 4%, 66%);        /* #A6A7AB - muted labels/placeholders */
-  --border: hsl(225, 4%, 26%);          /* #3F4046 - card/input borders */
-  --divider: hsl(225, 4%, 26%);         /* #3F4046 - dividers */
+  /* ChatGPT exact dark mode clone */
+  --bg: #202123;                        /* Main app background - exact ChatGPT */
+  --bg-muted: #2D2D30;                  /* Slightly lighter panels */
+  --surface: #2D2D30;                   /* Cards, modals, sidebar */
+  --surface-muted: #343541;             /* Inputs, hover states, elevated surfaces */
+  --fg: #ECECF1;                        /* Primary text - exact ChatGPT */
+  --fg-muted: #9A9B9F;                  /* Secondary text, labels */
+  --border: #565869;                    /* Borders and dividers */
+  --divider: #565869;                   /* Same as borders for consistency */
 
-  /* ChatGPT semantic tokens */
-  --bg-primary: hsl(225, 7%, 13%);      /* #202123 */
-  --bg-secondary: hsl(225, 6%, 18%);    /* #2B2C2F */
-  --bg-tertiary: hsl(225, 5%, 24%);     /* #3A3B3F */
-  --text-primary: hsl(225, 20%, 93%);   /* #EDEEF1 */
-  --text-secondary: hsl(225, 4%, 66%);  /* #A6A7AB */
-  --text-disabled: hsl(225, 4%, 50%);   /* #7A7B80 */
-  --border-subtle: hsl(225, 4%, 26%);   /* #3F4046 */
-  --border-strong: hsl(225, 4%, 37%);   /* #5A5B61 */
-  --chip-bg: hsl(225, 5%, 24%);         /* #3A3B3F */
-  --chip-text: hsl(225, 20%, 93%);      /* #EDEEF1 */
-  --danger-bg: hsl(353, 42%, 21%);      /* #4B1F23 */
-  --danger-text: hsl(353, 78%, 88%);    /* #F7C4C9 */
-  --accent-primary: hsl(166, 82%, 35%); /* #10A37F */
-  --accent-primary-hover: hsl(166, 82%, 30%); /* #0E8C6E */
-  --accent-on: hsl(0, 0%, 100%);        /* #FFFFFF */
-  --focus-ring: hsl(166, 42%, 67%);     /* #8AC7B6 */
+  /* Brand - ChatGPT uses green accent for interactive elements */
+  --primary: #10A37F;                   /* ChatGPT green for links and accents */
+  --primary-50: #2D2D30;                /* Light surface for subtle backgrounds */
+  --primary-100: #343541;               /* Darker surface for elevated states */
+  --primary-30a: rgba(16, 163, 127, 0.1); /* Green with opacity */
 
-  /* Legacy colors mapped to new semantic tokens */
-  --color-bg: var(--bg-primary);
-  --color-surface: var(--bg-secondary);
-  --color-border: var(--border-subtle);
-  --color-fg: var(--text-primary);
-  --color-fg-muted: var(--text-secondary);
+  /* Status colors adapted for dark mode */
+  --medical-blue: #ECECF1;              /* Use primary text color */
+  --medical-blue-light: #343541;        /* Use surface-muted */
+  --medical-green: #10A37F;             /* ChatGPT green */
+  --medical-green-light: #1a2e2a;       /* Dark green background */
+  --medical-amber: #FDB827;             /* Bright amber for dark mode */
+  --medical-amber-light: #2a251a;       /* Dark amber background */
+  --medical-red: #FF6B6B;               /* Bright red for dark mode */
+  --medical-red-light: #2a1a1a;         /* Dark red background */
 
-  /* Brand colors */
-  --color-primary: hsl(166, 82%, 35%);  /* Green accent for links */
-  --color-primary-fg: var(--accent-on);
-  --color-on-primary: var(--accent-on);
-  --color-secondary: var(--bg-tertiary);
-  --color-secondary-fg: var(--text-primary);
+  /* Checkbox tokens for dark mode */
+  --surface-inverse: var(--fg);         /* Light text color for checked state */
+  --content-inverse: var(--bg);         /* Dark background for checkmark */
+  --surface-base: var(--surface-muted); /* Input background */
+  --border-subtle: var(--border);       /* Subtle borders */
+  --border-strong: #6B6C70;             /* Stronger borders for focus */
+  --surface-disabled: #404040;          /* Disabled backgrounds */
+  --content-disabled: #6B6C70;          /* Disabled text */
 
-  /* Button colors */
-  --color-button-primary: var(--accent-primary);
-  --color-button-primary-text: var(--accent-on);
-
-  /* Status colors */
-  --color-success: hsl(166, 82%, 35%);  /* #10A37F */
-  --color-success-fg: var(--accent-on);
-  --color-danger: hsl(0, 84%, 60%);     /* #ef4444 */
-  --color-danger-fg: var(--accent-on);
-  --color-warning: hsl(43, 96%, 56%);   /* #f59e0b */
-  --color-warning-fg: hsl(0, 0%, 0%);
-
-  /* Medical colors using new palette */
-  --color-medical-blue: var(--text-primary);
-  --color-medical-blue-light: var(--bg-tertiary);
-  --color-medical-green: var(--accent-primary);
-  --color-medical-green-light: hsl(166, 20%, 15%);
-  --color-medical-amber: hsl(43, 96%, 56%);
-  --color-medical-amber-light: hsl(43, 20%, 15%);
-  --color-medical-red: hsl(0, 84%, 60%);
-  --color-medical-red-light: var(--danger-bg);
-
-  /* Checkbox tokens */
-  --surface-inverse: var(--text-primary);
-  --content-inverse: var(--bg-primary);
-  --surface-base: var(--bg-secondary);
-  --border-subtle: var(--border-subtle);
-  --border-strong: var(--border-strong);
-  --surface-disabled: var(--bg-tertiary);
-  --content-disabled: var(--text-disabled);
-
-  /* UI elements */
-  --color-muted: var(--bg-tertiary);
-  --color-muted-fg: var(--text-secondary);
-  --color-accent: var(--bg-tertiary);
-  --color-accent-fg: var(--text-primary);
-  --color-popover: var(--bg-secondary);
-  --color-popover-fg: var(--text-primary);
-  --color-card: var(--bg-secondary);
-  --color-card-fg: var(--text-primary);
-
-  /* Input elements */
-  --color-input: var(--bg-tertiary);
-  --color-input-border: var(--border-subtle);
-  --color-ring: var(--focus-ring);
-
-  /* Sidebar */
-  --color-sidebar-bg: var(--bg-secondary);
-  --color-sidebar-fg: var(--text-primary);
-  --color-sidebar-primary: var(--text-primary);
-  --color-sidebar-primary-fg: var(--bg-primary);
-  --color-sidebar-accent: var(--bg-tertiary);
-  --color-sidebar-accent-fg: var(--text-primary);
-  --color-sidebar-border: var(--border-subtle);
-  --color-sidebar-ring: var(--focus-ring);
+  /* Legacy support - map to ChatGPT colors */
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-border: var(--border);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-primary: var(--primary);
+  --color-primary-fg: #ffffff;
+  --color-on-primary: #ffffff;
+  --color-secondary: var(--surface-muted);
+  --color-secondary-fg: var(--fg);
+  --color-button-primary: var(--primary);
+  --color-button-primary-text: #ffffff;
+  --color-success: var(--medical-green);
+  --color-success-fg: #ffffff;
+  --color-danger: var(--medical-red);
+  --color-danger-fg: #ffffff;
+  --color-warning: var(--medical-amber);
+  --color-warning-fg: #000000;
+  --color-medical-blue: var(--medical-blue);
+  --color-medical-blue-light: var(--medical-blue-light);
+  --color-medical-green: var(--medical-green);
+  --color-medical-green-light: var(--medical-green-light);
+  --color-medical-amber: var(--medical-amber);
+  --color-medical-amber-light: var(--medical-amber-light);
+  --color-medical-red: var(--medical-red);
+  --color-medical-red-light: var(--medical-red-light);
+  --color-muted: var(--surface-muted);
+  --color-muted-fg: var(--fg-muted);
+  --color-accent: var(--surface-muted);
+  --color-accent-fg: var(--fg);
+  --color-popover: var(--surface);
+  --color-popover-fg: var(--fg);
+  --color-card: var(--surface);
+  --color-card-fg: var(--fg);
+  --color-input: var(--surface-muted);
+  --color-input-border: var(--border);
+  --color-ring: var(--primary);
+  --color-sidebar-bg: var(--surface);
+  --color-sidebar-fg: var(--fg);
+  --color-sidebar-primary: var(--fg);
+  --color-sidebar-primary-fg: var(--surface);
+  --color-sidebar-accent: var(--surface-muted);
+  --color-sidebar-accent-fg: var(--fg);
+  --color-sidebar-border: var(--border);
+  --color-sidebar-ring: var(--primary);
 }
