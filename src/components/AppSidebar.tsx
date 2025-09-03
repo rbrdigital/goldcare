@@ -54,6 +54,7 @@ const visitSummaryItem: SidebarItem = {
 };
 
 const clinicalItems: SidebarItem[] = [
+  { id: "goldcare-ai", label: "GoldCare AI", icon: <GoldCareAIIcon className="h-4 w-4" />, href: "#goldcare-ai", isNew: true },
   { id: "soap", label: "SOAP Note", icon: <FileText className="h-4 w-4" />, href: "#soap" },
   { id: "rx", label: "RX", icon: <Pill className="h-4 w-4" />, href: "#rx" },
   { id: "lab-orders", label: "Lab Orders", icon: <FlaskConical className="h-4 w-4" />, href: "#lab-orders" },
@@ -63,7 +64,6 @@ const clinicalItems: SidebarItem[] = [
 ];
 
 const patientDataItems: SidebarItem[] = [
-  { id: "goldcare-ai", label: "GoldCare AI", icon: <GoldCareAIIcon className="h-4 w-4" />, href: "#goldcare-ai", isNew: true },
   { id: "intake", label: "Intake Form", icon: <ClipboardList className="h-4 w-4" />, href: "#intake", attention: true },
   { id: "diagnoses-meds-allergies", label: "Diagnoses, Meds, Allergies", icon: <Stethoscope className="h-4 w-4" />, href: "#diagnoses" },
   { id: "previous-results", label: "Previous Labs & Imaging", icon: <Activity className="h-4 w-4" />, href: "#previous-results" },
