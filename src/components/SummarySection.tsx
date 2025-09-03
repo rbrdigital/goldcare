@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { PageHeader } from "@/components/ui/page-header";
-import { FileBarChart, Calendar, User, Stethoscope, Pill, FlaskConical, Activity, Upload, StickyNote } from "lucide-react";
+import { FileBarChart, Calendar, User, Stethoscope, Pill, FlaskConical, Activity, Upload, StickyNote, ClipboardCheck } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useConsultSelectors, useConsultStore } from "@/store/useConsultStore";
 
@@ -89,9 +89,9 @@ export function SummarySection() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Consult Summary"
+        title="Visit Summary"
         description="Review all data collected during this consultation"
-        icon={FileBarChart}
+        icon={ClipboardCheck}
         onSave={handleSave}
       />
 
