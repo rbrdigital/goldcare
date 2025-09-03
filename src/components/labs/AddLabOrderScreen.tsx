@@ -11,11 +11,12 @@ import { FlaskConical } from "lucide-react";
 import PageContainer from "@/components/layout/PageContainer";
 import ComboboxChips from "@/components/ui/ComboboxChips";
 import OrderSetModal from "./OrderSetModal";
+import { useConsultStore, type LabOrder as ConsultLabOrder } from "@/store/useConsultStore";
 
 type Diagnosis = { code: string; label: string };
 type Request = { id: string; category: string; exams: string[] };
 
-// Lab order type
+// Lab order type (local interface)
 interface LabOrder {
   id: string;
   diagnoses: string[];
@@ -138,15 +139,26 @@ const LAB_SETS: Record<string, string[]> = {
 const ORDER_TABS = Object.keys(LAB_SETS);
 
 export default function AddLabOrderScreen() {  
-  // Multi-order state management like RX form
-  const [labOrders, setLabOrders] = React.useState<LabOrder[]>([
-    {
-      id: crypto.randomUUID(),
-      diagnoses: [],
-      otherDx: "",
-      requests: []
+  const {
+    labOrders,
+    addLabOrder,
+    updateLabOrder,
+    removeLabOrder
+  } = useConsultStore();
+  
+  // Initialize with empty lab order if none exist
+  React.useEffect(() => {
+    if (labOrders.length === 0) {
+      const emptyLabOrder = {
+        id: crypto.randomUUID(),
+        diagnoses: [],
+        otherDx: "",
+        requests: []
+      };
+      addLabOrder(emptyLabOrder);
     }
-  ]);
+  }, [labOrders.length, addLabOrder]);
+  
   const [modal, setModal] = React.useState<{ 
     open: boolean; 
     category: string | null;
@@ -167,34 +179,32 @@ export default function AddLabOrderScreen() {
   };
 
   // Lab order management functions
-  const addLabOrder = () => {
-    const newOrder: LabOrder = {
+  const addLabOrderItem = () => {
+    const newOrder: ConsultLabOrder = {
       id: crypto.randomUUID(),
       diagnoses: [],
       otherDx: "",
       requests: []
     };
-    setLabOrders(prev => [...prev, newOrder]);
+    addLabOrder(newOrder);
   };
 
-  const removeLabOrder = (index: number) => {
+  const removeLabOrderItem = (index: number) => {
     if (labOrders.length <= 1) return; // Keep at least one order
-    setLabOrders(prev => prev.filter((_, i) => i !== index));
+    removeLabOrder(labOrders[index].id);
   };
 
-  const duplicateLabOrder = (index: number) => {
+  const duplicateLabOrderItem = (index: number) => {
     const orderToDuplicate = labOrders[index];
-    const duplicatedOrder: LabOrder = {
+    const duplicatedOrder: ConsultLabOrder = {
       ...orderToDuplicate,
       id: crypto.randomUUID()
     };
-    setLabOrders(prev => [...prev, duplicatedOrder]);
+    addLabOrder(duplicatedOrder);
   };
 
-  const updateLabOrder = (index: number, updates: Partial<LabOrder>) => {
-    setLabOrders(prev => prev.map((order, i) => 
-      i === index ? { ...order, ...updates } : order
-    ));
+  const updateLabOrderItem = (index: number, updates: Partial<ConsultLabOrder>) => {
+    updateLabOrder(labOrders[index].id, updates);
   };
 
   const openSet = (category: string, orderIndex: number) => 
@@ -205,24 +215,24 @@ export default function AddLabOrderScreen() {
     
     const orderIndex = modal.orderIndex;
     const category = modal.category;
+    const currentOrder = labOrders[orderIndex];
     
-    updateLabOrder(orderIndex, {
-      requests: labOrders[orderIndex].requests.map(r => 
-        r.category === category ? { ...r, exams } : r
-      ).concat(
-        labOrders[orderIndex].requests.find(r => r.category === category) 
-          ? [] 
-          : [{ id: `${category}-${Date.now()}`, category, exams }]
-      ).filter(r => r.category !== category || exams.length > 0)
-    });
+    // Remove any existing request for this category
+    const filteredRequests = currentOrder.requests.filter(r => r.category !== category);
     
+    // Add new request if exams were selected
+    const newRequests = exams.length > 0 
+      ? [...filteredRequests, { id: crypto.randomUUID(), category, exams }]
+      : filteredRequests;
+    
+    updateLabOrderItem(orderIndex, { requests: newRequests });
     setModal({ open: false, category: null, orderIndex: null });
   };
 
   const editSet = (category: string, orderIndex: number) => openSet(category, orderIndex);
   
   const removeSet = (category: string, orderIndex: number) => {
-    updateLabOrder(orderIndex, {
+    updateLabOrderItem(orderIndex, {
       requests: labOrders[orderIndex].requests.filter(r => r.category !== category)
     });
   };
@@ -247,13 +257,13 @@ export default function AddLabOrderScreen() {
               <div className="flex items-center gap-2">
                 <Button 
                   variant="outline" 
-                  onClick={() => duplicateLabOrder(orderIndex)}
+                  onClick={() => duplicateLabOrderItem(orderIndex)}
                 >
                   Duplicate
                 </Button>
                 <Button 
                   variant="outline" 
-                  onClick={() => removeLabOrder(orderIndex)}
+                  onClick={() => removeLabOrderItem(orderIndex)}
                   disabled={labOrders.length <= 1}
                 >
                   Remove
@@ -271,7 +281,7 @@ export default function AddLabOrderScreen() {
                   placeholder="Search diagnoses or add custom text..."
                   options={diagnosisOptions}
                   selected={order.diagnoses}
-                  onSelectionChange={(diagnoses) => updateLabOrder(orderIndex, { diagnoses })}
+                  onSelectionChange={(diagnoses) => updateLabOrderItem(orderIndex, { diagnoses })}
                 />
 
                 <div>
@@ -281,7 +291,7 @@ export default function AddLabOrderScreen() {
                     minRows={2}
                     placeholder="Describe additional clinical context"
                     value={order.otherDx}
-                    onChange={(e) => updateLabOrder(orderIndex, { otherDx: e.target.value })}
+                    onChange={(e) => updateLabOrderItem(orderIndex, { otherDx: e.target.value })}
                   />
                 </div>
               </div>
@@ -353,7 +363,7 @@ export default function AddLabOrderScreen() {
 
         {/* Add another order */}
         <div className="mt-4">
-          <Button variant="outline" className="text-sm" onClick={addLabOrder}>
+          <Button variant="outline" className="text-sm" onClick={addLabOrderItem}>
             + Add another order
           </Button>
         </div>

@@ -15,6 +15,7 @@ import { toast } from "@/hooks/use-toast";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import SelectedPharmacyCard from "./SelectedPharmacyCard";
+import { useConsultStore, type Prescription } from "@/store/useConsultStore";
 
 // Mock pharmacy data
 const MOCK_PHARMACIES = [
@@ -126,19 +127,87 @@ function emptyRx(): RxFields {
 }
 
 export default function RXForm() {
-  const [items, setItems] = React.useState<RxFields[]>([emptyRx()]);
+  const {
+    prescriptions,
+    addPrescription,
+    updatePrescription,
+    removePrescription
+  } = useConsultStore();
+  
+  // Initialize with empty prescription if none exist
   const [showPicker, setShowPicker] = React.useState<{ rxIndex: number } | null>(null);
 
-  const addItem = () => setItems((a) => [...a, emptyRx()]);
-  const removeItem = (idx: number) =>
-    setItems((a) => (a.length === 1 ? a : a.filter((_, i) => i !== idx)));
-  const duplicateItem = (idx: number) =>
-    setItems((a) => {
-      const copy = structuredClone(a[idx]);
-      return [...a.slice(0, idx + 1), copy, ...a.slice(idx + 1)];
-    });
-  const patchItem = (idx: number, patch: Partial<RxFields>) =>
-    setItems((a) => a.map((it, i) => (i === idx ? { ...it, ...patch } : it)));
+  React.useEffect(() => {
+    if (prescriptions.length === 0) {
+      const emptyPrescription: Prescription = {
+        id: crypto.randomUUID(),
+        medicine: "",
+        qtyPerDose: "",
+        formulation: "",
+        route: "",
+        frequency: "",
+        duration: "",
+        durationUnit: "Days",
+        totalQtyUnit: "Tablet",
+        refills: "",
+        action: "Take",
+        prn: false,
+        prnInstructions: "",
+        location: "",
+        subsAllowed: true,
+        startDate: "",
+        earliestFill: "",
+        notesPatient: "",
+        notesPharmacy: "",
+        selectedPharmacy: null
+      };
+      addPrescription(emptyPrescription);
+    }
+  }, [prescriptions.length, addPrescription]);
+
+  const addItem = () => {
+    const newPrescription: Prescription = {
+      id: crypto.randomUUID(),
+      medicine: "",
+      qtyPerDose: "",
+      formulation: "",
+      route: "",
+      frequency: "",
+      duration: "",
+      durationUnit: "Days",
+      totalQtyUnit: "Tablet",
+      refills: "",
+      action: "Take",
+      prn: false,
+      prnInstructions: "",
+      location: "",
+      subsAllowed: true,
+      startDate: "",
+      earliestFill: "",
+      notesPatient: "",
+      notesPharmacy: "",
+      selectedPharmacy: null
+    };
+    addPrescription(newPrescription);
+  };
+  
+  const removeItem = (idx: number) => {
+    if (prescriptions.length === 1) return; // Keep at least one
+    removePrescription(prescriptions[idx].id);
+  };
+  
+  const duplicateItem = (idx: number) => {
+    const original = prescriptions[idx];
+    const duplicate: Prescription = {
+      ...original,
+      id: crypto.randomUUID()
+    };
+    addPrescription(duplicate);
+  };
+  
+  const patchItem = (idx: number, patch: Partial<Prescription>) => {
+    updatePrescription(prescriptions[idx].id, patch);
+  };
 
   const handleSave = () => {
     toast({
@@ -168,7 +237,7 @@ export default function RXForm() {
         </Button>
       </PageHeader>
 
-      {items.map((rx, i) => {
+      {prescriptions.map((rx, i) => {
         const totalQty = calcTotalQty(rx);
         return (
           <section key={i} className="mb-8">
@@ -176,7 +245,7 @@ export default function RXForm() {
               <h2 className="text-lg font-semibold">Prescription #{i + 1}</h2>
               <div className="flex items-center gap-2">
                 <Button variant="outline" onClick={() => duplicateItem(i)}>Duplicate</Button>
-                <Button variant="outline" onClick={() => removeItem(i)} disabled={items.length === 1}>
+                <Button variant="outline" onClick={() => removeItem(i)} disabled={prescriptions.length === 1}>
                   Remove
                 </Button>
               </div>
@@ -243,10 +312,10 @@ export default function RXForm() {
               <div className="md:col-span-3">
                 <Label>Frequency</Label>
                 <Select
-                  value={rx.frequencyKey ? FREQUENCIES[rx.frequencyKey].label : ""}
+                  value={rx.frequency}
                   onChange={(label) =>
                     patchItem(i, {
-                      frequencyKey: labelToKey(label) ?? ""
+                      frequency: label
                     })
                   }
                   placeholder="Select frequency"
@@ -273,7 +342,7 @@ export default function RXForm() {
                 <Select
                   value={rx.durationUnit}
                   onChange={(v) =>
-                    patchItem(i, { durationUnit: (v as RxFields["durationUnit"]) || "Days" })
+                    patchItem(i, { durationUnit: (v as Prescription["durationUnit"]) || "Days" })
                   }
                   options={["Days", "Weeks"]}
                 />
@@ -290,7 +359,7 @@ export default function RXForm() {
                 <Select
                   value={rx.totalQtyUnit}
                   onChange={(v) =>
-                    patchItem(i, { totalQtyUnit: (v as RxFields["totalQtyUnit"]) || "Tablet" })
+                    patchItem(i, { totalQtyUnit: (v as Prescription["totalQtyUnit"]) || "Tablet" })
                   }
                   options={[...QTY_UNITS]}
                 />
@@ -549,13 +618,20 @@ function labelToKey(label: string): FrequencyKey | null {
   return null;
 }
 
-function calcTotalQty(rx: RxFields): number {
-  const qty = toNumber(rx.qtyPerDose);
-  const perDay = rx.frequencyKey ? FREQUENCIES[rx.frequencyKey].perDay : 0;
-  const days = rx.durationUnit === "Weeks" ? toNumber(rx.duration) * 7 : toNumber(rx.duration);
-  const total = qty * perDay * days;
-  return Number.isFinite(total) ? Math.ceil(total) : NaN;
-}
+  const calcTotalQty = (rx: Prescription): number => {
+    const qtyPerDose = Number(rx.qtyPerDose) || 0;
+    const duration = Number(rx.duration) || 0;
+    const frequency = rx.frequency;
+    
+    let perDay = 1;
+    if (frequency.includes("q12h")) perDay = 2;
+    else if (frequency.includes("q8h")) perDay = 3;
+    else if (frequency.includes("q6h")) perDay = 4;
+    else if (frequency.includes("qod")) perDay = 0.5;
+    
+    const daysMultiplier = rx.durationUnit === "Weeks" ? 7 : 1;
+    return Math.ceil(qtyPerDose * perDay * duration * daysMultiplier);
+  };
 
 function toNumber(v: number | "" | string): number {
   const n = typeof v === "string" ? parseFloat(v) : v;
@@ -578,11 +654,11 @@ function mergeLines(existing: string, lines: string[]) {
   return Array.from(set).join("\n");
 }
 
-function renderSummary(rx: RxFields & { totalQty: number }) {
-  const freq = rx.frequencyKey ? FREQUENCIES[rx.frequencyKey].label.toLowerCase() : "—";
+function renderSummary(rx: Prescription & { totalQty: number }) {
+  const freq = rx.frequency || "—";
   const parts = [
     rx.medicine ? `Prescribed ${rx.medicine}` : "",
-    `${capitalize(rx.action)} ${rx.qtyPerDose || "—"} ${rx.formulation || "—"} (${(rx.route || "—").toLowerCase()}) ${freq}`,
+    `${capitalize(rx.action)} ${rx.qtyPerDose || "—"} ${rx.formulation || "—"} (${(rx.route || "—").toLowerCase()}) ${freq.toLowerCase()}`,
     rx.duration ? `for ${rx.duration} ${rx.durationUnit.toLowerCase()}` : "",
     Number.isFinite(rx.totalQty) ? `Total Qty: ${rx.totalQty} ${rx.totalQtyUnit.toLowerCase()}` : "",
     `Refills: ${rx.refills === "" ? "—" : rx.refills}`,
@@ -662,14 +738,14 @@ function ChoiceCard({
 /* AI insight that fills Medicine + all fields */
 function applyTherapyInsight(
   index: number,
-  patch: (idx: number, patch: Partial<RxFields>) => void
+  patch: (idx: number, patch: Partial<Prescription>) => void
 ) {
   patch(index, {
     medicine: "Amoxicillin–clavulanate 875/125 mg tablet",
     qtyPerDose: 1,
     formulation: "Tablet",
     route: "Oral",
-    frequencyKey: "q12h",
+    frequency: "Every 12 hours",
     duration: 10,
     durationUnit: "Days",
     totalQtyUnit: "Tablet",
