@@ -62,13 +62,11 @@ type RxFields = {
   route: string;
   frequencyKey: FrequencyKey | "";
   duration: number | "";
-  durationUnit: "Days" | "Weeks";
   totalQtyUnit: "Tablet" | "Capsule" | "mL";
   refills: number | "";
   action: string;
   prn: boolean;
   prnInstructions: string;
-  location: string;
   subsAllowed: boolean;
   startDate: string;
   earliestFill: string;
@@ -104,6 +102,7 @@ const ROUTES = ["Oral", "IM", "IV"] as const;
 const QTY_UNITS = ["Tablet", "Capsule", "mL"] as const;
 
 function emptyRx(): RxFields {
+  const today = new Date().toISOString().split('T')[0];
   return {
     medicine: "",
     qtyPerDose: "",
@@ -111,16 +110,14 @@ function emptyRx(): RxFields {
     route: "",
     frequencyKey: "",
     duration: "",
-    durationUnit: "Days",
     totalQtyUnit: "Tablet",
     refills: "",
     action: "Take",
     prn: false,
     prnInstructions: "",
-    location: "",
     subsAllowed: true,
-    startDate: "",
-    earliestFill: "",
+    startDate: today,
+    earliestFill: today,
     notesPatient: "",
     notesPharmacy: "",
     selectedPharmacy: null
@@ -140,6 +137,7 @@ export default function RXForm() {
 
   React.useEffect(() => {
     if (prescriptions.length === 0) {
+      const today = new Date().toISOString().split('T')[0];
       const emptyPrescription: Prescription = {
         id: crypto.randomUUID(),
         medicine: "",
@@ -148,16 +146,14 @@ export default function RXForm() {
         route: "",
         frequency: "",
         duration: "",
-        durationUnit: "Days",
         totalQtyUnit: "Tablet",
         refills: "",
         action: "Take",
         prn: false,
         prnInstructions: "",
-        location: "",
         subsAllowed: true,
-        startDate: "",
-        earliestFill: "",
+        startDate: today,
+        earliestFill: today,
         notesPatient: "",
         notesPharmacy: "",
         selectedPharmacy: null
@@ -167,6 +163,7 @@ export default function RXForm() {
   }, [prescriptions.length, addPrescription]);
 
   const addItem = () => {
+    const today = new Date().toISOString().split('T')[0];
     const newPrescription: Prescription = {
       id: crypto.randomUUID(),
       medicine: "",
@@ -175,16 +172,14 @@ export default function RXForm() {
       route: "",
       frequency: "",
       duration: "",
-      durationUnit: "Days",
       totalQtyUnit: "Tablet",
       refills: "",
       action: "Take",
       prn: false,
       prnInstructions: "",
-      location: "",
       subsAllowed: true,
-      startDate: "",
-      earliestFill: "",
+      startDate: today,
+      earliestFill: today,
       notesPatient: "",
       notesPharmacy: "",
       selectedPharmacy: null
@@ -340,7 +335,7 @@ export default function RXForm() {
 
               {/* Duration */}
               <div className="md:col-span-3">
-                <Label htmlFor={`dur-${i}`}>Duration</Label>
+                <Label htmlFor={`dur-${i}`}>Duration (days)</Label>
                 <Input
                   id={`dur-${i}`}
                   type="number"
@@ -348,18 +343,6 @@ export default function RXForm() {
                   placeholder="e.g., 10"
                   value={rx.duration as number | ""}
                   onChange={(e) => patchItem(i, { duration: toNumOrEmpty(e.target.value) })}
-                />
-              </div>
-
-              {/* Duration unit */}
-              <div className="md:col-span-3">
-                <Label>Unit</Label>
-                <Select
-                  value={rx.durationUnit}
-                  onChange={(v) =>
-                    patchItem(i, { durationUnit: (v as Prescription["durationUnit"]) || "Days" })
-                  }
-                  options={["Days", "Weeks"]}
                 />
               </div>
 
@@ -422,17 +405,6 @@ export default function RXForm() {
                   value={rx.prnInstructions}
                   disabled={!rx.prn}
                   onChange={(e) => patchItem(i, { prnInstructions: e.target.value })}
-                />
-              </div>
-
-              {/* Location */}
-              <div className="md:col-span-3">
-                <Label htmlFor={`loc-${i}`}>Location</Label>
-                <Input
-                  id={`loc-${i}`}
-                  placeholder="e.g., Home"
-                  value={rx.location}
-                  onChange={(e) => patchItem(i, { location: e.target.value })}
                 />
               </div>
 
@@ -645,8 +617,7 @@ function labelToKey(label: string): FrequencyKey | null {
     else if (frequency.includes("q6h")) perDay = 4;
     else if (frequency.includes("qod")) perDay = 0.5;
     
-    const daysMultiplier = rx.durationUnit === "Weeks" ? 7 : 1;
-    return Math.ceil(qtyPerDose * perDay * duration * daysMultiplier);
+    return Math.ceil(qtyPerDose * perDay * duration);
   };
 
 function toNumber(v: number | "" | string): number {
@@ -671,17 +642,33 @@ function mergeLines(existing: string, lines: string[]) {
 }
 
 function renderSummary(rx: Prescription & { totalQty: number }) {
+  const formatDate = (dateStr: string) => {
+    if (!dateStr) return "";
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-US', { 
+      month: 'short', 
+      day: 'numeric', 
+      year: 'numeric' 
+    });
+  };
+
+  const formatDuration = (duration: number | "") => {
+    if (duration === "" || duration === 0 || !duration) return "";
+    const num = Number(duration);
+    return num === 1 ? `for 1 day` : `for ${num} days`;
+  };
+
   const freq = rx.frequency || "—";
   const parts = [
     rx.medicine ? `Prescribed ${rx.medicine}` : "",
     `${capitalize(rx.action)} ${rx.qtyPerDose || "—"} ${rx.formulation || "—"} (${(rx.route || "—").toLowerCase()}) ${freq.toLowerCase()}`,
-    rx.duration ? `for ${rx.duration} ${rx.durationUnit.toLowerCase()}` : "",
+    rx.duration ? formatDuration(rx.duration) : "",
     Number.isFinite(rx.totalQty) ? `Total Qty: ${rx.totalQty} ${rx.totalQtyUnit.toLowerCase()}` : "",
     `Refills: ${rx.refills === "" ? "—" : rx.refills}`,
     rx.prn ? `PRN${rx.prnInstructions ? ` (${rx.prnInstructions})` : ""}` : "",
     rx.subsAllowed ? "Substitutions allowed" : "No substitutions",
-    rx.startDate ? `Start: ${rx.startDate}` : "",
-    rx.earliestFill ? `Earliest fill: ${rx.earliestFill}` : "",
+    rx.startDate ? `Start: ${formatDate(rx.startDate)}` : "",
+    rx.earliestFill ? `Earliest fill: ${formatDate(rx.earliestFill)}` : "",
     rx.selectedPharmacy ? `Pharmacy: ${rx.selectedPharmacy.name} — ${rx.selectedPharmacy.city}, ${rx.selectedPharmacy.state} ${rx.selectedPharmacy.zip}` : ""
   ].filter(Boolean);
   return parts.join("; ");
@@ -763,7 +750,6 @@ function applyTherapyInsight(
     route: "Oral",
     frequency: "Every 12 hours",
     duration: 10,
-    durationUnit: "Days",
     totalQtyUnit: "Tablet",
     refills: 0,
     prn: false,

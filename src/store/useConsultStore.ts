@@ -36,13 +36,11 @@ export interface Prescription {
   route: string;
   frequency: string;
   duration: number | "";
-  durationUnit: "Days" | "Weeks";
   totalQtyUnit: "Tablet" | "Capsule" | "mL";
   refills: number | "";
   action: string;
   prn: boolean;
   prnInstructions: string;
-  location: string;
   subsAllowed: boolean;
   startDate: string;
   earliestFill: string;

@@ -73,7 +73,7 @@ export function SummarySection() {
       .map(rx => ({
         medication: `${rx.medicine} ${rx.qtyPerDose}${rx.formulation ? ` ${rx.formulation}` : ''}`,
         instructions: `${rx.action || 'Take'} ${rx.qtyPerDose || 1} ${rx.route || 'by mouth'} ${rx.frequency || 'as directed'}${rx.prn ? ' as needed' : ''}${rx.prnInstructions ? ` for ${rx.prnInstructions}` : ''}`,
-        quantity: `${rx.duration || ''} ${rx.durationUnit || 'Days'}`.trim(),
+        quantity: rx.duration ? `${rx.duration} ${rx.duration === 1 ? 'day' : 'days'}` : '',
         refills: rx.refills?.toString() || "0"
       }));
   };
