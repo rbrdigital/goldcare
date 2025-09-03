@@ -165,6 +165,10 @@ export function InternalReferralModal({ onClose, onComplete, initialReferral }: 
     if (type === "specialty") {
       setStep("specialty-list");
     } else {
+      // Reset service selection to ensure proper flow
+      setSelectedService(null);
+      setSelectedProviders(new Set());
+      setSearchQuery("");
       setStep("provider-selection");
     }
   };
