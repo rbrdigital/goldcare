@@ -25,6 +25,7 @@ import {
   Save
 } from "lucide-react";
 import RXForm from "@/components/RXForm";
+import { SummarySection } from "@/components/SummarySection";
 import { copy } from "@/copy/en";
 import PageContainer from "@/components/layout/PageContainer";
 
@@ -35,6 +36,8 @@ interface MainContentProps {
 export function MainContent({ activeSection }: MainContentProps) {
   const renderSection = () => {
     switch (activeSection) {
+      case "summary":
+        return <SummarySection />;
       case "soap":
         return <SOAPNoteSection />;
       case "rx":
