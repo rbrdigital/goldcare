@@ -146,19 +146,6 @@ export default function AddLabOrderScreen() {
     removeLabOrder
   } = useConsultStore();
   
-  // Initialize with empty lab order if none exist
-  React.useEffect(() => {
-    if (labOrders.length === 0) {
-      const emptyLabOrder = {
-        id: crypto.randomUUID(),
-        diagnoses: [],
-        otherDx: "",
-        requests: []
-      };
-      addLabOrder(emptyLabOrder);
-    }
-  }, [labOrders.length, addLabOrder]);
-  
   const [modal, setModal] = React.useState<{ 
     open: boolean; 
     category: string | null;
@@ -190,8 +177,13 @@ export default function AddLabOrderScreen() {
   };
 
   const removeLabOrderItem = (index: number) => {
-    if (labOrders.length <= 1) return; // Keep at least one order
-    removeLabOrder(labOrders[index].id);
+    const orderToRemove = labOrders[index];
+    removeLabOrder(orderToRemove.id);
+    
+    // If this was the last order, we've cleared everything
+    if (labOrders.length === 1) {
+      // The store will be empty, which is what we want for dot clearing
+    }
   };
 
   const duplicateLabOrderItem = (index: number) => {
@@ -248,125 +240,136 @@ export default function AddLabOrderScreen() {
           onSave={handleSave}
         />
 
-        {/* Render each lab order */}
-        {labOrders.map((order, orderIndex) => (
-          <div key={order.id} className="space-y-6">
-            {/* Lab order section header */}
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold">Lab order #{orderIndex + 1}</h2>
-              <div className="flex items-center gap-2">
-                <Button 
-                  variant="outline" 
-                  onClick={() => duplicateLabOrderItem(orderIndex)}
-                >
-                  Duplicate
-                </Button>
-                <Button 
-                  variant="outline" 
-                  onClick={() => removeLabOrderItem(orderIndex)}
-                  disabled={labOrders.length <= 1}
-                >
-                  Remove
-                </Button>
-              </div>
-            </div>
-
-            {/* Clinical diagnosis */}
-            <section>
-              <h3 className="text-base font-medium mb-3">Clinical diagnosis</h3>
-              <div className="space-y-4">
-                <ComboboxChips
-                  id={`diagnoses-${orderIndex}`}
-                  label="Common diagnoses"
-                  placeholder="Search diagnoses or add custom text..."
-                  options={diagnosisOptions}
-                  selected={order.diagnoses}
-                  onSelectionChange={(diagnoses) => updateLabOrderItem(orderIndex, { diagnoses })}
-                />
-
-                <div>
-                  <Label htmlFor={`other-${orderIndex}`}>Other (free text)</Label>
-                  <AutosizeTextarea
-                    id={`other-${orderIndex}`}
-                    minRows={2}
-                    placeholder="Describe additional clinical context"
-                    value={order.otherDx}
-                    onChange={(e) => updateLabOrderItem(orderIndex, { otherDx: e.target.value })}
-                  />
+        {/* Render each lab order or show empty state */}
+        {labOrders.length > 0 ? (
+          <>
+            {labOrders.map((order, orderIndex) => (
+              <div key={order.id} className="space-y-6">
+                {/* Lab order section header */}
+                <div className="flex items-center justify-between">
+                  <h2 className="text-lg font-semibold">Lab order #{orderIndex + 1}</h2>
+                  <div className="flex items-center gap-2">
+                    <Button 
+                      variant="outline" 
+                      onClick={() => duplicateLabOrderItem(orderIndex)}
+                    >
+                      Duplicate
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      onClick={() => removeLabOrderItem(orderIndex)}
+                    >
+                      Remove
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            </section>
 
-            <Separator className="my-6" />
+                {/* Clinical diagnosis */}
+                <section>
+                  <h3 className="text-base font-medium mb-3">Clinical diagnosis</h3>
+                  <div className="space-y-4">
+                    <ComboboxChips
+                      id={`diagnoses-${orderIndex}`}
+                      label="Common diagnoses"
+                      placeholder="Search diagnoses or add custom text..."
+                      options={diagnosisOptions}
+                      selected={order.diagnoses}
+                      onSelectionChange={(diagnoses) => updateLabOrderItem(orderIndex, { diagnoses })}
+                    />
 
-            {/* Orders */}
-            <section>
-              <h2 className="text-lg font-semibold mb-3">Order</h2>
-
-              <div className="flex flex-wrap gap-2">
-                {ORDER_TABS.map((cat) => (
-                  <button
-                    key={cat}
-                    type="button"
-                    className="rounded-full border border-border bg-surface px-3 py-1 text-sm hover:bg-surface-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                    onClick={() => openSet(cat, orderIndex)}
-                  >
-                    {cat}
-                  </button>
-                ))}
-              </div>
-
-              {/* Requests list */}
-              <div className="mt-4 divide-y divide-divider">
-                {order.requests.map((r) => (
-                  <div key={r.id} className="py-3 flex items-center justify-between">
-                    <div className="min-w-0">
-                      <div className="font-medium">{r.category}</div>
-                      <div className="text-sm text-fg-muted truncate">{r.exams.join(" • ")}</div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <button 
-                        className="text-sm text-fg-muted hover:underline focus-visible:outline-none" 
-                        onClick={() => editSet(r.category, orderIndex)}
-                      >
-                        Edit
-                      </button>
-                      <button 
-                        className="text-sm text-fg-muted hover:underline focus-visible:outline-none" 
-                        onClick={() => removeSet(r.category, orderIndex)}
-                      >
-                        Remove
-                      </button>
+                    <div>
+                      <Label htmlFor={`other-${orderIndex}`}>Other (free text)</Label>
+                      <AutosizeTextarea
+                        id={`other-${orderIndex}`}
+                        minRows={2}
+                        placeholder="Describe additional clinical context"
+                        value={order.otherDx}
+                        onChange={(e) => updateLabOrderItem(orderIndex, { otherDx: e.target.value })}
+                      />
                     </div>
                   </div>
-                ))}
-                {order.requests.length === 0 && (
-                  <p className="text-sm text-fg-muted py-3">No lab orders selected.</p>
-                )}
-              </div>
-            </section>
+                </section>
 
-            {/* Summary card for this order */}
-            <section>
-              <div className="rounded-md border border-border bg-surface p-4">
-                <div className="font-medium mb-1">Order summary</div>
-                <div className="text-sm text-fg-muted leading-6">
-                  {renderSummary(order.diagnoses, order.otherDx, order.requests)}
-                </div>
-              </div>
-            </section>
+                <Separator className="my-6" />
 
-            {/* Separator between orders */}
-            {orderIndex < labOrders.length - 1 && <Separator className="my-6" />}
+                {/* Orders */}
+                <section>
+                  <h2 className="text-lg font-semibold mb-3">Order</h2>
+
+                  <div className="flex flex-wrap gap-2">
+                    {ORDER_TABS.map((cat) => (
+                      <button
+                        key={cat}
+                        type="button"
+                        className="rounded-full border border-border bg-surface px-3 py-1 text-sm hover:bg-surface-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                        onClick={() => openSet(cat, orderIndex)}
+                      >
+                        {cat}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Requests list */}
+                  <div className="mt-4 divide-y divide-divider">
+                    {order.requests.map((r) => (
+                      <div key={r.id} className="py-3 flex items-center justify-between">
+                        <div className="min-w-0">
+                          <div className="font-medium">{r.category}</div>
+                          <div className="text-sm text-fg-muted truncate">{r.exams.join(" • ")}</div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <button 
+                            className="text-sm text-fg-muted hover:underline focus-visible:outline-none" 
+                            onClick={() => editSet(r.category, orderIndex)}
+                          >
+                            Edit
+                          </button>
+                          <button 
+                            className="text-sm text-fg-muted hover:underline focus-visible:outline-none" 
+                            onClick={() => removeSet(r.category, orderIndex)}
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                    {order.requests.length === 0 && (
+                      <p className="text-sm text-fg-muted py-3">No lab orders selected.</p>
+                    )}
+                  </div>
+                </section>
+
+                {/* Summary card for this order */}
+                <section>
+                  <div className="rounded-md border border-border bg-surface p-4">
+                    <div className="font-medium mb-1">Order summary</div>
+                    <div className="text-sm text-fg-muted leading-6">
+                      {renderSummary(order.diagnoses, order.otherDx, order.requests)}
+                    </div>
+                  </div>
+                </section>
+
+                {/* Separator between orders */}
+                {orderIndex < labOrders.length - 1 && <Separator className="my-6" />}
+              </div>
+            ))}
+
+            {/* Add another order */}
+            <div className="mt-4">
+              <Button variant="outline" className="text-sm" onClick={addLabOrderItem}>
+                + Add another order
+              </Button>
+            </div>
+          </>
+        ) : (
+          /* Empty state - no orders */
+          <div className="text-center py-12">
+            <FlaskConical className="h-12 w-12 text-fg-muted mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-fg mb-2">No Lab Orders</h3>
+            <p className="text-fg-muted mb-4">Create your first lab order to get started.</p>
+            <Button onClick={addLabOrderItem}>Create Lab Order</Button>
           </div>
-        ))}
-
-        {/* Add another order */}
-        <div className="mt-4">
-          <Button variant="outline" className="text-sm" onClick={addLabOrderItem}>
-            + Add another order
-          </Button>
-        </div>
+        )}
         </div>
       </PageContainer>
 

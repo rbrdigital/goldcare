@@ -17,12 +17,13 @@ import { toast } from "@/hooks/use-toast";
 type EditState = "none" | "external-editor";
 
 export default function OutsideOrdersSection() {
-  const { outsideOrders, addOutsideOrder: addStoreOrder, updateOutsideOrder: updateStoreOrder, removeOutsideOrder: removeStoreOrder } = useConsultStore();
+  const { 
+    outsideOrders, 
+    addOutsideOrder, 
+    updateOutsideOrder, 
+    removeOutsideOrder 
+  } = useConsultStore();
   
-  // Use store types directly
-  const [localOrders, setLocalOrders] = React.useState<OutsideOrder[]>(() => 
-    outsideOrders.length > 0 ? outsideOrders : []
-  );
   const [editState, setEditState] = React.useState<EditState>("none");
   const [editingOrderId, setEditingOrderId] = React.useState<string | null>(null);
   const [externalContent, setExternalContent] = React.useState("");
@@ -30,41 +31,21 @@ export default function OutsideOrdersSection() {
   const [modalOrderId, setModalOrderId] = React.useState<string | null>(null);
 
   const handleSave = () => {
-    // Sync local orders to store
-    localOrders.forEach(localOrder => {
-      if (outsideOrders.find(o => o.id === localOrder.id)) {
-        updateStoreOrder(localOrder.id, localOrder);
-      } else {
-        addStoreOrder(localOrder);
-      }
-    });
-    
-    toast({
-      title: "Outside Orders Saved",
-      description: "Your outside orders have been saved successfully.",
-    });
+    // Store updates automatically via direct store calls
   };
-  
-  // Auto-save when localOrders changes
-  React.useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      handleSave();
-    }, 500);
-    
-    return () => clearTimeout(timeoutId);
-  }, [localOrders]);
 
-  const addOutsideOrder = () => {
-    // Create a new incomplete order that will show selectors
+  const addOutsideOrderItem = () => {
     const newOrder = {
       id: crypto.randomUUID(),
-      type: "external" as const // Required by store interface
+      type: "external" as const,
+      external: { content: "" },
+      internal: undefined
     };
-    setLocalOrders(prev => [...prev, newOrder]);
+    addOutsideOrder(newOrder);
   };
 
-  const removeOutsideOrder = (orderId: string) => {
-    setLocalOrders(prev => prev.filter(order => order.id !== orderId));
+  const removeOutsideOrderItem = (orderId: string) => {
+    removeOutsideOrder(orderId);
     if (editingOrderId === orderId) {
       setEditState("none");
       setEditingOrderId(null);
@@ -72,21 +53,15 @@ export default function OutsideOrdersSection() {
     }
   };
 
-  const duplicateOutsideOrder = (orderId: string) => {
-    const orderToDuplicate = localOrders.find(order => order.id === orderId);
+  const duplicateOutsideOrderItem = (orderId: string) => {
+    const orderToDuplicate = outsideOrders.find(order => order.id === orderId);
     if (!orderToDuplicate) return;
     
     const duplicatedOrder = {
       ...orderToDuplicate,
-      id: crypto.randomUUID(),
-      external: orderToDuplicate.external ? {
-        content: orderToDuplicate.external.content
-      } : undefined,
-      internal: orderToDuplicate.internal ? {
-        ...orderToDuplicate.internal
-      } : undefined
+      id: crypto.randomUUID()
     };
-    setLocalOrders(prev => [...prev, duplicatedOrder]);
+    addOutsideOrder(duplicatedOrder);
   };
 
   const handleExternalSelect = (orderId?: string) => {
@@ -96,20 +71,20 @@ export default function OutsideOrdersSection() {
       setEditingOrderId(orderId);
       
       // Update order type and get existing content if editing
-      const order = localOrders.find(o => o.id === orderId);
+      const order = outsideOrders.find(o => o.id === orderId);
       setExternalContent(order?.external?.content || "");
       
-      setLocalOrders(prev => prev.map(order => 
-        order.id === orderId ? { ...order, type: "external" as const } : order
-      ));
+      updateOutsideOrder(orderId, { type: "external" as const });
     } else {
       // Initial state - create new order first
       const newOrderId = crypto.randomUUID();
       const newOrder = {
         id: newOrderId,
-        type: "external" as const
+        type: "external" as const,
+        external: { content: "" },
+        internal: undefined
       };
-      setLocalOrders(prev => [...prev, newOrder]);
+      addOutsideOrder(newOrder);
       setEditState("external-editor");
       setEditingOrderId(newOrderId);
       setExternalContent("");
@@ -122,17 +97,17 @@ export default function OutsideOrdersSection() {
       setModalOpen(true);
       setModalOrderId(orderId);
       
-      setLocalOrders(prev => prev.map(order => 
-        order.id === orderId ? { ...order, type: "internal" as const } : order
-      ));
+      updateOutsideOrder(orderId, { type: "internal" as const });
     } else {
       // Initial state - create new order first
       const newOrderId = crypto.randomUUID();
       const newOrder = {
         id: newOrderId,
-        type: "internal" as const
+        type: "internal" as const,
+        external: undefined,
+        internal: { id: crypto.randomUUID(), type: "specialty" as const }
       };
-      setLocalOrders(prev => [...prev, newOrder]);
+      addOutsideOrder(newOrder);
       setModalOpen(true);
       setModalOrderId(newOrderId);
     }
@@ -145,11 +120,7 @@ export default function OutsideOrdersSection() {
       content: externalContent.trim()
     };
 
-    setLocalOrders(prev => prev.map(order => 
-      order.id === editingOrderId 
-        ? { ...order, external: externalReferral }
-        : order
-    ));
+    updateOutsideOrder(editingOrderId, { external: externalReferral });
 
     setEditState("none");
     setEditingOrderId(null);
@@ -157,7 +128,7 @@ export default function OutsideOrdersSection() {
   };
 
   const handleExternalEdit = (orderId: string) => {
-    const order = localOrders.find(o => o.id === orderId);
+    const order = outsideOrders.find(o => o.id === orderId);
     if (order?.external) {
       setExternalContent(order.external.content);
       setEditState("external-editor");
@@ -174,11 +145,7 @@ export default function OutsideOrdersSection() {
       ...referral
     };
     
-    setLocalOrders(prev => prev.map(order => 
-      order.id === modalOrderId 
-        ? { ...order, internal: completeReferral }
-        : order
-    ));
+    updateOutsideOrder(modalOrderId, { internal: completeReferral });
     
     setModalOpen(false);
     setModalOrderId(null);
@@ -192,9 +159,9 @@ export default function OutsideOrdersSection() {
   const handleCancel = () => {
     // If we're editing an incomplete order, remove it
     if (editingOrderId) {
-      const order = localOrders.find(o => o.id === editingOrderId);
+      const order = outsideOrders.find(o => o.id === editingOrderId);
       if (order && !order.external && !order.internal) {
-        removeOutsideOrder(editingOrderId);
+        removeOutsideOrderItem(editingOrderId);
       }
     }
     
@@ -208,7 +175,7 @@ export default function OutsideOrdersSection() {
   };
 
   // Check if we should show initial selectors - when no orders exist at all
-  const shouldShowInitialSelectors = localOrders.length === 0;
+  const shouldShowInitialSelectors = outsideOrders.length === 0;
   const isEditing = editState === "external-editor";
   
   // Helper function to check if an order needs configuration
@@ -289,7 +256,7 @@ export default function OutsideOrdersSection() {
           )}
 
           {/* Render existing orders */}
-          {localOrders.map((order, orderIndex) => (
+          {outsideOrders.map((order, orderIndex) => (
             <div key={order.id} className="space-y-6">
               {/* Show selectors for orders that need configuration */}
               {orderNeedsConfiguration(order) && order.id !== editingOrderId && (
@@ -328,13 +295,13 @@ export default function OutsideOrdersSection() {
                     <div className="flex items-center gap-2">
                       <Button 
                         variant="outline" 
-                        onClick={() => duplicateOutsideOrder(order.id)}
+                        onClick={() => duplicateOutsideOrderItem(order.id)}
                       >
                         Duplicate
                       </Button>
                       <Button 
                         variant="outline" 
-                        onClick={() => removeOutsideOrder(order.id)}
+                        onClick={() => removeOutsideOrderItem(order.id)}
                       >
                         Remove
                       </Button>
@@ -360,7 +327,7 @@ export default function OutsideOrdersSection() {
                           </button>
                           <button 
                             className="text-sm text-fg-muted hover:underline focus-visible:outline-none" 
-                            onClick={() => removeOutsideOrder(order.id)}
+                            onClick={() => removeOutsideOrderItem(order.id)}
                           >
                             Remove
                           </button>
@@ -412,7 +379,7 @@ export default function OutsideOrdersSection() {
                           </button>
                           <button 
                             className="text-sm text-fg-muted hover:underline focus-visible:outline-none" 
-                            onClick={() => removeOutsideOrder(order.id)}
+                            onClick={() => removeOutsideOrderItem(order.id)}
                           >
                             Remove
                           </button>
@@ -422,16 +389,16 @@ export default function OutsideOrdersSection() {
                   )}
 
                   {/* Separator between orders */}
-                  {orderIndex < localOrders.length - 1 && <Separator className="my-6" />}
+                  {orderIndex < outsideOrders.length - 1 && <Separator className="my-6" />}
                 </>
               )}
             </div>
           ))}
 
           {/* Add another order - show if we have any configured orders and not editing */}
-          {localOrders.some(order => order.external || order.internal) && !isEditing && (
+          {outsideOrders.some(order => order.external || order.internal) && !isEditing && (
             <div className="mt-4">
-              <Button variant="outline" className="text-sm" onClick={addOutsideOrder}>
+              <Button variant="outline" className="text-sm" onClick={addOutsideOrderItem}>
                 + Add another order
               </Button>
             </div>
@@ -444,16 +411,16 @@ export default function OutsideOrdersSection() {
           onClose={() => {
             // If we're closing an incomplete order, remove it
             if (modalOrderId) {
-              const order = localOrders.find(o => o.id === modalOrderId);
+              const order = outsideOrders.find(o => o.id === modalOrderId);
               if (order && !order.external && !order.internal) {
-                removeOutsideOrder(modalOrderId);
+                removeOutsideOrderItem(modalOrderId);
               }
             }
             setModalOpen(false);
             setModalOrderId(null);
           }}
           onComplete={handleInternalComplete}
-          initialReferral={localOrders.find(o => o.id === modalOrderId)?.internal as any || null}
+          initialReferral={outsideOrders.find(o => o.id === modalOrderId)?.internal as any || null}
         />
       )}
     </>
