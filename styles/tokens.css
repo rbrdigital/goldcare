@@ -18,6 +18,13 @@
   --primary-100: #f1f3f4;   /* Slightly darker gray */
   --primary-30a: rgba(0, 0, 0, 0.1);  /* 10% black */
 
+  /* GoldCare Gold tokens */
+  --gc-gold-700: #8A6B1F;   /* Darker gold for text/icon shadow */
+  --gc-gold-500: #D4AF37;   /* Primary GoldCare gold */
+  --gc-gold-400: #E6C36A;   /* Lighter gold for highlights */
+  --gc-gold-300: #F5D76E;   /* Soft highlight for glow edge */
+  --gc-gold-shadow: rgba(212, 175, 55, 0.35);  /* Outer glow */
+
   /* Status - medical blues replaced with black/gray */
   --medical-blue: #000000;      /* Black */
   --medical-blue-light: #f5f5f5;  /* Very light gray */
@@ -163,6 +170,13 @@
   --color-input: #111111;
   --color-input-border: #262626;
   --color-ring: #404040;
+
+  /* GoldCare Gold tokens - dark mode */
+  --gc-gold-700: #8A6B1F;   /* Darker gold for text/icon shadow */
+  --gc-gold-500: #D4AF37;   /* Primary GoldCare gold */
+  --gc-gold-400: #E6C36A;   /* Lighter gold for highlights */
+  --gc-gold-300: #F5D76E;   /* Soft highlight for glow edge */
+  --gc-gold-shadow: rgba(212, 175, 55, 0.35);  /* Outer glow */
 
   /* Sidebar */
   --color-sidebar-bg: #111111;

@@ -41,6 +41,13 @@ const config: Config = {
         "medical-red": "var(--medical-red)",
         "medical-red-light": "var(--medical-red-light)",
         
+        // GoldCare Gold tokens
+        "gc-gold-700": "var(--gc-gold-700)",
+        "gc-gold-500": "var(--gc-gold-500)",
+        "gc-gold-400": "var(--gc-gold-400)",
+        "gc-gold-300": "var(--gc-gold-300)",
+        "gc-gold-shadow": "var(--gc-gold-shadow)",
+        
         // Legacy tokens for backward compatibility
         "primary-fg": "var(--color-primary-fg)",
         "on-primary": "var(--color-on-primary)",
@@ -109,11 +116,22 @@ const config: Config = {
           to: {
             height: '0'
           }
+        },
+        aiGlow: {
+          '0%, 100%': { 
+            transform: 'rotate(0deg)', 
+            opacity: '0.30' 
+          },
+          '50%': { 
+            transform: 'rotate(180deg)', 
+            opacity: '0.40' 
+          }
         }
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
-        'accordion-up': 'accordion-up 0.2s ease-out'
+        'accordion-up': 'accordion-up 0.2s ease-out',
+        'ai-glow': 'aiGlow 12s ease-in-out infinite'
       }
     }
   },
