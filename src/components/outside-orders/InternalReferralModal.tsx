@@ -141,13 +141,14 @@ export function InternalReferralModal({ onClose, onComplete, initialReferral }: 
 
   // Initialize state based on existing referral
   React.useEffect(() => {
-    if (initialReferral) {
-      if (initialReferral.type === "specialty") {
+    if (initialReferral && (initialReferral.specialty || initialReferral.providers)) {
+      // Only skip steps if we have actual referral data
+      if (initialReferral.type === "specialty" && initialReferral.specialty) {
         setStep("specialty-list");
-      } else if (initialReferral.type === "provider") {
+      } else if (initialReferral.type === "provider" && initialReferral.providers) {
         setStep("provider-selection");
         // Find the service based on providers
-        const firstProvider = initialReferral.providers?.[0];
+        const firstProvider = initialReferral.providers[0];
         if (firstProvider) {
           for (const [service, providers] of Object.entries(MOCK_PROVIDERS)) {
             if (providers.some(p => p.id === firstProvider.id)) {
@@ -157,6 +158,14 @@ export function InternalReferralModal({ onClose, onComplete, initialReferral }: 
           }
         }
       }
+    } else {
+      // Always start from choose-type for new referrals
+      setStep("choose-type");
+      setSelectedType(null);
+      setSelectedSpecialty(null);
+      setSelectedService(null);
+      setSelectedProviders(new Set());
+      setSearchQuery("");
     }
   }, [initialReferral]);
 

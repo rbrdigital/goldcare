@@ -99,13 +99,13 @@ export default function OutsideOrdersSection() {
       
       updateOutsideOrder(orderId, { type: "internal" as const });
     } else {
-      // Initial state - create new order first
+      // Initial state - create new order first, but don't set internal details yet
       const newOrderId = crypto.randomUUID();
       const newOrder = {
         id: newOrderId,
         type: "internal" as const,
         external: undefined,
-        internal: { id: crypto.randomUUID(), type: "specialty" as const }
+        internal: undefined // Let the modal handle the initial referral creation
       };
       addOutsideOrder(newOrder);
       setModalOpen(true);
