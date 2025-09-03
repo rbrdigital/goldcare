@@ -41,13 +41,6 @@ const config: Config = {
         "medical-red": "var(--medical-red)",
         "medical-red-light": "var(--medical-red-light)",
         
-        // GoldCare Gold tokens
-        "gc-gold-700": "var(--gc-gold-700)",
-        "gc-gold-500": "var(--gc-gold-500)",
-        "gc-gold-400": "var(--gc-gold-400)",
-        "gc-gold-300": "var(--gc-gold-300)",
-        "gc-gold-shadow": "var(--gc-gold-shadow)",
-        
         // Legacy tokens for backward compatibility
         "primary-fg": "var(--color-primary-fg)",
         "on-primary": "var(--color-on-primary)",
@@ -117,21 +110,30 @@ const config: Config = {
             height: '0'
           }
         },
-        aiGlow: {
-          '0%, 100%': { 
-            transform: 'rotate(0deg)', 
-            opacity: '0.30' 
+        // AI Glow effects - subtle and medical-appropriate
+        'ai-glow': {
+          '0%, 100%': {
+            boxShadow: '0 0 8px hsl(var(--primary) / 0.15), 0 0 16px hsl(var(--primary) / 0.1), inset 0 1px 0 hsl(var(--primary) / 0.1)'
           },
-          '50%': { 
-            transform: 'rotate(180deg)', 
-            opacity: '0.40' 
+          '50%': {
+            boxShadow: '0 0 12px hsl(var(--primary) / 0.25), 0 0 24px hsl(var(--primary) / 0.15), inset 0 1px 0 hsl(var(--primary) / 0.15)'
+          }
+        },
+        'ai-glow-hover': {
+          '0%, 100%': {
+            boxShadow: '0 0 12px hsl(var(--primary) / 0.25), 0 0 24px hsl(var(--primary) / 0.15), inset 0 1px 0 hsl(var(--primary) / 0.15)'
+          },
+          '50%': {
+            boxShadow: '0 0 16px hsl(var(--primary) / 0.35), 0 0 32px hsl(var(--primary) / 0.2), inset 0 1px 0 hsl(var(--primary) / 0.2)'
           }
         }
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
-        'ai-glow': 'aiGlow 12s ease-in-out infinite'
+        // AI Glow animations - gentle and professional
+        'ai-glow': 'ai-glow 3s ease-in-out infinite',
+        'ai-glow-hover': 'ai-glow-hover 2s ease-in-out infinite'
       }
     }
   },
