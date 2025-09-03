@@ -6,8 +6,7 @@ import { useToast } from '@/hooks/use-toast';
 import { AITextInput } from './AITextInput';
 import { PrescriptionCard } from './PrescriptionCard';
 import { PharmacySelector } from './PharmacySelector';
-import { ParsedPrescription, Alert } from '@/types/prescription';
-import { parsePrescriptions, checkInteractions, MOCK_DATA } from './prescriptionParser';
+import { parsePrescriptions, checkInteractions, ParsedPrescription, MOCK_DATA } from './prescriptionParser';
 
 export function PrescriptionAIPanel() {
   const [inputValue, setInputValue] = useState('');

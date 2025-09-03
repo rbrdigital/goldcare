@@ -8,8 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
-import { ParsedPrescription, Alert } from '@/types/prescription';
-import { getGuidance } from './prescriptionParser';
+import { ParsedPrescription, getGuidance, Alert } from './prescriptionParser';
 import { ChipEditor } from './ChipEditor';
 import { InlineAlert } from './InlineAlert';
 import { formatDateForDisplay, formatDuration } from '@/lib/dateUtils';

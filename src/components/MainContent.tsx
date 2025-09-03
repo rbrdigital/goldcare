@@ -11,8 +11,7 @@ import AddLabOrderScreen from "@/components/labs/AddLabOrderScreen";
 import ImagingOrdersSection from "./imaging/ImagingOrdersSection";
 import OutsideOrdersSection from "./outside-orders/OutsideOrdersSection";
 import { PrescriptionsPanel } from "./prescriptions/PrescriptionsPanel";
-import { PrescriptionAIPanel as EnhancedPrescriptionAIPanel } from "./prescription-ai/EnhancedPrescriptionAIPanel";
-import RXPanel from "./rx/RXPanel";
+import { PrescriptionAIPanel } from "./prescription-ai/PrescriptionAIPanel";
 import { AppSidebar } from "@/components/AppSidebar";
 import { useState, useRef, useEffect } from "react";
 import { toast } from "@/hooks/use-toast";
@@ -47,15 +46,17 @@ export function MainContent({ activeSection }: MainContentProps) {
       case "soap":
         return <SOAPNoteSection />;
       case "rx":
-        return <RXPanel />;
+        return <RXSection />;
       case "lab-orders":
         return <LabOrdersSection />;
       case "imaging-orders":
         return <ImagingOrdersSectionWrapper />;
       case "outside-orders":
         return <OutsideOrdersSection />;
+      case "prescriptions":
+        return <PrescriptionsPanel />;
       case "prescription-ai":
-        return <EnhancedPrescriptionAIPanel />;
+        return <PrescriptionAIPanel />;
       case "intake":
         return <IntakeFormSection />;
       case "diagnoses":
