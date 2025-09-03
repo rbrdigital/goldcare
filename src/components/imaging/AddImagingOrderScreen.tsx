@@ -11,6 +11,8 @@ import { Scan } from "lucide-react";
 import PageContainer from "@/components/layout/PageContainer";
 import ComboboxChips from "@/components/ui/ComboboxChips";
 import OrderSetModal from "./OrderSetModal";
+import { useConsultStore } from "@/store/useConsultStore";
+import { toast } from "@/hooks/use-toast";
 
 type Diagnosis = { code: string; label: string };
 type Request = { id: string; category: string; exams: string[] };
@@ -112,15 +114,26 @@ const IMAGING_SETS: Record<string, string[]> = {
 const ORDER_TABS = Object.keys(IMAGING_SETS);
 
 export default function AddImagingOrderScreen() {  
-  // Multi-order state management like RX form
-  const [imagingOrders, setImagingOrders] = React.useState<ImagingOrder[]>([
-    {
+  const { imagingOrders, addImagingOrder: addStoreOrder, updateImagingOrder: updateStoreOrder, removeImagingOrder: removeStoreOrder } = useConsultStore();
+  
+  // Initialize local state from store
+  const [localOrders, setLocalOrders] = React.useState<ImagingOrder[]>(() => 
+    imagingOrders.length > 0 ? imagingOrders.map(order => ({
+      id: order.id,
+      diagnoses: order.diagnoses,
+      otherDx: "",
+      requests: order.studies.map(study => ({
+        id: crypto.randomUUID(),
+        category: "Custom",
+        exams: [study]
+      }))
+    })) : [{
       id: crypto.randomUUID(),
       diagnoses: [],
       otherDx: "",
       requests: []
-    }
-  ]);
+    }]
+  );
   const [modal, setModal] = React.useState<{ 
     open: boolean; 
     category: string | null;
@@ -137,8 +150,37 @@ export default function AddImagingOrderScreen() {
   );
 
   const handleSave = () => {
-    // Auto-save functionality placeholder
+    // Convert local orders to store format and save
+    localOrders.forEach(localOrder => {
+      const storeOrder = {
+        id: localOrder.id,
+        diagnoses: localOrder.diagnoses,
+        studies: localOrder.requests.flatMap(req => req.exams),
+        urgency: "routine",
+        clinicalNotes: localOrder.otherDx
+      };
+      
+      if (imagingOrders.find(o => o.id === localOrder.id)) {
+        updateStoreOrder(localOrder.id, storeOrder);
+      } else {
+        addStoreOrder(storeOrder);
+      }
+    });
+    
+    toast({
+      title: "Imaging Orders Saved",
+      description: "Your imaging orders have been saved successfully.",
+    });
   };
+
+  // Auto-save to store whenever localOrders changes
+  React.useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      handleSave();
+    }, 500); // Debounce saves by 500ms
+    
+    return () => clearTimeout(timeoutId);
+  }, [localOrders]);
 
   // Imaging order management functions
   const addImagingOrder = () => {
@@ -148,25 +190,31 @@ export default function AddImagingOrderScreen() {
       otherDx: "",
       requests: []
     };
-    setImagingOrders(prev => [...prev, newOrder]);
+    setLocalOrders(prev => [...prev, newOrder]);
   };
 
   const removeImagingOrder = (index: number) => {
-    if (imagingOrders.length <= 1) return; // Keep at least one order
-    setImagingOrders(prev => prev.filter((_, i) => i !== index));
+    if (localOrders.length <= 1) return; // Keep at least one order
+    const orderToRemove = localOrders[index];
+    setLocalOrders(prev => prev.filter((_, i) => i !== index));
+    
+    // Remove from store if it exists
+    if (imagingOrders.find(o => o.id === orderToRemove.id)) {
+      removeStoreOrder(orderToRemove.id);
+    }
   };
 
   const duplicateImagingOrder = (index: number) => {
-    const orderToDuplicate = imagingOrders[index];
+    const orderToDuplicate = localOrders[index];
     const duplicatedOrder: ImagingOrder = {
       ...orderToDuplicate,
       id: crypto.randomUUID()
     };
-    setImagingOrders(prev => [...prev, duplicatedOrder]);
+    setLocalOrders(prev => [...prev, duplicatedOrder]);
   };
 
   const updateImagingOrder = (index: number, updates: Partial<ImagingOrder>) => {
-    setImagingOrders(prev => prev.map((order, i) => 
+    setLocalOrders(prev => prev.map((order, i) => 
       i === index ? { ...order, ...updates } : order
     ));
   };
@@ -181,10 +229,10 @@ export default function AddImagingOrderScreen() {
     const category = modal.category;
     
     updateImagingOrder(orderIndex, {
-      requests: imagingOrders[orderIndex].requests.map(r => 
+      requests: localOrders[orderIndex].requests.map(r => 
         r.category === category ? { ...r, exams } : r
       ).concat(
-        imagingOrders[orderIndex].requests.find(r => r.category === category) 
+        localOrders[orderIndex].requests.find(r => r.category === category) 
           ? [] 
           : [{ id: `${category}-${Date.now()}`, category, exams }]
       ).filter(r => r.category !== category || exams.length > 0)
@@ -197,7 +245,7 @@ export default function AddImagingOrderScreen() {
   
   const removeSet = (category: string, orderIndex: number) => {
     updateImagingOrder(orderIndex, {
-      requests: imagingOrders[orderIndex].requests.filter(r => r.category !== category)
+      requests: localOrders[orderIndex].requests.filter(r => r.category !== category)
     });
   };
 
@@ -213,7 +261,7 @@ export default function AddImagingOrderScreen() {
         />
 
         {/* Render each imaging order */}
-        {imagingOrders.map((order, orderIndex) => (
+        {localOrders.map((order, orderIndex) => (
           <div key={order.id} className="space-y-6">
             {/* Imaging order section header */}
             <div className="flex items-center justify-between">
@@ -228,7 +276,7 @@ export default function AddImagingOrderScreen() {
                 <Button 
                   variant="outline" 
                   onClick={() => removeImagingOrder(orderIndex)}
-                  disabled={imagingOrders.length <= 1}
+                  disabled={localOrders.length <= 1}
                 >
                   Remove
                 </Button>
@@ -321,7 +369,7 @@ export default function AddImagingOrderScreen() {
             </section>
 
             {/* Separator between orders */}
-            {orderIndex < imagingOrders.length - 1 && <Separator className="my-6" />}
+            {orderIndex < localOrders.length - 1 && <Separator className="my-6" />}
           </div>
         ))}
 
@@ -340,7 +388,7 @@ export default function AddImagingOrderScreen() {
           title={modal.category}
           options={IMAGING_SETS[modal.category]}
           selected={
-            imagingOrders[modal.orderIndex].requests.find((r) => r.category === modal.category)?.exams ??
+            localOrders[modal.orderIndex].requests.find((r) => r.category === modal.category)?.exams ??
             IMAGING_SETS[modal.category]
           }
           onClose={() => setModal({ open: false, category: null, orderIndex: null })}

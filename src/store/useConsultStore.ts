@@ -510,6 +510,31 @@ export const useConsultStore = create<ConsultState & ConsultActions>()(
 export const useConsultSelectors = () => {
   const store = useConsultStore();
   
+  // Helper to check if SOAP has meaningful content
+  const hasSoapContent = () => {
+    const soap = store.soapNote;
+    return !!(
+      soap.chiefComplaint?.trim() ||
+      soap.observations?.trim() ||
+      soap.assessment?.trim() ||
+      soap.differential?.trim() ||
+      soap.plan?.trim() ||
+      soap.currentMedications?.length > 0 ||
+      soap.supplements?.length > 0 ||
+      soap.allergies?.length > 0 ||
+      soap.diagnoses?.length > 0 ||
+      soap.comorbidities?.length > 0 ||
+      soap.vitals.heightFt?.trim() ||
+      soap.vitals.heightIn?.trim() ||
+      soap.vitals.weightLbs?.trim() ||
+      soap.vitals.waist?.trim() ||
+      soap.vitals.hip?.trim() ||
+      soap.vitals.bloodPressure?.trim() ||
+      soap.vitals.heartRate?.trim() ||
+      soap.vitals.temperature?.trim()
+    );
+  };
+  
   return {
     // Patient info
     patientInfo: {
@@ -532,12 +557,20 @@ export const useConsultSelectors = () => {
     finished: store.finished,
     lastSaved: store.lastSaved,
     
-    // Computed values
-    hasData: store.soapNote.chiefComplaint.length > 0 || 
+    // Content detection selectors
+    hasSoapContent: hasSoapContent(),
+    hasRxContent: store.prescriptions.length > 0,
+    hasLabContent: store.labOrders.length > 0,
+    hasImagingContent: store.imagingOrders.length > 0,
+    hasOutsideOrdersContent: store.outsideOrders.length > 0,
+    hasPrivateNotesContent: !!store.privateNotes?.trim(),
+    
+    // Overall data check
+    hasData: hasSoapContent() || 
              store.prescriptions.length > 0 || 
              store.labOrders.length > 0 || 
              store.imagingOrders.length > 0 || 
              store.outsideOrders.length > 0 || 
-             store.privateNotes.length > 0
+             !!store.privateNotes?.trim()
   };
 };

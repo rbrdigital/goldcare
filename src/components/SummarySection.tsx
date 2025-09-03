@@ -224,16 +224,16 @@ export function SummarySection() {
           </CardContent>
         </Card>
 
-        {/* Medications */}
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="flex items-center gap-2 text-base">
-              <Pill className="h-4 w-4" />
-              Medications Prescribed
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {formatPrescriptions().length > 0 ? (
+        {/* Medications - only show if there are prescriptions */}
+        {formatPrescriptions().length > 0 && (
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2 text-base">
+                <Pill className="h-4 w-4" />
+                Medications Prescribed
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
               <div className="space-y-3">
                 {formatPrescriptions().map((rx, idx) => (
                   <div key={idx} className="p-3 bg-surface-muted rounded-lg">
@@ -246,87 +246,79 @@ export function SummarySection() {
                   </div>
                 ))}
               </div>
-            ) : (
-              <p className="text-sm text-fg-muted">No prescriptions added</p>
-            )}
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        )}
 
-        {/* Orders */}
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="flex items-center gap-2 text-base">
-              <Activity className="h-4 w-4" />
-              Orders & Referrals
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <h4 className="flex items-center gap-2 font-medium text-sm text-fg mb-2">
-                <FlaskConical className="h-4 w-4" />
-                Lab Orders
-              </h4>
-              {formatLabOrders().length > 0 ? (
-                <div className="flex flex-wrap gap-1">
-                  {formatLabOrders().map((lab, idx) => (
-                    <Badge key={idx} variant="secondary" className="text-xs">{lab}</Badge>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-sm text-fg-muted">No lab orders added</p>
-              )}
-            </div>
-
-            <div>
-              <h4 className="flex items-center gap-2 font-medium text-sm text-fg mb-2">
+        {/* Orders - only show if there are any orders */}
+        {(formatLabOrders().length > 0 || formatImagingOrders().length > 0 || formatOutsideOrders().length > 0) && (
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2 text-base">
                 <Activity className="h-4 w-4" />
-                Imaging Orders
-              </h4>
-              {formatImagingOrders().length > 0 ? (
-                <div className="flex flex-wrap gap-1">
-                  {formatImagingOrders().map((imaging, idx) => (
-                    <Badge key={idx} variant="secondary" className="text-xs">{imaging}</Badge>
-                  ))}
+                Orders & Referrals
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {formatLabOrders().length > 0 && (
+                <div>
+                  <h4 className="flex items-center gap-2 font-medium text-sm text-fg mb-2">
+                    <FlaskConical className="h-4 w-4" />
+                    Lab Orders
+                  </h4>
+                  <div className="flex flex-wrap gap-1">
+                    {formatLabOrders().map((lab, idx) => (
+                      <Badge key={idx} variant="secondary" className="text-xs">{lab}</Badge>
+                    ))}
+                  </div>
                 </div>
-              ) : (
-                <p className="text-sm text-fg-muted">No imaging orders added</p>
               )}
-            </div>
 
-            <div>
-              <h4 className="flex items-center gap-2 font-medium text-sm text-fg mb-2">
-                <Upload className="h-4 w-4" />
-                Outside Orders
-              </h4>
-              {formatOutsideOrders().length > 0 ? (
-                <div className="flex flex-wrap gap-1">
-                  {formatOutsideOrders().map((order, idx) => (
-                    <Badge key={idx} variant="secondary" className="text-xs">{order}</Badge>
-                  ))}
+              {formatImagingOrders().length > 0 && (
+                <div>
+                  <h4 className="flex items-center gap-2 font-medium text-sm text-fg mb-2">
+                    <Activity className="h-4 w-4" />
+                    Imaging Orders
+                  </h4>
+                  <div className="flex flex-wrap gap-1">
+                    {formatImagingOrders().map((imaging, idx) => (
+                      <Badge key={idx} variant="secondary" className="text-xs">{imaging}</Badge>
+                    ))}
+                  </div>
                 </div>
-              ) : (
-                <p className="text-sm text-fg-muted">No outside orders added</p>
               )}
-            </div>
-          </CardContent>
-        </Card>
 
-        {/* Private Notes */}
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="flex items-center gap-2 text-base">
-              <StickyNote className="h-4 w-4" />
-              Private Clinician Notes
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {consultData.privateNotes ? (
+              {formatOutsideOrders().length > 0 && (
+                <div>
+                  <h4 className="flex items-center gap-2 font-medium text-sm text-fg mb-2">
+                    <Upload className="h-4 w-4" />
+                    Outside Orders
+                  </h4>
+                  <div className="flex flex-wrap gap-1">
+                    {formatOutsideOrders().map((order, idx) => (
+                      <Badge key={idx} variant="secondary" className="text-xs">{order}</Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Private Notes - only show if there are notes */}
+        {consultData.privateNotes?.trim() && (
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2 text-base">
+                <StickyNote className="h-4 w-4" />
+                Private Clinician Notes
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
               <p className="text-sm text-fg-muted">{consultData.privateNotes}</p>
-            ) : (
-              <p className="text-sm text-fg-muted">No private notes added</p>
-            )}
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Next Steps */}
         <Card>

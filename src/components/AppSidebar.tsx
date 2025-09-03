@@ -99,28 +99,17 @@ export function AppSidebar({ mini = false, activeItem = "soap", onItemClick }: A
       case "summary":
         return consultData.hasData;
       case "soap":
-        return (
-          consultData.soapNote.chiefComplaint.length > 0 ||
-          consultData.soapNote.observations.length > 0 ||
-          consultData.soapNote.assessment.length > 0 ||
-          consultData.soapNote.plan.length > 0 ||
-          consultData.soapNote.currentMedications.length > 0 ||
-          consultData.soapNote.supplements.length > 0 ||
-          consultData.soapNote.allergies.length > 0 ||
-          consultData.soapNote.diagnoses.length > 0 ||
-          consultData.soapNote.vitals.heightFt.length > 0 ||
-          consultData.soapNote.vitals.weightLbs.length > 0
-        );
+        return consultData.hasSoapContent;
       case "rx":
-        return consultData.prescriptions.length > 0;
+        return consultData.hasRxContent;
       case "lab-orders":
-        return consultData.labOrders.length > 0;
+        return consultData.hasLabContent;
       case "imaging-orders":
-        return consultData.imagingOrders.length > 0;
+        return consultData.hasImagingContent;
       case "outside-orders":
-        return consultData.outsideOrders.length > 0;
+        return consultData.hasOutsideOrdersContent;
       case "private-notes":
-        return consultData.privateNotes.length > 0;
+        return consultData.hasPrivateNotesContent;
       default:
         return false;
     }
