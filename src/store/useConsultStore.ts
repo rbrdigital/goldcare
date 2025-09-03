@@ -364,6 +364,10 @@ export const useConsultStore = create<ConsultState & ConsultActions>()(
           prescriptions: [...state.prescriptions, prescription],
           lastSaved: new Date().toISOString()
         }));
+        debouncedSave(() => {
+          // Debounced save will persist automatically via Zustand persist
+          console.log('Prescription saved');
+        });
       },
       
       updatePrescription: (id, updates) => {
@@ -373,6 +377,10 @@ export const useConsultStore = create<ConsultState & ConsultActions>()(
           ),
           lastSaved: new Date().toISOString()
         }));
+        debouncedSave(() => {
+          // Debounced save will persist automatically via Zustand persist
+          console.log('Prescription updated');
+        });
       },
       
       removePrescription: (id) => {
@@ -380,6 +388,10 @@ export const useConsultStore = create<ConsultState & ConsultActions>()(
           prescriptions: state.prescriptions.filter(rx => rx.id !== id),
           lastSaved: new Date().toISOString()
         }));
+        debouncedSave(() => {
+          // Debounced save will persist automatically via Zustand persist
+          console.log('Prescription removed');
+        });
       },
       
       // Lab actions
@@ -539,6 +551,27 @@ const isMeaningfulLab = (lab: LabOrder): boolean => {
   );
 };
 
+const isMeaningfulRx = (rx: Prescription): boolean => {
+  const name = rx?.medicine?.trim();
+  const qtyPerDose = Number(rx?.qtyPerDose) || 0;
+  const formulation = rx?.formulation?.trim();
+  const route = rx?.route?.trim();
+  const frequency = rx?.frequency?.trim();
+  const duration = Number(rx?.duration) || 0;
+  
+  // Require at least a drug name AND some meaningful dosing information
+  const hasName = !!name;
+  const hasMeaningfulDosing = !!(
+    qtyPerDose > 0 ||
+    formulation ||
+    route ||
+    frequency ||
+    duration > 0
+  );
+  
+  return hasName && hasMeaningfulDosing;
+};
+
 const isMeaningfulImaging = (imaging: ImagingOrder): boolean => {
   return !!(
     imaging.diagnoses?.length > 0 ||
@@ -593,7 +626,7 @@ export const useConsultSelectors = () => {
     
     // Content detection selectors (improved)
     hasSoapContent: hasSoapContent(),
-    hasRxContent: store.prescriptions.length > 0,
+    hasRxContent: store.prescriptions.some(isMeaningfulRx),
     hasLabContent: store.labOrders.some(isMeaningfulLab),
     hasImagingContent: store.imagingOrders.some(isMeaningfulImaging),
     hasOutsideOrdersContent: store.outsideOrders.length > 0,
@@ -601,7 +634,7 @@ export const useConsultSelectors = () => {
     
     // Overall data check
     hasData: hasSoapContent() || 
-             store.prescriptions.length > 0 || 
+             store.prescriptions.some(isMeaningfulRx) || 
              store.labOrders.some(isMeaningfulLab) || 
              store.imagingOrders.some(isMeaningfulImaging) || 
              store.outsideOrders.length > 0 || 

@@ -16,6 +16,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import SelectedPharmacyCard from "./SelectedPharmacyCard";
 import { useConsultStore, type Prescription } from "@/store/useConsultStore";
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
 
 // Mock pharmacy data
 const MOCK_PHARMACIES = [
@@ -217,39 +218,53 @@ export default function RXForm() {
   };
 
   return (
-    <div className="space-y-6">
-      <PageHeader
-        title="Prescriptions"
-        description="Create and manage prescription orders for your patients"
-        icon={Pill}
-        onSave={handleSave}
-      >
-        <Button
-          variant="outline"
-          onClick={() => {
-            // This will be handled by the parent component
-            window.dispatchEvent(new CustomEvent('openMedicationWorkspace'));
-          }}
-          className="ml-4"
+    <TooltipProvider>
+      <div className="space-y-6">
+        <PageHeader
+          title="Prescriptions"
+          description="Create and manage prescription orders for your patients"
+          icon={Pill}
+          onSave={handleSave}
         >
-          <Pill className="h-4 w-4 mr-2" />
-          Medication Workspace
-        </Button>
-      </PageHeader>
+          <Button
+            variant="outline"
+            onClick={() => {
+              // This will be handled by the parent component
+              window.dispatchEvent(new CustomEvent('openMedicationWorkspace'));
+            }}
+            className="ml-4"
+          >
+            <Pill className="h-4 w-4 mr-2" />
+            Medication Workspace
+          </Button>
+        </PageHeader>
 
-      {prescriptions.map((rx, i) => {
-        const totalQty = calcTotalQty(rx);
-        return (
-          <section key={i} className="mb-8">
-            <div className="flex items-center justify-between mb-2">
-              <h2 className="text-lg font-semibold">Prescription #{i + 1}</h2>
-              <div className="flex items-center gap-2">
-                <Button variant="outline" onClick={() => duplicateItem(i)}>Duplicate</Button>
-                <Button variant="outline" onClick={() => removeItem(i)} disabled={prescriptions.length === 1}>
-                  Remove
-                </Button>
+        {prescriptions.map((rx, i) => {
+          const totalQty = calcTotalQty(rx);
+          return (
+            <section key={i} className="mb-8">
+              <div className="flex items-center justify-between mb-2">
+                <h2 className="text-lg font-semibold">Prescription #{i + 1}</h2>
+                <div className="flex items-center gap-2">
+                  <Button variant="outline" onClick={() => duplicateItem(i)}>Duplicate</Button>
+                  {prescriptions.length > 1 ? (
+                    <Button variant="outline" onClick={() => removeItem(i)}>
+                      Remove
+                    </Button>
+                  ) : (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button variant="outline" disabled>
+                          Remove
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        Keep one draft prescription
+                      </TooltipContent>
+                    </Tooltip>
+                  )}
+                </div>
               </div>
-            </div>
 
             {/* Medicine name */}
             <div className="mb-3">
@@ -607,6 +622,7 @@ export default function RXForm() {
         />
       )}
     </div>
+    </TooltipProvider>
   );
 }
 

@@ -45,14 +45,37 @@ export function SummarySection() {
     return "";
   };
 
-  // Format prescriptions for display
+  // Format prescriptions for display - only meaningful ones
   const formatPrescriptions = () => {
-    return consultData.prescriptions.map(rx => ({
-      medication: `${rx.medicine} ${rx.qtyPerDose}${rx.formulation ? ` ${rx.formulation}` : ''}`,
-      instructions: `${rx.action || 'Take'} ${rx.qtyPerDose || 1} ${rx.route || 'by mouth'} ${rx.frequency || 'as directed'}${rx.prn ? ' as needed' : ''}${rx.prnInstructions ? ` for ${rx.prnInstructions}` : ''}`,
-      quantity: `${rx.duration || ''} ${rx.durationUnit || 'Days'}`.trim(),
-      refills: rx.refills?.toString() || "0"
-    }));
+    // Helper function to check if prescription is meaningful (same logic as store)
+    const isMeaningfulRx = (rx: any) => {
+      const name = rx?.medicine?.trim();
+      const qtyPerDose = Number(rx?.qtyPerDose) || 0;
+      const formulation = rx?.formulation?.trim();
+      const route = rx?.route?.trim();
+      const frequency = rx?.frequency?.trim();
+      const duration = Number(rx?.duration) || 0;
+      
+      const hasName = !!name;
+      const hasMeaningfulDosing = !!(
+        qtyPerDose > 0 ||
+        formulation ||
+        route ||
+        frequency ||
+        duration > 0
+      );
+      
+      return hasName && hasMeaningfulDosing;
+    };
+
+    return consultData.prescriptions
+      .filter(isMeaningfulRx)
+      .map(rx => ({
+        medication: `${rx.medicine} ${rx.qtyPerDose}${rx.formulation ? ` ${rx.formulation}` : ''}`,
+        instructions: `${rx.action || 'Take'} ${rx.qtyPerDose || 1} ${rx.route || 'by mouth'} ${rx.frequency || 'as directed'}${rx.prn ? ' as needed' : ''}${rx.prnInstructions ? ` for ${rx.prnInstructions}` : ''}`,
+        quantity: `${rx.duration || ''} ${rx.durationUnit || 'Days'}`.trim(),
+        refills: rx.refills?.toString() || "0"
+      }));
   };
 
   // Format lab orders for display
