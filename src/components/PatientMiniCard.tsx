@@ -31,8 +31,8 @@ export function PatientMiniCard({
 }: PatientMiniCardProps) {
   const { theme, toggleTheme } = useTheme();
   return (
-    <div className="sticky top-0 z-40 bg-bg border-b border-border">
-      <div className="flex h-16 items-center justify-between px-6">
+    <div className="sticky top-0 z-40 bg-bg border-b border-border h-16">
+      <div className="flex h-full items-center justify-between px-6">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="sm">
             <ArrowLeft className="h-4 w-4" />

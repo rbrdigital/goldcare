@@ -110,8 +110,8 @@ export function Dashboard() {
   const hasRightSheet = labsImagingSideSheetOpen || diagnosesMedsAllergiesSideSheetOpen || patientProfileDrawerOpen || goldcareAIPanelOpen || medicationWorkspaceOpen;
 
   return (
-    <div className="min-h-screen grid grid-rows-[auto_1fr]">
-      {/* Patient Mini Card */}
+    <div className="min-h-screen flex flex-col">
+      {/* Patient Mini Card - Fixed at top */}
       <PatientMiniCard
         sidebarMini={sidebarMini}
         onToggleSidebar={() => setSidebarMini(!sidebarMini)}
@@ -122,54 +122,67 @@ export function Dashboard() {
         onProfileClick={() => handleItemClick("profile")}
       />
 
-      {/* Main Layout */}
-      <div className={cn(
-        "grid grid-cols-1",
-        hasRightSheet 
-          ? "md:grid-cols-[280px_minmax(0,1fr)_auto]" 
-          : "md:grid-cols-[280px_minmax(0,1fr)]"
-      )}>
-        <aside className="md:w-[280px] shrink-0 border-r border-border">
+      {/* Main Layout - Fixed Sidebar + Scrollable Content */}
+      <div className="flex-1 relative">
+        {/* Fixed Sidebar */}
+        <aside className={cn(
+          "fixed left-0 top-16 bottom-0 z-30 border-r border-border bg-bg transition-all duration-200",
+          sidebarMini ? "w-16" : "w-[280px]"
+        )}>
           <AppSidebar 
             mini={sidebarMini}
             activeItem={activeSection}
             onItemClick={handleItemClick}
           />
         </aside>
-        <main className="min-w-0 py-6">
-          <MainContent activeSection={activeSection} />
-        </main>
-        
-        {/* Right Panel */}
-        <RightPanel isOpen={hasRightSheet}>
-          {patientProfileDrawerOpen && (
-            <PatientProfileDrawer
-              isOpen={true}
-              onClose={() => setPatientProfileDrawerOpen(false)}
-            />
-          )}
-          {labsImagingSideSheetOpen && (
-            <LabsImagingSideSheet
-              isOpen={true}
-              onClose={() => setLabsImagingSideSheetOpen(false)}
-            />
-          )}
-          {diagnosesMedsAllergiesSideSheetOpen && (
-            <DiagnosesMedsAllergiesSideSheet
-              isOpen={true}
-              onClose={() => setDiagnosesMedsAllergiesSideSheetOpen(false)}
-            />
-          )}
-          {goldcareAIPanelOpen && (
-            <GoldCareAIPanel />
-          )}
-          {medicationWorkspaceOpen && (
-            <MedicationWorkspace
-              isOpen={true}
-              onClose={() => setMedicationWorkspaceOpen(false)}
-            />
-          )}
-        </RightPanel>
+
+        {/* Content Area with Left Margin for Fixed Sidebar */}
+        <div className={cn(
+          "transition-all duration-200",
+          sidebarMini ? "ml-16" : "ml-[280px]"
+        )}>
+          <div className={cn(
+            "grid grid-cols-1",
+            hasRightSheet 
+              ? "md:grid-cols-[minmax(0,1fr)_auto]" 
+              : "md:grid-cols-[minmax(0,1fr)]"
+          )}>
+            <main className="min-w-0 py-6">
+              <MainContent activeSection={activeSection} />
+            </main>
+            
+            {/* Right Panel */}
+            <RightPanel isOpen={hasRightSheet}>
+              {patientProfileDrawerOpen && (
+                <PatientProfileDrawer
+                  isOpen={true}
+                  onClose={() => setPatientProfileDrawerOpen(false)}
+                />
+              )}
+              {labsImagingSideSheetOpen && (
+                <LabsImagingSideSheet
+                  isOpen={true}
+                  onClose={() => setLabsImagingSideSheetOpen(false)}
+                />
+              )}
+              {diagnosesMedsAllergiesSideSheetOpen && (
+                <DiagnosesMedsAllergiesSideSheet
+                  isOpen={true}
+                  onClose={() => setDiagnosesMedsAllergiesSideSheetOpen(false)}
+                />
+              )}
+              {goldcareAIPanelOpen && (
+                <GoldCareAIPanel />
+              )}
+              {medicationWorkspaceOpen && (
+                <MedicationWorkspace
+                  isOpen={true}
+                  onClose={() => setMedicationWorkspaceOpen(false)}
+                />
+              )}
+            </RightPanel>
+          </div>
+        </div>
       </div>
     </div>
   );

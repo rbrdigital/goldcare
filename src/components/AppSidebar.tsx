@@ -156,7 +156,7 @@ export function AppSidebar({ mini = false, activeItem = "soap", onItemClick }: A
 
   if (mini) {
     return (
-      <aside className="w-16 border-r bg-background flex flex-col">
+      <div className="h-full bg-bg flex flex-col">
         <div className="p-2 space-y-1">
           {[visitSummaryItem, goldcareAIItem, ...clinicalItems].slice(0, 6).map((item) => (
             <button
@@ -187,12 +187,12 @@ export function AppSidebar({ mini = false, activeItem = "soap", onItemClick }: A
             </button>
           ))}
         </div>
-      </aside>
+      </div>
     );
   }
 
   return (
-    <aside className="w-[280px] border-r bg-background flex flex-col">
+    <div className="h-full bg-bg flex flex-col">
       <div className="p-4">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -296,7 +296,7 @@ export function AppSidebar({ mini = false, activeItem = "soap", onItemClick }: A
           </div>
         ))}
       </div>
-    </aside>
+    </div>
   );
 }
 
