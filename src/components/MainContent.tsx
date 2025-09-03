@@ -8,8 +8,9 @@ import { PageHeader } from "@/components/ui/page-header";
 import { AIChipClosedSmart } from "@/components/ai/AIChipClosedSmart";
 import { InlineAddInput } from "@/components/ui/inline-add-input";
 import AddLabOrderScreen from "@/components/labs/AddLabOrderScreen";
-import ImagingOrdersSection from "@/components/imaging/ImagingOrdersSection";
-import OutsideOrdersSection from "@/components/outside-orders/OutsideOrdersSection";
+import { ImagingOrdersSection } from "./imaging/ImagingOrdersSection";
+import { OutsideOrdersSection } from "./outside-orders/OutsideOrdersSection";
+import { PrescriptionsPanel } from "./prescriptions/PrescriptionsPanel";
 import { AppSidebar } from "@/components/AppSidebar";
 import { useState, useRef, useEffect } from "react";
 import { toast } from "@/hooks/use-toast";
@@ -51,6 +52,8 @@ export function MainContent({ activeSection }: MainContentProps) {
         return <ImagingOrdersSectionWrapper />;
       case "outside-orders":
         return <OutsideOrdersSection />;
+      case "prescriptions":
+        return <PrescriptionsPanel />;
       case "intake":
         return <IntakeFormSection />;
       case "diagnoses":
