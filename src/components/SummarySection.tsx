@@ -373,13 +373,10 @@ export function SummarySection() {
         <div className="flex gap-3 pt-4">
           <Button 
             onClick={handleFinishAppointment} 
-            className="flex-1"
+            className="max-w-md"
             disabled={consultData.finished}
           >
             {consultData.finished ? "Appointment Finalized" : "Finalize & Finish Appointment"}
-          </Button>
-          <Button variant="outline" onClick={handleSave}>
-            Save Summary
           </Button>
         </div>
       </div>
