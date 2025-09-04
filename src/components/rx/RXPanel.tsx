@@ -110,22 +110,12 @@ export function RXPanel() {
         />
       )}
       
-      {/* RX Form - Collapsible */}
+      {/* Pharmacy Line - Always visible when not in ai-ready state */}
+      {panelState !== 'ai-ready' && <PharmacyLine />}
+      
+      {/* RX Form - Collapsible, no section header */}
       {(panelState === 'manual' || panelState === 'drafted') && (
         <Collapsible open={isFormExpanded} onOpenChange={setIsFormExpanded}>
-          <CollapsibleTrigger asChild>
-            <Button 
-              variant="ghost" 
-              className="w-full justify-between p-2 h-auto font-medium"
-            >
-              <span>Prescription Details</span>
-              {isFormExpanded ? (
-                <ChevronDown className="h-4 w-4" />
-              ) : (
-                <ChevronRight className="h-4 w-4" />
-              )}
-            </Button>
-          </CollapsibleTrigger>
           <CollapsibleContent>
             <div className="pt-4">
               <RXForm />
@@ -133,9 +123,6 @@ export function RXPanel() {
           </CollapsibleContent>
         </Collapsible>
       )}
-      
-      {/* Pharmacy Line - Always visible when not in ai-ready state */}
-      {panelState !== 'ai-ready' && <PharmacyLine />}
     </div>
   );
 }

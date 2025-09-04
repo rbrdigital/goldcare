@@ -2,9 +2,8 @@ import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { AutosizeTextarea } from '@/components/ui/autosize-textarea';
-import { Badge } from '@/components/ui/badge';
-import { Avatar } from '@/components/ui/avatar';
 import { Mic, MicOff } from 'lucide-react';
+import { GoldCareAIIcon } from '@/components/icons/GoldCareAIIcon';
 import { cn } from '@/lib/utils';
 
 interface AIPromptBoxProps {
@@ -52,16 +51,11 @@ export function AIPromptBox({ onDraft, onManualEntry }: AIPromptBoxProps) {
   return (
     <Card className="p-6 bg-gradient-to-br from-surface via-surface to-surface/80 border-2 border-primary/20 shadow-lg" data-testid="ai-prompt-box">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-3">
-          <Avatar className="h-10 w-10 bg-gradient-to-br from-primary/20 to-primary/10 border-2 border-primary/30">
-            <span className="text-sm font-semibold text-primary">AI</span>
-          </Avatar>
-          <span className="font-semibold text-fg text-lg">GoldCare AI</span>
+      <div className="flex items-center gap-3 mb-6">
+        <div className="h-10 w-10 rounded-full bg-gradient-to-br from-primary/20 to-primary/10 border-2 border-primary/30 flex items-center justify-center">
+          <GoldCareAIIcon className="h-6 w-6 text-primary" />
         </div>
-        <Badge variant="outline" className="bg-success/10 text-success border-success/30">
-          Ready • Mock
-        </Badge>
+        <span className="font-semibold text-fg text-lg">GoldCare AI</span>
       </div>
 
       {/* Input Area */}
@@ -114,22 +108,24 @@ export function AIPromptBox({ onDraft, onManualEntry }: AIPromptBoxProps) {
         </div>
 
         {/* Actions */}
-        <div className="flex items-center gap-4">
+        <div className="space-y-4">
           <Button 
             onClick={handleDraft}
             disabled={!prompt.trim()}
-            className="flex-1 font-semibold"
+            className="w-full sm:w-auto font-semibold"
             size="lg"
           >
-            Draft prescription
+            Draft with AI
           </Button>
-          <Button 
-            variant="ghost" 
-            onClick={onManualEntry}
-            className="font-medium text-primary hover:text-primary/80"
-          >
-            Manual entry
-          </Button>
+          <div className="text-center">
+            <Button 
+              variant="link" 
+              onClick={onManualEntry}
+              className="font-medium text-primary hover:text-primary/80 h-auto p-0"
+            >
+              Or fill the form manually
+            </Button>
+          </div>
         </div>
       </div>
     </Card>
