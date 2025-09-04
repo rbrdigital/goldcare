@@ -104,11 +104,20 @@ export function AIChipClosedSmart({ text, onInsert, onGenerateInsert, useCustomi
   return (
     <div 
       className={cn(
-        "relative mt-2 w-full flex items-center justify-between rounded-full border border-border bg-surface-muted px-3 py-2 text-[13px] text-fg transition-all duration-300",
+        "relative mt-2 w-full flex items-center justify-between rounded-full px-3 py-2 text-[13px] text-fg transition-all duration-300",
+        // GoldCare gradient background - pearl-like subtle gradient
+        "bg-gradient-to-r from-white via-[#FBF9F5] to-white",
+        // Soft gold border
+        "border border-[#E8E1D6]",
         // AI Glow effect - subtle and professional
         "animate-ai-glow hover:animate-ai-glow-hover",
-        // Enhanced border for AI chip
-        "border-primary/20 bg-gradient-to-r from-surface-muted to-surface",
+        // Hover state - warmer background
+        "hover:bg-gradient-to-r hover:from-[#FAF5EC] hover:via-[#F8F4EE] hover:to-[#FAF5EC]",
+        // Focus state - golden glow ring
+        "focus-within:shadow-[0_0_0_2px_rgba(212,175,55,0.3)]",
+        // Dark mode gradient
+        "dark:bg-gradient-to-r dark:from-[#2B2925] dark:via-[#34322E] dark:to-[#2B2925]",
+        "dark:hover:from-[#36342F] dark:hover:via-[#3A3833] dark:hover:to-[#36342F]",
         className
       )}
       role="group"
