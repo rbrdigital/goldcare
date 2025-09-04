@@ -13,7 +13,7 @@ const badgeVariants = cva(
         destructive: "border-transparent bg-medical-red-light text-medical-red hover:opacity-95",
         neutral: "border border-border bg-surface text-fg hover:bg-surface-muted",
         outline: "border border-border text-fg hover:bg-surface-muted",
-        gold: "h-8 px-3.5 gap-2 border-none bg-gc-gold-bg hover:bg-gc-gold-bg-hover focus:ring-2 focus:ring-gc-gold-ring focus:ring-offset-2 text-transparent bg-gradient-to-r from-gc-gold-700 via-gc-gold-500 to-gc-gold-600 bg-clip-text [-webkit-background-clip:text] [&_svg]:text-gc-gold-700",
+        gold: "h-8 px-3.5 gap-2 border border-[#F5D6A7] bg-gc-gold-bg hover:bg-gc-gold-bg-hover focus:ring-2 focus:ring-gc-gold-ring focus:ring-offset-2 text-transparent bg-gradient-to-r from-gc-gold-700 via-gc-gold-500 to-gc-gold-600 bg-clip-text [-webkit-background-clip:text] [&_svg]:text-gc-gold-700",
       },
       size: {
         default: "h-5 px-2.5 py-0.5 text-xs",

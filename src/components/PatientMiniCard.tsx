@@ -82,7 +82,7 @@ export function PatientMiniCard({
                 <span>{patient.location}</span>
               </div>
               <span className="text-muted-foreground">•</span>
-              <Badge variant="gold" className="border border-gc-gold-ring">
+              <Badge variant="gold">
                 <Shield className="h-3 w-3 mr-1" />
                 {patient.membership}
               </Badge>
