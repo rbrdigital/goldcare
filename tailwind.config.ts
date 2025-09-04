@@ -41,6 +41,16 @@ const config: Config = {
         "medical-red": "var(--medical-red)",
         "medical-red-light": "var(--medical-red-light)",
         
+        // Gold tokens
+        "gc-gold-700": "var(--gc-gold-700)",
+        "gc-gold-600": "var(--gc-gold-600)",
+        "gc-gold-500": "var(--gc-gold-500)",
+        "gc-gold-400": "var(--gc-gold-400)",
+        "gc-gold-300": "var(--gc-gold-300)",
+        "gc-gold-bg": "var(--gc-gold-bg)",
+        "gc-gold-bg-hover": "var(--gc-gold-bg-hover)",
+        "gc-gold-ring": "var(--gc-gold-ring)",
+        
         // Legacy tokens for backward compatibility
         "primary-fg": "var(--color-primary-fg)",
         "on-primary": "var(--color-on-primary)",

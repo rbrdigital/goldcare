@@ -28,6 +28,17 @@
   --medical-red: #dc2626;
   --medical-red-light: #fee2e2;
 
+  /* Gold tokens */
+  --gc-gold-700: #8A6B1F;
+  --gc-gold-600: #B88746;
+  --gc-gold-500: #D4AF37;
+  --gc-gold-400: #E6C36A;
+  --gc-gold-300: #F5D76E;
+  --gc-gold-bg: #F8E3C2;
+  --gc-gold-bg-hover: #F4D7AD;
+  --gc-gold-ring: rgba(212,175,55,.35);
+  --gc-gold-gradient: linear-gradient(90deg, var(--gc-gold-700) 0%, var(--gc-gold-600) 22%, var(--gc-gold-500) 45%, var(--gc-gold-300) 68%, var(--gc-gold-600) 100%);
+
   /* Radius */
   --radius-sm: 6px;
   --radius-md: 10px;
@@ -109,6 +120,17 @@
   --primary-50: #2D2D30;                /* Light surface for subtle backgrounds */
   --primary-100: #343541;               /* Darker surface for elevated states */
   --primary-30a: rgba(16, 163, 127, 0.1); /* Green with opacity */
+
+  /* Gold tokens for dark mode */
+  --gc-gold-700: #8A6B1F;
+  --gc-gold-600: #B88746;
+  --gc-gold-500: #D4AF37;
+  --gc-gold-400: #E6C36A;
+  --gc-gold-300: #F5D76E;
+  --gc-gold-bg: #3C2F17;
+  --gc-gold-bg-hover: #4A3A1E;
+  --gc-gold-ring: rgba(212,175,55,.35);
+  --gc-gold-gradient: linear-gradient(90deg, var(--gc-gold-700) 0%, var(--gc-gold-600) 22%, var(--gc-gold-500) 45%, var(--gc-gold-300) 68%, var(--gc-gold-600) 100%);
 
   /* Status colors adapted for dark mode */
   --medical-blue: #ECECF1;              /* Use primary text color */
