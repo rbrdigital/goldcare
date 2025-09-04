@@ -20,7 +20,7 @@ const mockPatient = {
 };
 
 export function Dashboard() {
-  const [activeSection, setActiveSection] = useState("summary");
+  const [activeSection, setActiveSection] = useState("soap");
   const [sidebarMini, setSidebarMini] = useState(false);
   const [patientProfileDrawerOpen, setPatientProfileDrawerOpen] = useState(false);
   const [labsImagingSideSheetOpen, setLabsImagingSideSheetOpen] = useState(false);
