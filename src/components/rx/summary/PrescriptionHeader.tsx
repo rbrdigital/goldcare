@@ -8,16 +8,17 @@ import {
   DropdownMenuItem, 
   DropdownMenuTrigger 
 } from '@/components/ui/dropdown-menu';
-import { Pill, MoreHorizontal, Copy, FileText, Edit } from 'lucide-react';
-import { formatDateForDisplay, formatDuration } from '@/lib/dateUtils';
+import { Pill, MoreHorizontal, Copy, FileText, Edit, Bot } from 'lucide-react';
 import { InlineAlert } from '@/components/prescriptions/InlineAlert';
 import { useConsultStore, type Prescription } from '@/store/useConsultStore';
 
 interface PrescriptionHeaderProps {
   prescription: Prescription;
+  onEditDetails: () => void;
+  onReopenAI: () => void;
 }
 
-export function PrescriptionHeader({ prescription }: PrescriptionHeaderProps) {
+export function PrescriptionHeader({ prescription, onEditDetails, onReopenAI }: PrescriptionHeaderProps) {
   // Calculate total quantity locally
   const calcTotalQty = (rx: Prescription): number => {
     const qtyPerDose = Number(rx.qtyPerDose) || 0;
@@ -40,13 +41,10 @@ export function PrescriptionHeader({ prescription }: PrescriptionHeaderProps) {
     { type: 'allergy' as const, message: 'Patient has documented penicillin allergy - consider alternative' }
   ];
 
-  const handleEditWithAI = () => {
-    // Scroll to AI prompt box and prefill with current values
-    const promptBox = document.querySelector('[data-testid="ai-prompt-box"]');
-    if (promptBox) {
-      promptBox.scrollIntoView({ behavior: 'smooth' });
-      // In real implementation, would serialize current form values
-    }
+  const formatDurationText = (duration: number | "") => {
+    if (!duration || duration === 0) return "";
+    const num = Number(duration);
+    return num === 1 ? " for 1 day" : ` for ${num} days`;
   };
 
   return (
@@ -54,38 +52,36 @@ export function PrescriptionHeader({ prescription }: PrescriptionHeaderProps) {
       <div className="flex items-start gap-4">
         {/* Icon */}
         <div className="flex-shrink-0">
-          <div className="h-10 w-10 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center">
-            <Pill className="h-5 w-5 text-primary" />
+          <div className="h-12 w-12 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center">
+            <Pill className="h-6 w-6 text-primary" />
           </div>
         </div>
 
         {/* Summary */}
         <div className="flex-1 min-w-0">
-          <div className="font-semibold text-fg leading-tight mb-1">
+          <div className="font-semibold text-fg leading-tight mb-1 text-lg">
             {prescription.medicine || 'Medication not specified'} {prescription.qtyPerDose} {prescription.formulation}
           </div>
           <div className="text-sm text-fg-muted">
             {prescription.action} {prescription.qtyPerDose} {prescription.route?.toLowerCase()} {prescription.frequency?.toLowerCase()}
-            {prescription.duration && ` for ${formatDuration(prescription.duration.toString())}`}
+            {prescription.duration && formatDurationText(prescription.duration)}
           </div>
         </div>
 
         {/* Chips */}
         <div className="flex items-center gap-2 flex-wrap">
           {totalQty > 0 && (
-            <Badge variant="outline">
-              <span className="font-semibold">Qty: {totalQty}</span>
+            <Badge variant="outline" className="font-semibold">
+              Qty: {totalQty}
             </Badge>
           )}
           {prescription.refills !== "" && (
-            <Badge variant="outline">
-              <span className="font-semibold">Refills: {prescription.refills}</span>
+            <Badge variant="outline" className="font-semibold">
+              Refills: {prescription.refills}
             </Badge>
           )}
-          <Badge variant={prescription.subsAllowed ? "outline" : "secondary"}>
-            <span className="font-semibold">
-              {prescription.subsAllowed ? 'Substitutions OK' : 'No substitutions'}
-            </span>
+          <Badge variant={prescription.subsAllowed ? "outline" : "secondary"} className="font-semibold">
+            {prescription.subsAllowed ? 'Substitutions OK' : 'No substitutions'}
           </Badge>
         </div>
 
@@ -97,6 +93,10 @@ export function PrescriptionHeader({ prescription }: PrescriptionHeaderProps) {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-48">
+            <DropdownMenuItem onClick={onEditDetails}>
+              <Edit className="h-4 w-4 mr-2" />
+              Edit details
+            </DropdownMenuItem>
             <DropdownMenuItem>
               <Copy className="h-4 w-4 mr-2" />
               Copy
@@ -105,9 +105,9 @@ export function PrescriptionHeader({ prescription }: PrescriptionHeaderProps) {
               <FileText className="h-4 w-4 mr-2" />
               Preview PDF
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={handleEditWithAI}>
-              <Edit className="h-4 w-4 mr-2" />
-              Edit with AI
+            <DropdownMenuItem onClick={onReopenAI}>
+              <Bot className="h-4 w-4 mr-2" />
+              Reopen AI
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

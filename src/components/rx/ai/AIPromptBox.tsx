@@ -8,10 +8,11 @@ import { Mic, MicOff } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface AIPromptBoxProps {
-  onSubmit: () => void;
+  onDraft: (prompt: string) => void;
+  onManualEntry: () => void;
 }
 
-export function AIPromptBox({ onSubmit }: AIPromptBoxProps) {
+export function AIPromptBox({ onDraft, onManualEntry }: AIPromptBoxProps) {
   const [prompt, setPrompt] = useState('');
   const [isListening, setIsListening] = useState(false);
 
@@ -35,36 +36,36 @@ export function AIPromptBox({ onSubmit }: AIPromptBoxProps) {
     }
   };
 
-  const handleSubmit = () => {
+  const handleDraft = () => {
     if (prompt.trim()) {
-      onSubmit();
+      onDraft(prompt.trim());
     }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      handleSubmit();
+      handleDraft();
     }
   };
 
   return (
-    <Card className="p-6 bg-gradient-to-br from-surface to-surface-muted border-2 border-primary/20 shadow-lg" data-testid="ai-prompt-box">
+    <Card className="p-6 bg-gradient-to-br from-surface via-surface to-surface/80 border-2 border-primary/20 shadow-lg" data-testid="ai-prompt-box">
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <Avatar className="h-8 w-8 bg-primary/10 border border-primary/20">
-            <span className="text-sm font-medium text-primary">AI</span>
+          <Avatar className="h-10 w-10 bg-gradient-to-br from-primary/20 to-primary/10 border-2 border-primary/30">
+            <span className="text-sm font-semibold text-primary">AI</span>
           </Avatar>
-          <span className="font-medium text-fg">GoldCare AI</span>
+          <span className="font-semibold text-fg text-lg">GoldCare AI</span>
         </div>
-        <Badge variant="secondary" className="bg-success/10 text-success border-success/20">
+        <Badge variant="outline" className="bg-success/10 text-success border-success/30">
           Ready • Mock
         </Badge>
       </div>
 
       {/* Input Area */}
-      <div className="space-y-4">
+      <div className="space-y-6">
         <div className="relative">
           <AutosizeTextarea
             value={prompt}
@@ -73,38 +74,38 @@ export function AIPromptBox({ onSubmit }: AIPromptBoxProps) {
             placeholder="Describe the prescription (e.g., 'Amoxicillin 875 twice daily for 10 days; no refills')."
             minRows={3}
             maxRows={6}
-            className="pr-12 resize-none"
+            className="pr-12 resize-none text-base"
           />
           <Button
             size="icon"
             variant={isListening ? "default" : "ghost"}
             className={cn(
-              "absolute top-3 right-3 h-8 w-8",
+              "absolute top-3 right-3 h-9 w-9",
               isListening && "bg-primary text-on-primary animate-pulse"
             )}
             onClick={handleMicToggle}
           >
             {isListening ? (
-              <MicOff className="h-4 w-4" />
+              <MicOff className="h-5 w-5" />
             ) : (
-              <Mic className="h-4 w-4" />
+              <Mic className="h-5 w-5" />
             )}
           </Button>
           {isListening && (
-            <div className="absolute top-11 right-3 text-xs text-primary">
+            <div className="absolute top-12 right-3 text-sm text-primary font-medium">
               Listening...
             </div>
           )}
         </div>
 
         {/* Quick Prompts */}
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-3">
           {quickPrompts.map((quickPrompt) => (
             <Button
               key={quickPrompt}
               variant="outline"
               size="sm"
-              className="text-xs"
+              className="text-sm font-medium"
               onClick={() => setPrompt(quickPrompt)}
             >
               {quickPrompt}
@@ -113,21 +114,19 @@ export function AIPromptBox({ onSubmit }: AIPromptBoxProps) {
         </div>
 
         {/* Actions */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           <Button 
-            onClick={handleSubmit}
+            onClick={handleDraft}
             disabled={!prompt.trim()}
-            className="flex-1"
+            className="flex-1 font-semibold"
+            size="lg"
           >
             Draft prescription
           </Button>
           <Button 
             variant="ghost" 
-            onClick={() => {
-              // Scroll to form
-              const formElement = document.querySelector('[data-testid="rx-form"]');
-              formElement?.scrollIntoView({ behavior: 'smooth' });
-            }}
+            onClick={onManualEntry}
+            className="font-medium text-primary hover:text-primary/80"
           >
             Manual entry
           </Button>

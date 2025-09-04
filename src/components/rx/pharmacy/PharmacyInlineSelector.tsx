@@ -114,6 +114,10 @@ export function PharmacyInlineSelector({
     if (e.key === 'Escape') {
       onCancel();
     }
+    if (e.key === '/' && e.target !== document.querySelector('input[type="text"]')) {
+      e.preventDefault();
+      (document.querySelector('input[placeholder="Search pharmacies..."]') as HTMLInputElement)?.focus();
+    }
   };
 
   // Specialty recommendation
@@ -137,10 +141,20 @@ export function PharmacyInlineSelector({
       {/* Specialty Recommendation */}
       {hasSpecialtyRecommendation && (
         <div className="p-3 bg-primary/5 border border-primary/20 rounded-md">
-          <div className="text-sm font-medium text-primary mb-1">
+          <div className="text-sm font-medium text-primary mb-2">
             Recommended: Partell Specialty (ships overnight)
           </div>
-          <Button size="sm" variant="outline" className="h-7">
+          <Button 
+            size="sm" 
+            variant="outline" 
+            className="h-7"
+            onClick={() => {
+              const specialty = MOCK_PHARMACIES.find(p => p.id === 'partell-specialty');
+              if (specialty) {
+                setSelectedId(specialty.id);
+              }
+            }}
+          >
             Use this
           </Button>
         </div>

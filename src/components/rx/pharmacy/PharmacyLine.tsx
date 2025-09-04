@@ -67,8 +67,8 @@ export function PharmacyLine() {
     <div className="space-y-4">
       {/* Always-visible single line */}
       <div className="flex items-center gap-3 text-sm">
-        <span>Send to</span>
-        <span className="font-semibold">
+        <span className="text-fg-muted">Send to</span>
+        <span className="font-semibold text-fg">
           {selectedPharmacy.name}
         </span>
         <span className="text-fg-muted">
@@ -77,7 +77,7 @@ export function PharmacyLine() {
         <Button 
           variant="link" 
           size="sm" 
-          className="h-auto p-0 text-primary hover:text-primary/80"
+          className="h-auto p-0 text-primary hover:text-primary/80 font-medium"
           onClick={() => setShowSelector(!showSelector)}
         >
           Change
@@ -86,7 +86,7 @@ export function PharmacyLine() {
         <Button 
           variant="link" 
           size="sm" 
-          className="h-auto p-0"
+          className="h-auto p-0 font-medium"
           onClick={handleSendToManager}
         >
           Send to manager

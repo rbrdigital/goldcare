@@ -488,89 +488,9 @@ export default function RXForm() {
               </div>
             </div>
 
-            {/* Order Summary */}
-            <div className="mt-6 rounded-md border border-border bg-surface p-4">
-              <div className="font-medium mb-1">Order Summary</div>
-              <div className="text-sm text-fg-muted">
-                {renderSummary({ ...rx, totalQty })}
-              </div>
-            </div>
+            {/* Order Summary removed - replaced by PrescriptionHeader */}
 
-            {/* Selected Pharmacy Card */}
-            {rx.selectedPharmacy && (
-              <div className="mt-6">
-                <SelectedPharmacyCard
-                  pharmacy={rx.selectedPharmacy}
-                  onChangePharmacy={() => setShowPicker({ rxIndex: i })}
-                  onRemovePharmacy={() => patchItem(i, { selectedPharmacy: null })}
-                />
-              </div>
-            )}
-
-            {/* Pharmacy Selection (Empty State) */}
-            {!rx.selectedPharmacy && (
-              <div className="mt-6">
-                <div className="space-y-3">
-                  <div className="text-sm font-medium">Choose pharmacy</div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <ChoiceCard
-                      label="Partell specialty pharmacy"
-                      sub="Freedom"
-                      selected={false}
-                      onClick={() => patchItem(i, { 
-                        selectedPharmacy: {
-                          name: "Partell specialty pharmacy",
-                          address: "1001 Freedom Blvd",
-                          city: "Naples", 
-                          state: "FL", 
-                          zip: "34102",
-                          phone: "(239) 555-0001",
-                          distance: "0.5 mi",
-                          isOpen: true,
-                          is24hr: false
-                        }
-                      })}
-                    />
-                    <ChoiceCard
-                      label="Walgreens"
-                      sub="Nearby"
-                      selected={false}
-                      onClick={() => patchItem(i, { 
-                        selectedPharmacy: {
-                          name: "Walgreens #5541",
-                          address: "200 Pine Ave",
-                          city: "Naples", 
-                          state: "FL", 
-                          zip: "34103",
-                          phone: "(239) 555-0456",
-                          distance: "1.2 mi",
-                          isOpen: false,
-                          is24hr: true
-                        }
-                      })}
-                    />
-                    <ChoiceCard
-                      label="Choose other pharmacy"
-                      selected={false}
-                      onClick={() => setShowPicker({ rxIndex: i })}
-                    />
-                    <ChoiceCard
-                      label="Send to manager"
-                      selected={false}
-                      onClick={() => patchItem(i, { 
-                        selectedPharmacy: {
-                          name: "Manager Review",
-                          address: "Pending Assignment",
-                          city: "Naples", 
-                          state: "FL", 
-                          zip: "34102"
-                        }
-                      })}
-                    />
-                  </div>
-                </div>
-              </div>
-            )}
+            {/* Pharmacy selection removed - replaced by PharmacyLine */}
           </section>
         );
       })}
