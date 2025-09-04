@@ -513,11 +513,9 @@ function labelToKey(label: string): FrequencyKey | null {
     const duration = Number(rx.duration) || 0;
     const frequency = rx.frequency;
     
-    let perDay = 1;
-    if (frequency.includes("q12h")) perDay = 2;
-    else if (frequency.includes("q8h")) perDay = 3;
-    else if (frequency.includes("q6h")) perDay = 4;
-    else if (frequency.includes("qod")) perDay = 0.5;
+    // Convert frequency label to key and get perDay value
+    const frequencyKey = labelToKey(frequency);
+    const perDay = frequencyKey ? FREQUENCIES[frequencyKey].perDay : 1;
     
     return Math.ceil(qtyPerDose * perDay * duration);
   };
