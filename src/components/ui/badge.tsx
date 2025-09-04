@@ -13,7 +13,7 @@ const badgeVariants = cva(
         destructive: "border-transparent bg-medical-red-light text-medical-red hover:opacity-95",
         neutral: "border border-border bg-surface text-fg hover:bg-surface-muted",
         outline: "border border-border text-fg hover:bg-surface-muted",
-        gold: "h-8 px-3.5 gap-2 border-none bg-gc-gold-bg hover:bg-gc-gold-bg-hover focus:ring-2 focus:ring-gc-gold-ring focus:ring-offset-2 text-transparent bg-gradient-to-r from-gc-gold-700 via-gc-gold-500 to-gc-gold-600 bg-clip-text [-webkit-background-clip:text] [&_svg]:text-transparent [&_svg]:bg-gradient-to-r [&_svg]:from-gc-gold-700 [&_svg]:via-gc-gold-500 [&_svg]:to-gc-gold-600 [&_svg]:bg-clip-text [&_svg]:[-webkit-background-clip:text]",
+        gold: "h-8 px-3.5 gap-2 border-none bg-gc-gold-bg hover:bg-gc-gold-bg-hover focus:ring-2 focus:ring-gc-gold-ring focus:ring-offset-2 text-transparent bg-gradient-to-r from-gc-gold-700 via-gc-gold-500 to-gc-gold-600 bg-clip-text [-webkit-background-clip:text] [&_svg]:[mask:linear-gradient(135deg,hsl(var(--gc-gold-700)),hsl(var(--gc-gold-500)),hsl(var(--gc-gold-600)))_border-box] [&_svg]:[-webkit-mask:linear-gradient(135deg,hsl(var(--gc-gold-700)),hsl(var(--gc-gold-500)),hsl(var(--gc-gold-600)))_border-box] [&_svg]:bg-gradient-to-r [&_svg]:from-gc-gold-700 [&_svg]:via-gc-gold-500 [&_svg]:to-gc-gold-600 [&_svg]:text-transparent",
       },
       size: {
         default: "h-5 px-2.5 py-0.5 text-xs",
