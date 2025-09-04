@@ -3,9 +3,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import patientAvatar from "@/assets/patient-avatar.jpg";
 import { useTheme } from "@/hooks/use-theme";
-import { useConsultStore } from "@/store/useConsultStore";
-import { GoldCareAIIcon } from "@/components/icons/GoldCareAIIcon";
-
 interface PatientMiniCardProps {
   patient: {
     name: string;
@@ -21,57 +18,34 @@ interface PatientMiniCardProps {
   onFinishAppointment: () => void;
   onProfileClick: () => void;
 }
-
-export function PatientMiniCard({ 
-  patient, 
-  timeLeft, 
+export function PatientMiniCard({
+  patient,
+  timeLeft,
   sidebarMini,
   onToggleSidebar,
-  onJoinMeeting, 
+  onJoinMeeting,
   onFinishAppointment,
   onProfileClick
 }: PatientMiniCardProps) {
-  const { theme, toggleTheme } = useTheme();
-  const { isAIVisible, toggleAIVisibility } = useConsultStore();
-  return (
-    <div className="sticky top-0 z-40 bg-bg border-b border-border h-16">
+  const {
+    theme,
+    toggleTheme
+  } = useTheme();
+  return <div className="sticky top-0 z-40 bg-bg border-b border-border h-16">
       <div className="flex h-full items-center justify-between px-6">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="sm">
             <ArrowLeft className="h-4 w-4" />
           </Button>
-          <Button 
-            variant="ghost" 
-            size="sm"
-            onClick={onToggleSidebar}
-          >
+          <Button variant="ghost" size="sm" onClick={onToggleSidebar}>
             {sidebarMini ? <Maximize2 className="h-4 w-4" /> : <Minimize2 className="h-4 w-4" />}
           </Button>
-          <Button 
-            variant="ghost" 
-            size="sm"
-            onClick={toggleTheme}
-          >
+          <Button variant="ghost" size="sm" onClick={toggleTheme}>
             {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-          </Button>
-          
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={toggleAIVisibility}
-            className="h-8 w-8"
-            style={{ opacity: isAIVisible ? 1 : 0.5 }}
-            aria-label={isAIVisible ? 'Hide AI suggestions' : 'Show AI suggestions'}
-          >
-            <GoldCareAIIcon className="h-4 w-4" />
           </Button>
           <div className="h-4 w-px bg-border" />
           <div className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity" onClick={onProfileClick}>
-            <img 
-              src={patientAvatar} 
-              alt={`${patient.name}'s avatar`}
-              className="h-10 w-10 rounded-full object-cover"
-            />
+            <img src={patientAvatar} alt={`${patient.name}'s avatar`} className="h-10 w-10 rounded-full object-cover" />
             <div className="flex items-center gap-2 text-sm">
               <span className="font-semibold text-foreground">{patient.name}</span>
               <span className="text-muted-foreground">•</span>
@@ -82,7 +56,7 @@ export function PatientMiniCard({
                 <span>{patient.location}</span>
               </div>
               <span className="text-muted-foreground">•</span>
-              <Badge variant="gold">
+              <Badge variant="secondary" className="h-5">
                 <Shield className="h-3 w-3 mr-1" />
                 {patient.membership}
               </Badge>
@@ -96,22 +70,15 @@ export function PatientMiniCard({
             <span>Time left: {timeLeft}</span>
           </div>
           
-          <div className="flex items-center gap-2">
-            <button 
-              onClick={onJoinMeeting}
-              className="px-4 py-2 bg-fg text-bg hover:bg-fg/90 rounded-md text-sm font-medium transition-colors"
-            >
+          <div className="flex items-center gap-2 bg-[F5D6A7] bg-[#f5d6a7]/[0.19]">
+            <button onClick={onJoinMeeting} className="px-4 py-2 bg-fg text-bg hover:bg-fg/90 rounded-md text-sm font-medium transition-colors">
               Join Meeting
             </button>
-            <button 
-              onClick={onFinishAppointment}
-              className="px-4 py-2 bg-bg text-fg border border-fg hover:bg-surface rounded-md text-sm font-medium transition-colors"
-            >
+            <button onClick={onFinishAppointment} className="px-4 py-2 bg-bg text-fg border border-fg hover:bg-surface rounded-md text-sm font-medium transition-colors">
               Finish Appointment
             </button>
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 }
