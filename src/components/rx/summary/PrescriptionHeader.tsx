@@ -48,7 +48,7 @@ export function PrescriptionHeader({ prescription, onEditDetails, onReopenAI }: 
   };
 
   return (
-    <Card className="p-4">
+    <Card className="p-4" data-testid="prescription-header">
       <div className="flex items-start gap-4">
         {/* Icon */}
         <div className="flex-shrink-0">

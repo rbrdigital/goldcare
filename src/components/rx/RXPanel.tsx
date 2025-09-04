@@ -4,9 +4,12 @@ import { PrescriptionHeader } from './summary/PrescriptionHeader';
 import { PharmacyLine } from './pharmacy/PharmacyLine';
 import RXForm from '@/components/RXForm';
 import { useConsultStore } from '@/store/useConsultStore';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, ChevronRight } from 'lucide-react';
+import { PageHeader } from '@/components/ui/page-header';
+import { Separator } from '@/components/ui/separator';
+import { Pill } from 'lucide-react';
+import { toast } from '@/hooks/use-toast';
 
 type PanelState = 'ai-ready' | 'drafted' | 'manual';
 
@@ -27,9 +30,22 @@ export function RXPanel() {
       updatePrescription(prescriptions[0].id, parsed);
     }
     
-    // Change to drafted state
+    // Change to drafted state and expand form
     setPanelState('drafted');
-    setIsFormExpanded(false);
+    setIsFormExpanded(true);
+    
+    // Scroll to header and focus first field
+    setTimeout(() => {
+      const headerElement = document.querySelector('[data-testid="prescription-header"]');
+      if (headerElement) {
+        headerElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      
+      const firstInput = document.querySelector('[data-testid="rx-form"] input');
+      if (firstInput) {
+        (firstInput as HTMLInputElement).focus();
+      }
+    }, 100);
   };
 
   const handleManualEntry = () => {
@@ -91,8 +107,36 @@ export function RXPanel() {
     };
   };
 
+  const handleSave = () => {
+    toast({
+      title: "Prescriptions Saved",
+      description: "Your prescription orders have been saved.",
+    });
+  };
+
   return (
     <div className="space-y-6">
+      {/* Page Heading - Always at top */}
+      <PageHeader
+        title="Prescriptions"
+        description="Create and manage prescription orders for your patients"
+        icon={Pill}
+        onSave={handleSave}
+      >
+        <Button
+          variant="outline"
+          onClick={() => {
+            window.dispatchEvent(new CustomEvent('openMedicationWorkspace'));
+          }}
+          className="ml-4"
+        >
+          <Pill className="h-4 w-4 mr-2" />
+          Medication Workspace
+        </Button>
+      </PageHeader>
+      
+      <Separator />
+      
       {/* AI Prompt Box - Only visible in ai-ready state */}
       {panelState === 'ai-ready' && (
         <AIPromptBox 

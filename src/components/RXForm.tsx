@@ -215,24 +215,6 @@ export default function RXForm() {
   return (
     <TooltipProvider>
       <div className="space-y-6" data-testid="rx-form">
-        <PageHeader
-          title="Prescriptions"
-          description="Create and manage prescription orders for your patients"
-          icon={Pill}
-          onSave={handleSave}
-        >
-          <Button
-            variant="outline"
-            onClick={() => {
-              // This will be handled by the parent component
-              window.dispatchEvent(new CustomEvent('openMedicationWorkspace'));
-            }}
-            className="ml-4"
-          >
-            <Pill className="h-4 w-4 mr-2" />
-            Medication Workspace
-          </Button>
-        </PageHeader>
 
         {prescriptions.map((rx, i) => {
           const totalQty = calcTotalQty(rx);
