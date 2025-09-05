@@ -4,7 +4,6 @@ import { MainContent } from "@/components/MainContent";
 import { PatientProfileDrawer } from "@/components/PatientProfileDrawer";
 import { LabsImagingSideSheet } from "@/components/LabsImagingSideSheet";
 import { DiagnosesMedsAllergiesSideSheet } from "@/components/DiagnosesMedsAllergiesSideSheet";
-import { GoldCareAIPanel } from "@/components/GoldCareAIPanel";
 import { PatientMiniCard } from "@/components/PatientMiniCard";
 import { MedicationWorkspace } from "@/components/MedicationWorkspace";
 import { RightPanel } from "@/components/layout/RightPanel";
@@ -25,7 +24,6 @@ export function Dashboard() {
   const [patientProfileDrawerOpen, setPatientProfileDrawerOpen] = useState(false);
   const [labsImagingSideSheetOpen, setLabsImagingSideSheetOpen] = useState(false);
   const [diagnosesMedsAllergiesSideSheetOpen, setDiagnosesMedsAllergiesSideSheetOpen] = useState(false);
-  const [goldcareAIPanelOpen, setGoldcareAIPanelOpen] = useState(false);
   const [medicationWorkspaceOpen, setMedicationWorkspaceOpen] = useState(false);
 
   const { initializeSession } = useConsultStore();
@@ -51,7 +49,6 @@ export function Dashboard() {
     setPatientProfileDrawerOpen(false);
     setLabsImagingSideSheetOpen(false);
     setDiagnosesMedsAllergiesSideSheetOpen(false);
-    setGoldcareAIPanelOpen(false);
     setMedicationWorkspaceOpen(false);
     
     // Open the selected panel or change section
@@ -61,8 +58,6 @@ export function Dashboard() {
       setLabsImagingSideSheetOpen(true);
     } else if (itemId === "diagnoses-meds-allergies") {
       setDiagnosesMedsAllergiesSideSheetOpen(true);
-    } else if (itemId === "goldcare-ai") {
-      setGoldcareAIPanelOpen(true);
     } else {
       // For all other items (soap, rx, lab-orders, imaging-orders, etc.), just change the active section
       setActiveSection(itemId);
@@ -107,7 +102,7 @@ export function Dashboard() {
     };
   }, [labsImagingSideSheetOpen, diagnosesMedsAllergiesSideSheetOpen, medicationWorkspaceOpen]);
 
-  const hasRightSheet = labsImagingSideSheetOpen || diagnosesMedsAllergiesSideSheetOpen || patientProfileDrawerOpen || goldcareAIPanelOpen || medicationWorkspaceOpen;
+  const hasRightSheet = labsImagingSideSheetOpen || diagnosesMedsAllergiesSideSheetOpen || patientProfileDrawerOpen || medicationWorkspaceOpen;
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -170,9 +165,6 @@ export function Dashboard() {
                   isOpen={true}
                   onClose={() => setDiagnosesMedsAllergiesSideSheetOpen(false)}
                 />
-              )}
-              {goldcareAIPanelOpen && (
-                <GoldCareAIPanel />
               )}
               {medicationWorkspaceOpen && (
                 <MedicationWorkspace
