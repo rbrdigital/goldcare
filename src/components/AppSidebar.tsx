@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { 
   FileText, 
   Pill, 
@@ -58,7 +57,7 @@ const goldcareAIItem: SidebarItem = {
   id: "goldcare-ai", 
   label: "GoldCare AI", 
   icon: <GoldCareAIIcon className="h-4 w-4" />, 
-  href: "/goldcare-ai", 
+  href: "#goldcare-ai", 
   isNew: true
 };
 
@@ -100,7 +99,6 @@ interface AppSidebarProps {
 }
 
 export function AppSidebar({ mini = false, activeItem = "soap", onItemClick }: AppSidebarProps) {
-  const navigate = useNavigate();
   const [openSections, setOpenSections] = useState<Set<string>>(
     new Set(sections.filter(s => s.defaultOpen).map(s => s.id))
   );
@@ -144,14 +142,8 @@ export function AppSidebar({ mini = false, activeItem = "soap", onItemClick }: A
     setOpenSections(newOpenSections);
   };
 
-  const handleItemClick = (itemId: string, href?: string) => {
-    if (href && (href.startsWith("/") || href.startsWith("http"))) {
-      // Navigate to route
-      navigate(href);
-    } else {
-      // Call the original handler for section changes and panels
-      onItemClick?.(itemId);
-    }
+  const handleItemClick = (itemId: string) => {
+    onItemClick?.(itemId);
   };
 
   const filteredSections = sections.map(section => ({
@@ -169,7 +161,7 @@ export function AppSidebar({ mini = false, activeItem = "soap", onItemClick }: A
           {[visitSummaryItem, goldcareAIItem, ...clinicalItems].slice(0, 6).map((item) => (
             <button
               key={item.id}
-              onClick={() => handleItemClick(item.id, item.href)}
+              onClick={() => handleItemClick(item.id)}
               className={cn(
                 "w-12 h-12 rounded-lg flex items-center justify-center relative group transition-colors",
                 activeItem === item.id 
@@ -247,7 +239,7 @@ export function AppSidebar({ mini = false, activeItem = "soap", onItemClick }: A
                         key={visitSummaryItem.id}
                         item={visitSummaryItem}
                         isActive={activeItem === visitSummaryItem.id}
-                        onClick={() => handleItemClick(visitSummaryItem.id, visitSummaryItem.href)}
+                        onClick={() => handleItemClick(visitSummaryItem.id)}
                       />
                     </div>
                     <div className="px-4 pb-2">
@@ -255,7 +247,7 @@ export function AppSidebar({ mini = false, activeItem = "soap", onItemClick }: A
                         key={goldcareAIItem.id}
                         item={goldcareAIItem}
                         isActive={activeItem === goldcareAIItem.id}
-                        onClick={() => handleItemClick(goldcareAIItem.id, goldcareAIItem.href)}
+                        onClick={() => handleItemClick(goldcareAIItem.id)}
                       />
                     </div>
                     <div className="px-4 pb-2">
@@ -267,7 +259,7 @@ export function AppSidebar({ mini = false, activeItem = "soap", onItemClick }: A
                           key={item.id}
                           item={{ ...item, dirty: hasContent(item.id) }}
                           isActive={activeItem === item.id}
-                          onClick={() => handleItemClick(item.id, item.href)}
+                          onClick={() => handleItemClick(item.id)}
                         />
                       ))}
                     </div>
@@ -280,7 +272,7 @@ export function AppSidebar({ mini = false, activeItem = "soap", onItemClick }: A
                           key={item.id}
                           item={item}
                           isActive={activeItem === item.id}
-                          onClick={() => handleItemClick(item.id, item.href)}
+                          onClick={() => handleItemClick(item.id)}
                         />
                       ))}
                     </div>
@@ -294,7 +286,7 @@ export function AppSidebar({ mini = false, activeItem = "soap", onItemClick }: A
                       key={item.id}
                       item={item}
                       isActive={activeItem === item.id}
-                      onClick={() => handleItemClick(item.id, item.href)}
+                      onClick={() => handleItemClick(item.id)}
                     />
                     ))}
                   </div>
@@ -315,8 +307,8 @@ interface SidebarItemProps {
 }
 
 function SidebarItem({ item, isActive, onClick }: SidebarItemProps) {
-  // Don't show active state for drawer items like patient profile, labs & imaging, diagnoses, goldcare-ai
-  const showActive = !["profile", "previous-results", "diagnoses-meds-allergies", "goldcare-ai"].includes(item.id) && isActive;
+  // Don't show active state for drawer items like patient profile, labs & imaging, diagnoses
+  const showActive = !["profile", "previous-results", "diagnoses-meds-allergies"].includes(item.id) && isActive;
   
   return (
     <button

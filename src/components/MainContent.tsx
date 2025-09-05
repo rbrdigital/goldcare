@@ -30,6 +30,7 @@ import RXForm from "@/components/RXForm";
 import { RXPanel } from "@/components/rx/RXPanel";
 import { SummarySection } from "@/components/SummarySection";
 import { PrivateNotesSection } from "@/components/PrivateNotesSection";
+import { GoldCareAISection } from "@/components/GoldCareAISection";
 import { copy } from "@/copy/en";
 import PageContainer from "@/components/layout/PageContainer";
 import { useConsultStore } from "@/store/useConsultStore";
@@ -43,6 +44,8 @@ export function MainContent({ activeSection }: MainContentProps) {
     switch (activeSection) {
       case "summary":
         return <SummarySection />;
+      case "goldcare-ai":
+        return <GoldCareAISection />;
       case "soap":
         return <SOAPNoteSection />;
       case "rx":
