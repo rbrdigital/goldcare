@@ -309,11 +309,6 @@ export function GoldCareAISection() {
       {/* Sticky Toolbar */}
       <div className="sticky top-0 z-50 bg-bg border-b border-border px-6 py-3">
         <div className="flex items-center justify-between max-w-7xl mx-auto">
-          <h1 className="text-lg font-semibold text-fg">GoldCare AI — Encounter Assistant</h1>
-          <Badge variant="outline" className="gap-1">
-            <User className="h-3 w-3" />
-            Sarah Johnson, 34F, MRN 102938
-          </Badge>
           
           <div className="text-sm text-fg-muted">
             {acceptedCount} of {totalCount} accepted
