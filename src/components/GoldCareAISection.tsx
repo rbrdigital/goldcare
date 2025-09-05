@@ -8,6 +8,8 @@ import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { PageHeader } from "@/components/ui/page-header";
+import { GoldCareAIIcon } from "@/components/icons/GoldCareAIIcon";
 import { 
   Check, 
   Edit3, 
@@ -351,6 +353,13 @@ export function GoldCareAISection() {
       </div>
 
       <div className="max-w-4xl mx-auto px-6 py-6 space-y-6" ref={containerRef}>
+        {/* Page Header */}
+        <PageHeader
+          title="GoldCare AI"
+          description="AI-powered encounter assistant for clinical documentation and decision support"
+          icon={GoldCareAIIcon}
+        />
+
         {/* Sources Section */}
         <Card>
           <Collapsible open={sourcesOpen} onOpenChange={setSourcesOpen}>
