@@ -115,6 +115,7 @@ export function AIPromptBox({ onDraft, onManualEntry }: AIPromptBoxProps) {
             className="w-full sm:w-auto font-semibold"
             size="lg"
           >
+            <GoldCareAIIcon className="h-4 w-4 mr-2" />
             Draft with AI
           </Button>
           <div className="text-center">
