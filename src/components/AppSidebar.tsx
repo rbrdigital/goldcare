@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { 
   FileText, 
   Pill, 
@@ -57,7 +58,7 @@ const goldcareAIItem: SidebarItem = {
   id: "goldcare-ai", 
   label: "GoldCare AI", 
   icon: <GoldCareAIIcon className="h-4 w-4" />, 
-  href: "#goldcare-ai", 
+  href: "/goldcare-ai", 
   isNew: true
 };
 
@@ -99,6 +100,7 @@ interface AppSidebarProps {
 }
 
 export function AppSidebar({ mini = false, activeItem = "soap", onItemClick }: AppSidebarProps) {
+  const navigate = useNavigate();
   const [openSections, setOpenSections] = useState<Set<string>>(
     new Set(sections.filter(s => s.defaultOpen).map(s => s.id))
   );
@@ -142,8 +144,14 @@ export function AppSidebar({ mini = false, activeItem = "soap", onItemClick }: A
     setOpenSections(newOpenSections);
   };
 
-  const handleItemClick = (itemId: string) => {
-    onItemClick?.(itemId);
+  const handleItemClick = (itemId: string, href?: string) => {
+    if (href && (href.startsWith("/") || href.startsWith("http"))) {
+      // Navigate to route
+      navigate(href);
+    } else {
+      // Call the original handler for section changes and panels
+      onItemClick?.(itemId);
+    }
   };
 
   const filteredSections = sections.map(section => ({
@@ -161,7 +169,7 @@ export function AppSidebar({ mini = false, activeItem = "soap", onItemClick }: A
           {[visitSummaryItem, goldcareAIItem, ...clinicalItems].slice(0, 6).map((item) => (
             <button
               key={item.id}
-              onClick={() => handleItemClick(item.id)}
+              onClick={() => handleItemClick(item.id, item.href)}
               className={cn(
                 "w-12 h-12 rounded-lg flex items-center justify-center relative group transition-colors",
                 activeItem === item.id 
@@ -239,7 +247,7 @@ export function AppSidebar({ mini = false, activeItem = "soap", onItemClick }: A
                         key={visitSummaryItem.id}
                         item={visitSummaryItem}
                         isActive={activeItem === visitSummaryItem.id}
-                        onClick={() => handleItemClick(visitSummaryItem.id)}
+                        onClick={() => handleItemClick(visitSummaryItem.id, visitSummaryItem.href)}
                       />
                     </div>
                     <div className="px-4 pb-2">
@@ -247,7 +255,7 @@ export function AppSidebar({ mini = false, activeItem = "soap", onItemClick }: A
                         key={goldcareAIItem.id}
                         item={goldcareAIItem}
                         isActive={activeItem === goldcareAIItem.id}
-                        onClick={() => handleItemClick(goldcareAIItem.id)}
+                        onClick={() => handleItemClick(goldcareAIItem.id, goldcareAIItem.href)}
                       />
                     </div>
                     <div className="px-4 pb-2">
@@ -259,7 +267,7 @@ export function AppSidebar({ mini = false, activeItem = "soap", onItemClick }: A
                           key={item.id}
                           item={{ ...item, dirty: hasContent(item.id) }}
                           isActive={activeItem === item.id}
-                          onClick={() => handleItemClick(item.id)}
+                          onClick={() => handleItemClick(item.id, item.href)}
                         />
                       ))}
                     </div>
@@ -272,7 +280,7 @@ export function AppSidebar({ mini = false, activeItem = "soap", onItemClick }: A
                           key={item.id}
                           item={item}
                           isActive={activeItem === item.id}
-                          onClick={() => handleItemClick(item.id)}
+                          onClick={() => handleItemClick(item.id, item.href)}
                         />
                       ))}
                     </div>
@@ -282,12 +290,12 @@ export function AppSidebar({ mini = false, activeItem = "soap", onItemClick }: A
                 {section.id === "appointment" && (
                   <div className="px-4">
                     {section.items.map((item) => (
-                      <SidebarItem
-                        key={item.id}
-                        item={item}
-                        isActive={activeItem === item.id}
-                        onClick={() => handleItemClick(item.id)}
-                      />
+                    <SidebarItem
+                      key={item.id}
+                      item={item}
+                      isActive={activeItem === item.id}
+                      onClick={() => handleItemClick(item.id, item.href)}
+                    />
                     ))}
                   </div>
                 )}
