@@ -601,8 +601,8 @@ function Select({
   return (
     <select
       className={cn(
-        "w-full h-9 px-3 rounded-md bg-surface border border-border",
-        "text-sm placeholder:text-fg-muted",
+        "w-full py-2.5 px-3 rounded-md bg-surface border border-border",
+        "text-base md:text-sm placeholder:text-fg-muted",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
       )}
       value={value}
