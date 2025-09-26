@@ -100,8 +100,23 @@ const FREQUENCIES: Record<FrequencyKey, { label: string; perDay: number }> = {
   other: { label: "Other", perDay: 1 }
 };
 
-const FORMULATIONS = ["Tablet", "Capsule", "Liquid", "ODT"] as const;
-const ROUTES = ["Oral", "IM", "IV"] as const;
+const FORMULATIONS = [
+  "Tablet", "Capsule", "Suspension", "Syrup", "Solution", "Injection", 
+  "Ointment", "Cream", "Gel", "Patch", "Spray", "Suppository"
+] as const;
+
+const ROUTES = [
+  "Oral (PO)", "Intravenous (IV)", "Intramuscular (IM)", "Subcutaneous (SC)", 
+  "Sublingual", "Inhalation", "Topical", "Transdermal", "Rectal", "Vaginal", 
+  "Ophthalmic", "Otic", "Nasal"
+] as const;
+
+const STRENGTHS = [
+  "5 mg", "10 mg", "20 mg", "25 mg", "50 mg", "100 mg", "250 mg", "500 mg",
+  "875 mg", "1000 mg", "875/125 mg", "500/125 mg", "250/125 mg", "1 mg/mL",
+  "5 mg/mL", "10 mg/mL", "25 mg/mL", "50 mg/mL", "100 mg/mL"
+] as const;
+
 const QTY_UNITS = ["Tablet", "Capsule", "mL"] as const;
 
 function emptyRx(): RxFields {
@@ -294,12 +309,12 @@ export default function RXForm() {
                 />
               </div>
               <div>
-                <Label htmlFor={`strength-${i}`}>Strength</Label>
-                <Input
-                  id={`strength-${i}`}
-                  placeholder="e.g., 875/125 mg"
+                <Label>Strength</Label>
+                <Select
                   value={rx.strength}
-                  onChange={(e) => patchItem(i, { strength: e.target.value })}
+                  onChange={(v) => patchItem(i, { strength: v })}
+                  placeholder="Select strength"
+                  options={[...STRENGTHS]}
                 />
               </div>
             </div>
@@ -429,7 +444,7 @@ export default function RXForm() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
               <div>
-                <Label>Notes to patient</Label>
+                <Label>Instructions to patient</Label>
                 <AutosizeTextarea
                   minRows={2}
                   placeholder="Additional instructions for the patient"
