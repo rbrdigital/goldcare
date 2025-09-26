@@ -37,7 +37,9 @@ export interface Prescription {
   qtyPerDose: number | "";
   formulation: string;
   route: string;
+  strength: string;
   frequency: string;
+  frequencyOther: string;
   duration: number | "";
   totalQtyUnit: "Tablet" | "Capsule" | "mL";
   refills: number | "";

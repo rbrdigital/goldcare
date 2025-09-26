@@ -60,7 +60,9 @@ type RxFields = {
   qtyPerDose: number | "";
   formulation: string;
   route: string;
+  strength: string;
   frequencyKey: FrequencyKey | "";
+  frequencyOther: string;
   duration: number | "";
   totalQtyUnit: "Tablet" | "Capsule" | "mL";
   refills: number | "";
@@ -87,14 +89,15 @@ type SelectedPharmacy = {
   is24hr?: boolean;
 };
 
-type FrequencyKey = "qd" | "q12h" | "q8h" | "q6h" | "qod";
+type FrequencyKey = "qd" | "q12h" | "q8h" | "q6h" | "qod" | "other";
 
 const FREQUENCIES: Record<FrequencyKey, { label: string; perDay: number }> = {
   qd: { label: "Once daily", perDay: 1 },
   q12h: { label: "Every 12 hours", perDay: 2 },
   q8h: { label: "Every 8 hours", perDay: 3 },
   q6h: { label: "Every 6 hours", perDay: 4 },
-  qod: { label: "Every other day", perDay: 0.5 }
+  qod: { label: "Every other day", perDay: 0.5 },
+  other: { label: "Other", perDay: 1 }
 };
 
 const FORMULATIONS = ["Tablet", "Capsule", "Liquid", "ODT"] as const;
@@ -108,7 +111,9 @@ function emptyRx(): RxFields {
     qtyPerDose: "",
     formulation: "",
     route: "",
+    strength: "",
     frequencyKey: "",
+    frequencyOther: "",
     duration: "",
     totalQtyUnit: "Tablet",
     refills: "",
@@ -144,7 +149,9 @@ export default function RXForm() {
         qtyPerDose: "",
         formulation: "",
         route: "",
+        strength: "",
         frequency: "",
+        frequencyOther: "",
         duration: "",
         totalQtyUnit: "Tablet",
         refills: "",
@@ -170,7 +177,9 @@ export default function RXForm() {
       qtyPerDose: "",
       formulation: "",
       route: "",
+      strength: "",
       frequency: "",
+      frequencyOther: "",
       duration: "",
       totalQtyUnit: "Tablet",
       refills: "",
@@ -255,7 +264,7 @@ export default function RXForm() {
             </div>
 
             {/* GoldCare AI - Therapy plan */}
-            <div className="space-y-2 mb-4">
+            <div className="space-y-2 mb-6">
               <AIChipClosedSmart
                 text="Therapy plan: amoxicillin–clavulanate 875/125 mg tablet, 1 tab PO q12h x 10 days; 0 refills."
                 onInsert={() =>
@@ -264,33 +273,9 @@ export default function RXForm() {
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
-              {/* Quantity per dose */}
-              <div className="md:col-span-3">
-                <Label htmlFor={`qty-${i}`}>Quantity</Label>
-                <Input
-                  id={`qty-${i}`}
-                  type="number"
-                  min={0}
-                  placeholder="e.g., 1"
-                  value={rx.qtyPerDose as number | ""}
-                  onChange={(e) => patchItem(i, { qtyPerDose: toNumOrEmpty(e.target.value) })}
-                />
-              </div>
-
-              {/* Formulation */}
-              <div className="md:col-span-3">
-                <Label>Formulation</Label>
-                <Select
-                  value={rx.formulation}
-                  onChange={(v) => patchItem(i, { formulation: v })}
-                  placeholder="Select formulation"
-                  options={[...FORMULATIONS]}
-                />
-              </div>
-
-              {/* Route */}
-              <div className="md:col-span-3">
+            {/* Row 2: Route, Formulation, Strength */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+              <div>
                 <Label>Route</Label>
                 <Select
                   value={rx.route}
@@ -299,78 +284,85 @@ export default function RXForm() {
                   options={[...ROUTES]}
                 />
               </div>
+              <div>
+                <Label>Formulation</Label>
+                <Select
+                  value={rx.formulation}
+                  onChange={(v) => patchItem(i, { formulation: v })}
+                  placeholder="Select formulation"
+                  options={[...FORMULATIONS]}
+                />
+              </div>
+              <div>
+                <Label htmlFor={`strength-${i}`}>Strength</Label>
+                <Input
+                  id={`strength-${i}`}
+                  placeholder="e.g., 875/125 mg"
+                  value={rx.strength}
+                  onChange={(e) => patchItem(i, { strength: e.target.value })}
+                />
+              </div>
+            </div>
 
-              {/* Frequency */}
-              <div className="md:col-span-3">
+            {/* Row 3: Quantity, Frequency, Duration */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+              <div>
+                <Label htmlFor={`qty-${i}`}>Quantity</Label>
+                <Input
+                  id={`qty-${i}`}
+                  type="number"
+                  min="0"
+                  step="1"
+                  placeholder="e.g., 1"
+                  value={rx.qtyPerDose as number | ""}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    patchItem(i, { qtyPerDose: val === "" ? "" : Math.max(0, parseInt(val) || 0) });
+                  }}
+                />
+              </div>
+              <div>
                 <Label>Frequency</Label>
                 <Select
                   value={rx.frequency}
-                  onChange={(label) =>
-                    patchItem(i, {
-                      frequency: label
-                    })
-                  }
+                  onChange={(label) => {
+                    patchItem(i, { frequency: label });
+                    if (label !== "Other") {
+                      patchItem(i, { frequencyOther: "" });
+                    }
+                  }}
                   placeholder="Select frequency"
                   options={Object.values(FREQUENCIES).map((f) => f.label)}
                 />
+                {rx.frequency === "Other" && (
+                  <Input
+                    className="mt-2"
+                    placeholder="Enter custom frequency"
+                    value={rx.frequencyOther}
+                    onChange={(e) => patchItem(i, { frequencyOther: e.target.value })}
+                  />
+                )}
               </div>
-
-              {/* Duration */}
-              <div className="md:col-span-3">
+              <div>
                 <Label htmlFor={`dur-${i}`}>Duration (days)</Label>
                 <Input
                   id={`dur-${i}`}
                   type="number"
-                  min={0}
+                  min="0"
+                  step="1"
                   placeholder="e.g., 10"
                   value={rx.duration as number | ""}
-                  onChange={(e) => patchItem(i, { duration: toNumOrEmpty(e.target.value) })}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    patchItem(i, { duration: val === "" ? "" : Math.max(0, parseInt(val) || 0) });
+                  }}
                 />
               </div>
+            </div>
 
-              {/* Total Qty (auto) */}
-              <div className="md:col-span-3">
-                <Label>Total Qty</Label>
-                <Input readOnly value={Number.isFinite(totalQty) ? totalQty : ""} />
-              </div>
-
-              <div className="md:col-span-3">
-                <Label>Unit</Label>
-                <Select
-                  value={rx.totalQtyUnit}
-                  onChange={(v) =>
-                    patchItem(i, { totalQtyUnit: (v as Prescription["totalQtyUnit"]) || "Tablet" })
-                  }
-                  options={[...QTY_UNITS]}
-                />
-              </div>
-
-              {/* Refills */}
-              <div className="md:col-span-3">
-                <Label htmlFor={`ref-${i}`}>Refills</Label>
-                <Input
-                  id={`ref-${i}`}
-                  type="number"
-                  min={0}
-                  placeholder="e.g., 0"
-                  value={rx.refills as number | ""}
-                  onChange={(e) => patchItem(i, { refills: toNumOrEmpty(e.target.value) })}
-                />
-              </div>
-
-              {/* Action */}
-              <div className="md:col-span-3">
-                <Label htmlFor={`act-${i}`}>Action</Label>
-                <Input
-                  id={`act-${i}`}
-                  placeholder="e.g., Take"
-                  value={rx.action}
-                  onChange={(e) => patchItem(i, { action: e.target.value })}
-                />
-              </div>
-
-              {/* Substitutions */}
-              <div className="md:col-span-3">
+            {/* Row 4: Substitutions, Refills, PRN */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+              <div>
                 <Label>Substitutions</Label>
                 <Select
                   value={rx.subsAllowed ? "Substitutions allowed" : "No substitutions"}
@@ -378,9 +370,45 @@ export default function RXForm() {
                   options={["Substitutions allowed", "No substitutions"]}
                 />
               </div>
+              <div>
+                <Label htmlFor={`ref-${i}`}>Refills</Label>
+                <Input
+                  id={`ref-${i}`}
+                  type="number"
+                  min="0"
+                  step="1"
+                  placeholder="e.g., 0"
+                  value={rx.refills as number | ""}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    patchItem(i, { refills: val === "" ? "" : Math.max(0, parseInt(val) || 0) });
+                  }}
+                />
+              </div>
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <input
+                    id={`prn-${i}`}
+                    type="checkbox"
+                    className="h-4 w-4"
+                    checked={rx.prn}
+                    onChange={(e) => patchItem(i, { prn: e.target.checked, prnInstructions: e.target.checked ? rx.prnInstructions : "" })}
+                  />
+                  <Label htmlFor={`prn-${i}`}>PRN (as needed)</Label>
+                </div>
+                <Input
+                  id={`prn-instructions-${i}`}
+                  placeholder="e.g., for pain, for nausea"
+                  value={rx.prnInstructions}
+                  disabled={!rx.prn}
+                  onChange={(e) => patchItem(i, { prnInstructions: e.target.value })}
+                />
+              </div>
+            </div>
 
-              {/* Dates */}
-              <div className="md:col-span-3">
+            {/* Row 5: Start date, Earliest fill date */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+              <div>
                 <Label>Start date</Label>
                 <Input
                   type="date"
@@ -388,7 +416,7 @@ export default function RXForm() {
                   onChange={(e) => patchItem(i, { startDate: e.target.value })}
                 />
               </div>
-              <div className="md:col-span-3">
+              <div>
                 <Label>Earliest fill date</Label>
                 <Input
                   type="date"
@@ -396,27 +424,7 @@ export default function RXForm() {
                   onChange={(e) => patchItem(i, { earliestFill: e.target.value })}
                 />
               </div>
-            </div>
-
-            {/* PRN - Full Width */}
-            <div className="mt-4">
-              <div className="flex items-center gap-2 mb-2">
-                <input
-                  id={`prn-${i}`}
-                  type="checkbox"
-                  className="h-4 w-4"
-                  checked={rx.prn}
-                  onChange={(e) => patchItem(i, { prn: e.target.checked, prnInstructions: e.target.checked ? rx.prnInstructions : "" })}
-                />
-                <Label htmlFor={`prn-${i}`}>PRN (as needed)</Label>
-              </div>
-              <Input
-                id={`prn-instructions-${i}`}
-                placeholder="e.g., for pain, for nausea"
-                value={rx.prnInstructions}
-                disabled={!rx.prn}
-                onChange={(e) => patchItem(i, { prnInstructions: e.target.value })}
-              />
+              <div></div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
