@@ -7,6 +7,7 @@ import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { PageHeader } from "@/components/ui/page-header";
 import { AIChipClosedSmart } from "@/components/ai/AIChipClosedSmart";
 import { InlineAddInput } from "@/components/ui/inline-add-input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import AddLabOrderScreen from "@/components/labs/AddLabOrderScreen";
 import ImagingOrdersSection from "./imaging/ImagingOrdersSection";
 import OutsideOrdersSection from "./outside-orders/OutsideOrdersSection";
@@ -327,12 +328,12 @@ function SOAPNoteSection() {
 
         <Separator className="my-8" />
 
-        {/* ========== Assessment ========== */}
+        {/* ========== Assessment / Plan ========== */}
         <section>
-          <h3 className="text-lg font-semibold text-fg mb-4">Assessment</h3>
+          <h3 className="text-lg font-semibold text-fg mb-4">Assessment / Plan</h3>
           <div className="space-y-6">
             <div>
-              <Label className="text-sm font-medium text-fg mb-2">{copy.assessment}</Label>
+              <Label className="text-sm font-medium text-fg mb-2">Assessment</Label>
               <AutosizeTextarea
                 value={soapNote.assessment}
                 onChange={(e) => updateSOAPField('assessment', e.target.value)}
@@ -349,49 +350,8 @@ function SOAPNoteSection() {
             </div>
 
             <div>
-              <Label className="text-sm font-medium text-fg mb-2">{copy.differential}</Label>
-              <AutosizeTextarea
-                value={soapNote.differential}
-                onChange={(e) => updateSOAPField('differential', e.target.value)}
-                placeholder={copy.differentialPlaceholder}
-                minRows={2}
-                maxRows={5}
-              />
-              <AIChipClosedSmart
-                text="Hypertension with secondary cardiovascular risk • Obstructive sleep apnea • Anxiety-related chest tightness"
-                onInsert={() => insertSuggestion("Hypertension with secondary cardiovascular risk • Obstructive sleep apnea • Anxiety-related chest tightness", 'differential')}
-                onGenerateInsert={(text) => insertSuggestion(text, 'differential')}
-                useCustomizable={true}
-              />
-            </div>
-          </div>
-        </section>
-
-        <Separator className="my-8" />
-
-        {/* ========== Plan ========== */}
-        <section>
-          <h3 className="text-lg font-semibold text-fg mb-4">{copy.planSection}</h3>
-          <div className="space-y-6">
-            <div>
-              <Label className="text-sm font-medium text-fg mb-2">{copy.plan}</Label>
-              <AutosizeTextarea
-                value={soapNote.plan}
-                onChange={(e) => updateSOAPField('plan', e.target.value)}
-                placeholder={copy.planPlaceholder}
-                minRows={4}
-                maxRows={8}
-              />
-              <AIChipClosedSmart
-                text="1) Order EKG, lipid panel, and basic metabolic panel. 2) Continue lisinopril and atorvastatin as prescribed. 3) Recommend sleep study referral to rule out OSA. 4) Follow-up in 6 weeks with lab results."
-                onInsert={() => insertSuggestion("1) Order EKG, lipid panel, and basic metabolic panel. 2) Continue lisinopril and atorvastatin as prescribed. 3) Recommend sleep study referral to rule out OSA. 4) Follow-up in 6 weeks with lab results.", 'plan')}
-                onGenerateInsert={(text) => insertSuggestion(text, 'plan')}
-                useCustomizable={true}
-              />
-            </div>
-
-            <div>
-              <Label className="text-sm font-medium text-fg mb-2">{copy.acuteDiagnosis}</Label>
+              <Label className="text-sm font-medium text-fg mb-2">Diagnosis</Label>
+              <p className="text-xs text-fg-muted mb-2">{copy.acuteDiagnosisPlaceholder}</p>
               <InlineAddInput
                 placeholder={copy.acuteDiagnosisPlaceholder}
                 onAdd={(value) => addDiagnosis(value)}
@@ -413,23 +373,61 @@ function SOAPNoteSection() {
             </div>
 
             <div>
-              <Label className="text-sm font-medium text-fg mb-2">{copy.comorbidities}</Label>
-              <InlineAddInput
-                placeholder={copy.comorbiditiesPlaceholder}
-                onAdd={(value) => addComorbidity(value)}
+              <Label className="text-sm font-medium text-fg mb-2">Patient Education and Discharge Instructions</Label>
+              <AutosizeTextarea
+                value={soapNote.patientEducation}
+                onChange={(e) => updateSOAPField('patientEducation', e.target.value)}
+                placeholder="Patient education, discharge instructions, and lifestyle recommendations"
+                minRows={3}
+                maxRows={6}
               />
-              {soapNote.comorbidities.length > 0 && (
-                <div className="flex flex-wrap gap-2 mt-3">
-                  {soapNote.comorbidities.map((condition, idx) => (
-                    <Tag key={idx} text={condition} onRemove={() => removeComorbidity(idx)} />
-                  ))}
+              <AIChipClosedSmart
+                text="Continue current medications as prescribed. Monitor blood pressure daily. Limit sodium intake and increase physical activity. Return if symptoms worsen."
+                onInsert={() => insertSuggestion("Continue current medications as prescribed. Monitor blood pressure daily. Limit sodium intake and increase physical activity. Return if symptoms worsen.", 'patientEducation')}
+                onGenerateInsert={(text) => insertSuggestion(text, 'patientEducation')}
+                useCustomizable={true}
+              />
+            </div>
+
+            <div>
+              <Label className="text-sm font-medium text-fg mb-2">Follow-up Appointment</Label>
+              <div className="flex gap-2 items-center">
+                <div className="flex-1">
+                  <Input 
+                    type="number" 
+                    value={soapNote.followUpValue} 
+                    onChange={(e) => updateSOAPField('followUpValue', e.target.value)}
+                    placeholder="Select days, weeks, or months" 
+                    min="1"
+                  />
                 </div>
+                <div className="flex-1">
+                  <Select
+                    value={soapNote.followUpUnit}
+                    onValueChange={(value) => updateSOAPField('followUpUnit', value)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select unit" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Days">Days</SelectItem>
+                      <SelectItem value="Weeks">Weeks</SelectItem>
+                      <SelectItem value="Months">Months</SelectItem>
+                      <SelectItem value="Years">Years</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              {soapNote.followUpValue && soapNote.followUpUnit && (
+                <p className="text-sm text-fg-muted mt-2">
+                  Follow-up in {soapNote.followUpValue} {soapNote.followUpUnit.toLowerCase()}
+                </p>
               )}
               <AIChipClosedSmart
-                text="Type 2 diabetes mellitus • Osteoarthritis of knee"
+                text="6 weeks"
                 onInsert={() => {
-                  const comorbList = ["Type 2 diabetes mellitus", "Osteoarthritis of knee"];
-                  comorbList.forEach(comorb => addComorbidity(comorb));
+                  updateSOAPField('followUpValue', "6");
+                  updateSOAPField('followUpUnit', "Weeks");
                 }}
               />
             </div>
