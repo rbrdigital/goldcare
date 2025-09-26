@@ -334,41 +334,41 @@ export function GoldCareAISection() {
         description="AI-powered encounter assistant for clinical documentation and decision support"
         icon={GoldCareAIIcon}
         onSave={handleSave}
-      >
-        <div className="flex items-center gap-3">
-          <div className="text-sm text-fg-muted">
-            {acceptedCount} of {totalCount} accepted
-          </div>
-          <Button 
-            onClick={handleAcceptAll}
-            disabled={acceptedCount === totalCount}
-            variant="secondary"
-            size="sm"
-            className="gap-2"
-          >
-            <Check className="h-4 w-4" />
-            Accept All
-          </Button>
-          <Button 
-            onClick={handleCommit}
-            disabled={acceptedCount === 0}
-            variant="default"
-            size="sm"
-            className="gap-2"
-          >
-            Commit & Finalize
-          </Button>
-          <div className="relative">
-            <Search className="absolute left-3 top-2.5 h-4 w-4 text-fg-muted" />
-            <Input
-              placeholder="Type 'rx albuterol' or 'add cbc'..."
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
-              className="pl-9 w-64"
-            />
-          </div>
+      />
+
+      <div className="flex items-center gap-3">
+        <div className="text-sm text-fg-muted">
+          {acceptedCount} of {totalCount} accepted
         </div>
-      </PageHeader>
+        <Button 
+          onClick={handleAcceptAll}
+          disabled={acceptedCount === totalCount}
+          variant="secondary"
+          size="sm"
+          className="gap-2"
+        >
+          <Check className="h-4 w-4" />
+          Accept All
+        </Button>
+        <Button 
+          onClick={handleCommit}
+          disabled={acceptedCount === 0}
+          variant="default"
+          size="sm"
+          className="gap-2"
+        >
+          Commit & Finalize
+        </Button>
+        <div className="relative">
+          <Search className="absolute left-3 top-2.5 h-4 w-4 text-fg-muted" />
+          <Input
+            placeholder="Type 'rx albuterol' or 'add cbc'..."
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+            className="pl-9 w-64"
+          />
+        </div>
+      </div>
 
       {/* Sources Section */}
       <Card>
