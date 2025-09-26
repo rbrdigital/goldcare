@@ -67,18 +67,14 @@ export interface LabOrder {
 
 export interface ImagingOrder {
   id: string;
-  diagnoses: string[];
-  selectedOrders: Array<{
-    orderId: string;
-    orderName: string;
-    modality: string;
-    contrast: string;
-    laterality: string;
+  diagnosisCodes: string[];
+  diagnosisText: string;
+  studies: Array<{
+    id: string;
+    label: string;
+    contrast?: "yes" | "no" | "unsure";
   }>;
-  otherOrders: string[];
-  urgency: string;
-  indication: string;
-  clinicalNotes: string;
+  notes?: string;
 }
 
 export interface OutsideOrder {
@@ -604,11 +600,10 @@ const isMeaningfulRx = (rx: Prescription): boolean => {
 
 const isMeaningfulImaging = (imaging: ImagingOrder): boolean => {
   return !!(
-    imaging.diagnoses?.length > 0 ||
-    imaging.clinicalNotes?.trim() ||
-    imaging.indication?.trim() ||
-    imaging.selectedOrders?.length > 0 ||
-    imaging.otherOrders?.length > 0
+    imaging.diagnosisCodes?.length > 0 ||
+    imaging.diagnosisText?.trim() ||
+    imaging.studies?.length > 0 ||
+    imaging.notes?.trim()
   );
 };
 

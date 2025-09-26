@@ -88,9 +88,7 @@ export function SummarySection() {
   // Format imaging orders for display
   const formatImagingOrders = () => {
     return consultData.imagingOrders.flatMap(imaging => {
-      const selectedStudies = imaging.selectedOrders?.map(o => o.orderName) || [];
-      const otherStudies = imaging.otherOrders || [];
-      return [...selectedStudies, ...otherStudies];
+      return imaging.studies?.map(study => study.label) || [];
     });
   };
 
