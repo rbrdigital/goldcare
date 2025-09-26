@@ -10,6 +10,7 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/h
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { PageHeader } from "@/components/ui/page-header";
 import { GoldCareAIIcon } from "@/components/icons/GoldCareAIIcon";
+import { useToast } from "@/hooks/use-toast";
 import { 
   Check, 
   Edit3, 
@@ -202,6 +203,7 @@ export function GoldCareAISection() {
   const [sourcesOpen, setSourcesOpen] = useState(false);
   const [savedAt, setSavedAt] = useState<Date | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const { toast } = useToast();
 
   const acceptedCount = blocks.filter(b => b.accepted).length;
   const totalCount = blocks.length;
@@ -210,9 +212,14 @@ export function GoldCareAISection() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setSavedAt(new Date());
+      toast({
+        title: "Auto-saved",
+        description: "Changes saved automatically",
+        duration: 2000,
+      });
     }, 2000);
     return () => clearTimeout(timer);
-  }, [blocks]);
+  }, [blocks, toast]);
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -303,65 +310,68 @@ export function GoldCareAISection() {
 
   const handleCommit = () => {
     // Simulate commit
-    alert(`Committed ${acceptedCount} accepted items. Redirecting to chart note...`);
+    toast({
+      title: "Finalized Successfully",
+      description: `Committed ${acceptedCount} accepted items. Redirecting to chart note...`,
+      duration: 4000,
+    });
+  };
+
+  const handleSave = () => {
+    setSavedAt(new Date());
+    toast({
+      title: "Manual Save",
+      description: "All changes saved",
+      duration: 2000,
+    });
   };
 
   return (
-    <div className="min-h-screen bg-bg">
-      {/* Sticky Toolbar */}
-      <div className="sticky top-0 z-50 bg-bg border-b border-border px-6 py-3">
-        <div className="flex items-center justify-between max-w-7xl mx-auto">
-          
+    <div className="space-y-6" ref={containerRef}>
+      {/* Page Header */}
+      <PageHeader
+        title="GoldCare AI"
+        description="AI-powered encounter assistant for clinical documentation and decision support"
+        icon={GoldCareAIIcon}
+        onSave={handleSave}
+      >
+        <div className="flex items-center gap-3">
           <div className="text-sm text-fg-muted">
             {acceptedCount} of {totalCount} accepted
           </div>
-          
-          <div className="flex items-center gap-3">
-            <Button 
-              onClick={handleAcceptAll}
-              disabled={acceptedCount === totalCount}
-              className="gap-2"
-            >
-              <Check className="h-4 w-4" />
-              Accept All
-            </Button>
-            <Button 
-              onClick={handleCommit}
-              disabled={acceptedCount === 0}
-              variant="default"
-              className="gap-2"
-            >
-              Commit & Finalize
-            </Button>
-            <div className="relative">
-              <Search className="absolute left-3 top-2.5 h-4 w-4 text-fg-muted" />
-              <Input
-                placeholder="Type 'rx albuterol' or 'add cbc'..."
-                value={searchValue}
-                onChange={(e) => setSearchValue(e.target.value)}
-                className="pl-9 w-64"
-              />
-            </div>
+          <Button 
+            onClick={handleAcceptAll}
+            disabled={acceptedCount === totalCount}
+            variant="secondary"
+            size="sm"
+            className="gap-2"
+          >
+            <Check className="h-4 w-4" />
+            Accept All
+          </Button>
+          <Button 
+            onClick={handleCommit}
+            disabled={acceptedCount === 0}
+            variant="default"
+            size="sm"
+            className="gap-2"
+          >
+            Commit & Finalize
+          </Button>
+          <div className="relative">
+            <Search className="absolute left-3 top-2.5 h-4 w-4 text-fg-muted" />
+            <Input
+              placeholder="Type 'rx albuterol' or 'add cbc'..."
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              className="pl-9 w-64"
+            />
           </div>
         </div>
-        
-        {savedAt && (
-          <div className="text-xs text-fg-muted text-right mt-1">
-            Saved at {savedAt.toLocaleTimeString()}
-          </div>
-        )}
-      </div>
+      </PageHeader>
 
-      <div className="max-w-4xl mx-auto px-6 py-6 space-y-6" ref={containerRef}>
-        {/* Page Header */}
-        <PageHeader
-          title="GoldCare AI"
-          description="AI-powered encounter assistant for clinical documentation and decision support"
-          icon={GoldCareAIIcon}
-        />
-
-        {/* Sources Section */}
-        <Card>
+      {/* Sources Section */}
+      <Card>
           <Collapsible open={sourcesOpen} onOpenChange={setSourcesOpen}>
             <CollapsibleTrigger asChild>
               <CardHeader className="cursor-pointer hover:bg-surface-muted transition-colors">
@@ -451,9 +461,8 @@ export function GoldCareAISection() {
           </Card>
         )}
       </div>
-    </div>
-  );
-}
+    );
+  }
 
 // AI Block Card Component
 function AIBlockCard({ 
