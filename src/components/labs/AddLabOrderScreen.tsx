@@ -13,6 +13,7 @@ import ComboboxChips from "@/components/ui/ComboboxChips";
 import OrderSetModal from "./OrderSetModal";
 import { useConsultStore, type LabOrder as ConsultLabOrder } from "@/store/useConsultStore";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
+import { AILabOrderBox } from "./AILabOrderBox";
 
 type Diagnosis = { code: string; label: string };
 type Request = { id: string; category: string; exams: string[] };
@@ -152,6 +153,8 @@ export default function AddLabOrderScreen() {
     category: string | null;
     orderIndex: number | null;
   }>({ open: false, category: null, orderIndex: null });
+  
+  const [isDrafting, setIsDrafting] = React.useState(false);
 
   // Convert TOP_DIAGNOSES to combobox format
   const diagnosisOptions = React.useMemo(
@@ -241,6 +244,109 @@ export default function AddLabOrderScreen() {
     });
   };
 
+  // AI parsing function to populate first lab order
+  const handleAIDraft = async (prompt: string) => {
+    setIsDrafting(true);
+    
+    // Simulate AI processing
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    // Simple parsing logic - in real implementation, this would use actual AI
+    const parseDiagnoses = (text: string): string[] => {
+      const dxMatches = text.match(/dx:\s*([^;]+)/i);
+      if (dxMatches) {
+        return dxMatches[1].split(/,|\sand\s/).map(d => d.trim()).filter(Boolean);
+      }
+      return [];
+    };
+    
+    const parseTests = (text: string): string[] => {
+      const commonTests = ['CBC', 'CMP', 'BMP', 'Lipid panel', 'A1C', 'TSH', 'CRP'];
+      const foundTests: string[] = [];
+      
+      commonTests.forEach(test => {
+        if (text.toLowerCase().includes(test.toLowerCase())) {
+          foundTests.push(test);
+        }
+      });
+      
+      return foundTests;
+    };
+    
+    const parseNotes = (text: string): string => {
+      const notes: string[] = [];
+      if (text.toLowerCase().includes('fasting')) {
+        notes.push('Fasting required');
+      }
+      if (text.toLowerCase().includes('stat')) {
+        notes.push('STAT priority');
+      }
+      if (text.toLowerCase().includes('urgent')) {
+        notes.push('Urgent priority');
+      }
+      return notes.join('; ');
+    };
+    
+    const diagnoses = parseDiagnoses(prompt);
+    const tests = parseTests(prompt);
+    const notes = parseNotes(prompt);
+    
+    // Update the first lab order (create one if none exists)
+    if (labOrders.length === 0) {
+      const newOrder: ConsultLabOrder = {
+        id: crypto.randomUUID(),
+        diagnoses,
+        otherDx: notes,
+        requests: []
+      };
+      addLabOrder(newOrder);
+      
+      // Add requests for found tests
+      if (tests.length > 0) {
+        // Map tests to categories - simplified mapping
+        const basicTests = tests.filter(t => ['CBC', 'CMP', 'BMP'].includes(t));
+        if (basicTests.length > 0) {
+          setTimeout(() => {
+            const updatedOrder = { ...newOrder };
+            updatedOrder.requests = [{
+              id: crypto.randomUUID(),
+              category: 'Basic',
+              exams: basicTests
+            }];
+            updateLabOrder(newOrder.id, { requests: updatedOrder.requests });
+          }, 100);
+        }
+      }
+    } else {
+      // Update first existing order
+      const firstOrder = labOrders[0];
+      const updatedRequests = [...firstOrder.requests];
+      
+      // Add basic tests if found
+      const basicTests = tests.filter(t => ['CBC', 'CMP', 'BMP'].includes(t));
+      if (basicTests.length > 0) {
+        const basicRequest = updatedRequests.find(r => r.category === 'Basic');
+        if (basicRequest) {
+          basicRequest.exams = [...new Set([...basicRequest.exams, ...basicTests])];
+        } else {
+          updatedRequests.push({
+            id: crypto.randomUUID(),
+            category: 'Basic',
+            exams: basicTests
+          });
+        }
+      }
+      
+      updateLabOrder(firstOrder.id, {
+        diagnoses: [...new Set([...firstOrder.diagnoses, ...diagnoses])],
+        otherDx: firstOrder.otherDx ? `${firstOrder.otherDx}; ${notes}` : notes,
+        requests: updatedRequests
+      });
+    }
+    
+    setIsDrafting(false);
+  };
+
   return (
     <TooltipProvider>
       <PageContainer>
@@ -250,6 +356,12 @@ export default function AddLabOrderScreen() {
           description="Create and manage lab orders for your patients"
           icon={FlaskConical}
           onSave={handleSave}
+        />
+
+        {/* AI Lab Order Box */}
+        <AILabOrderBox 
+          onDraft={handleAIDraft}
+          isLoading={isDrafting}
         />
 
         {/* Always render orders - never show empty state */}

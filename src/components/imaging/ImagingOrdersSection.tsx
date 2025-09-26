@@ -22,6 +22,7 @@ import ComboboxChips from "@/components/ui/ComboboxChips";
 import { useConsultStore, type ImagingOrder as ConsultImagingOrder } from "@/store/useConsultStore";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
 import { searchOrders, formatOrderDisplayName, type ImagingOrderData } from "@/data/imagingOrders";
+import { AIImagingOrderBox } from "./AIImagingOrderBox";
 
 // Top common ICD-10 diagnoses (same as Lab Orders for consistency)
 const TOP_DIAGNOSES = [
@@ -85,6 +86,7 @@ export default function ImagingOrdersSection() {
   const [searchTerm, setSearchTerm] = React.useState("");
   const [searchResults, setSearchResults] = React.useState<ImagingOrderData[]>([]);
   const [activeSearchOrder, setActiveSearchOrder] = React.useState<number | null>(null);
+  const [isDrafting, setIsDrafting] = React.useState(false);
 
   // Convert TOP_DIAGNOSES to combobox format
   const diagnosisOptions = React.useMemo(
@@ -228,6 +230,94 @@ export default function ImagingOrdersSection() {
     setActiveSearchOrder(orderIndex);
   };
 
+  // AI parsing function to populate first imaging order
+  const handleAIDraft = async (prompt: string) => {
+    setIsDrafting(true);
+    
+    // Simulate AI processing
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    // Simple parsing logic - in real implementation, this would use actual AI
+    const parseDiagnoses = (text: string): string[] => {
+      const dxMatches = text.match(/dx:\s*([^;]+)/i);
+      if (dxMatches) {
+        return dxMatches[1].split(/,|\sand\s/).map(d => d.trim()).filter(Boolean);
+      }
+      return [];
+    };
+    
+    const parseStudies = (text: string): Array<{id: string; label: string; contrast?: "yes" | "no" | "unsure"}> => {
+      const commonStudies = [
+        'Chest X-ray', 'CT Head', 'MRI Brain', 'Ultrasound Abdomen', 
+        'CT Abdomen/Pelvis', 'MRI Lumbar Spine', 'CT Chest'
+      ];
+      const foundStudies: Array<{id: string; label: string; contrast?: "yes" | "no" | "unsure"}> = [];
+      
+      commonStudies.forEach(study => {
+        if (text.toLowerCase().includes(study.toLowerCase())) {
+          let contrast: "yes" | "no" | "unsure" | undefined = undefined;
+          
+          // Parse contrast information
+          if (text.toLowerCase().includes('without contrast') || text.toLowerCase().includes('w/o contrast')) {
+            contrast = 'no';
+          } else if (text.toLowerCase().includes('with contrast') || text.toLowerCase().includes('w/ contrast')) {
+            contrast = 'yes';
+          } else if (text.toLowerCase().includes('w/ and w/o')) {
+            contrast = 'yes'; // Default to yes for w/ and w/o
+          }
+          
+          foundStudies.push({
+            id: crypto.randomUUID(),
+            label: study,
+            contrast
+          });
+        }
+      });
+      
+      return foundStudies;
+    };
+    
+    const parseNotes = (text: string): string => {
+      const notes: string[] = [];
+      if (text.toLowerCase().includes('stat')) {
+        notes.push('STAT priority');
+      }
+      if (text.toLowerCase().includes('urgent')) {
+        notes.push('Urgent priority');
+      }
+      if (text.toLowerCase().includes('trauma')) {
+        notes.push('Trauma indication');
+      }
+      return notes.join('; ');
+    };
+    
+    const diagnoses = parseDiagnoses(prompt);
+    const studies = parseStudies(prompt);
+    const notes = parseNotes(prompt);
+    
+    // Update the first imaging order (create one if none exists)  
+    if (imagingOrders.length === 0) {
+      const newOrder: ConsultImagingOrder = {
+        id: crypto.randomUUID(),
+        diagnosisCodes: diagnoses,
+        diagnosisText: "",
+        studies,
+        notes
+      };
+      addImagingOrder(newOrder);
+    } else {
+      // Update first existing order
+      const firstOrder = imagingOrders[0];
+      updateImagingOrder(firstOrder.id, {
+        diagnosisCodes: [...new Set([...firstOrder.diagnosisCodes, ...diagnoses])],
+        studies: [...firstOrder.studies, ...studies],
+        notes: firstOrder.notes ? `${firstOrder.notes}; ${notes}` : notes
+      });
+    }
+    
+    setIsDrafting(false);
+  };
+
   return (
     <TooltipProvider>
       <PageContainer>
@@ -237,6 +327,12 @@ export default function ImagingOrdersSection() {
             description="Create and manage imaging orders for your patients"
             icon={ImagingIcon}
             onSave={handleSave}
+          />
+
+          {/* AI Imaging Order Box */}
+          <AIImagingOrderBox 
+            onDraft={handleAIDraft}
+            isLoading={isDrafting}
           />
 
           {/* Always render orders - never show empty state */}
