@@ -59,23 +59,20 @@ export function AILabOrderBox({ onDraft, isLoading = false }: AILabOrderBoxProps
   };
 
   return (
-    <Card className="p-10 bg-gradient-to-br from-surface/60 via-surface/95 to-surface/80 border border-border/40 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] backdrop-blur-sm" data-testid="ai-lab-order-box">
+    <div className="space-y-6" data-testid="ai-lab-order-box">
       {/* Header */}
-      <div className="flex flex-col items-center gap-4 mb-10">
-        <div className="relative">
-          <div className="h-11 w-11 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center ring-2 ring-primary/10">
-            <GoldCareAIIcon className="h-6 w-6 text-primary animate-shimmer" />
-          </div>
-          <div className="absolute inset-0 rounded-full bg-primary/5 animate-ping opacity-20" />
+      <div className="flex items-center gap-3">
+        <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
+          <GoldCareAIIcon className="h-4.5 w-4.5 text-primary animate-shimmer" />
         </div>
-        <div className="text-center">
-          <h3 className="font-bold text-fg text-lg">GoldCare AI</h3>
-          <p className="text-xs text-fg-muted mt-0.5">Draft lab orders with natural language</p>
+        <div>
+          <h3 className="font-semibold text-fg text-base">GoldCare AI</h3>
+          <p className="text-xs text-fg-muted">Draft lab orders with natural language</p>
         </div>
       </div>
 
       {/* Input Area */}
-      <div className="space-y-7">
+      <div className="space-y-4">
         <div className="relative">
           <AutosizeTextarea
             value={prompt}
@@ -84,43 +81,43 @@ export function AILabOrderBox({ onDraft, isLoading = false }: AILabOrderBoxProps
             placeholder="Describe the labs..."
             minRows={2}
             maxRows={6}
-            className="w-full rounded-full px-7 py-5 pr-16 resize-none text-base placeholder:text-fg-muted/50 border-border/60 hover:border-border focus:border-primary/50 focus:ring-2 focus:ring-primary/15 bg-bg/60 shadow-sm transition-all"
+            className="w-full rounded-full px-6 py-4 pr-14 resize-none text-base placeholder:text-fg-muted/50 border border-border/60 hover:border-border focus:border-primary/50 focus:ring-1 focus:ring-primary/20 bg-bg transition-all"
             disabled={isLoading}
           />
           <Button
             size="icon"
             variant="ghost"
             className={cn(
-              "absolute top-3.5 right-3 h-10 w-10 rounded-full transition-all",
+              "absolute top-3 right-2 h-9 w-9 rounded-full transition-all",
               isListening 
-                ? "bg-primary text-on-primary hover:bg-primary/90 shadow-lg animate-pulse" 
-                : "hover:bg-surface-muted/80"
+                ? "bg-primary text-on-primary hover:bg-primary/90 shadow-md" 
+                : "hover:bg-surface-muted/60"
             )}
             onClick={handleMicToggle}
             disabled={isLoading}
           >
             {isListening ? (
-              <MicOff className="h-5 w-5" />
+              <MicOff className="h-4.5 w-4.5" />
             ) : (
-              <Mic className="h-5 w-5" />
+              <Mic className="h-4.5 w-4.5" />
             )}
           </Button>
           {isListening && (
-            <div className="absolute -bottom-7 right-3 text-xs text-primary font-medium animate-fade-in">
+            <div className="absolute -bottom-6 right-2 text-xs text-primary font-medium animate-fade-in">
               Listening...
             </div>
           )}
         </div>
 
         {/* Suggestion Chips */}
-        <div className="overflow-x-auto scrollbar-hide -mx-3 px-3">
-          <div className="flex gap-2.5 pb-1">
+        <div className="overflow-x-auto scrollbar-hide -mx-1">
+          <div className="flex gap-2 px-1 pb-1">
             {quickPrompts.map((quickPrompt) => (
               <button
                 key={quickPrompt}
                 onClick={() => handleChipClick(quickPrompt)}
                 disabled={isLoading}
-                className="flex-shrink-0 px-5 py-2.5 rounded-full bg-surface hover:bg-surface-muted border border-border/50 hover:border-border text-sm font-medium text-fg hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 whitespace-nowrap disabled:opacity-40 disabled:hover:translate-y-0 disabled:hover:shadow-none"
+                className="flex-shrink-0 px-4 py-2 rounded-full bg-surface hover:bg-surface-muted border border-border/40 text-sm text-fg transition-colors duration-150 whitespace-nowrap disabled:opacity-40 disabled:hover:bg-surface"
               >
                 {quickPrompt}
               </button>
@@ -129,18 +126,18 @@ export function AILabOrderBox({ onDraft, isLoading = false }: AILabOrderBoxProps
         </div>
 
         {/* Actions */}
-        <div className="flex flex-col items-center gap-5 pt-3">
+        <div className="flex flex-col items-center gap-4 pt-1">
           <Button 
             onClick={handleDraft}
             disabled={!prompt.trim() || isLoading}
-            className="w-full sm:w-auto px-10 py-6 rounded-full text-base font-semibold bg-gradient-to-r from-primary via-primary to-primary/90 hover:from-primary/95 hover:via-primary/95 hover:to-primary/85 text-on-primary shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 disabled:opacity-40 disabled:hover:scale-100 disabled:shadow-lg"
+            className="w-full sm:w-auto px-8 py-5 rounded-full text-base font-semibold bg-primary hover:bg-primary/90 text-on-primary shadow-sm hover:shadow-md hover:scale-[1.01] active:scale-[0.99] transition-all duration-150 disabled:opacity-40 disabled:hover:scale-100"
             size="lg"
           >
-            <Sparkles className="h-5 w-5 mr-2.5" />
+            <Sparkles className="h-4.5 w-4.5 mr-2" />
             {isLoading ? 'Drafting...' : 'Draft with AI'}
           </Button>
         </div>
       </div>
-    </Card>
+    </div>
   );
 }
