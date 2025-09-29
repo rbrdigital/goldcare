@@ -71,7 +71,7 @@ export function AIPromptBox({ onDraft, onManualEntry }: AIPromptBoxProps) {
             placeholder="Describe the prescription..."
             minRows={2}
             maxRows={6}
-            className="w-full rounded-full px-6 py-4 pr-14 resize-none text-base placeholder:text-fg-muted/50 border border-border/60 hover:border-border focus:border-primary/50 focus:ring-1 focus:ring-primary/20 bg-bg transition-all"
+            className="w-full rounded-2xl px-6 py-4 pr-14 resize-none text-base placeholder:text-fg-muted/50 border border-border/60 hover:border-border focus:border-primary/50 focus:ring-1 focus:ring-primary/20 bg-bg transition-all"
           />
           <Button
             size="icon"
