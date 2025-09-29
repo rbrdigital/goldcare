@@ -49,17 +49,23 @@ export function AIPromptBox({ onDraft, onManualEntry }: AIPromptBoxProps) {
   };
 
   return (
-    <Card className="p-8 bg-gradient-to-br from-surface/50 via-surface to-surface/80 border border-border/50 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] backdrop-blur-sm" data-testid="ai-prompt-box">
+    <Card className="p-10 bg-gradient-to-br from-surface/60 via-surface/95 to-surface/80 border border-border/40 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] backdrop-blur-sm" data-testid="ai-prompt-box">
       {/* Header */}
-      <div className="flex items-center justify-center gap-3 mb-8">
-        <div className="h-9 w-9 rounded-full bg-gradient-to-br from-primary/15 to-primary/5 flex items-center justify-center">
-          <GoldCareAIIcon className="h-5 w-5 text-primary" />
+      <div className="flex flex-col items-center gap-4 mb-10">
+        <div className="relative">
+          <div className="h-11 w-11 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center ring-2 ring-primary/10">
+            <GoldCareAIIcon className="h-6 w-6 text-primary animate-shimmer" />
+          </div>
+          <div className="absolute inset-0 rounded-full bg-primary/5 animate-ping opacity-20" />
         </div>
-        <span className="font-semibold text-fg text-base">GoldCare AI</span>
+        <div className="text-center">
+          <h3 className="font-bold text-fg text-lg">GoldCare AI</h3>
+          <p className="text-xs text-fg-muted mt-0.5">Draft prescriptions with natural language</p>
+        </div>
       </div>
 
       {/* Input Area */}
-      <div className="space-y-6">
+      <div className="space-y-7">
         <div className="relative">
           <AutosizeTextarea
             value={prompt}
@@ -68,16 +74,16 @@ export function AIPromptBox({ onDraft, onManualEntry }: AIPromptBoxProps) {
             placeholder="Describe the prescription..."
             minRows={2}
             maxRows={6}
-            className="w-full rounded-full px-6 py-4 pr-14 resize-none text-base placeholder:text-fg-muted/60 border-border/60 focus:border-primary/40 focus:ring-2 focus:ring-primary/20 bg-bg/50 shadow-sm transition-all"
+            className="w-full rounded-full px-7 py-5 pr-16 resize-none text-base placeholder:text-fg-muted/50 border-border/60 hover:border-border focus:border-primary/50 focus:ring-2 focus:ring-primary/15 bg-bg/60 shadow-sm transition-all"
           />
           <Button
             size="icon"
             variant="ghost"
             className={cn(
-              "absolute top-3 right-2 h-10 w-10 rounded-full transition-all",
+              "absolute top-3.5 right-3 h-10 w-10 rounded-full transition-all",
               isListening 
-                ? "bg-primary text-on-primary hover:bg-primary/90 animate-pulse" 
-                : "hover:bg-surface-muted"
+                ? "bg-primary text-on-primary hover:bg-primary/90 shadow-lg animate-pulse" 
+                : "hover:bg-surface-muted/80"
             )}
             onClick={handleMicToggle}
           >
@@ -88,20 +94,20 @@ export function AIPromptBox({ onDraft, onManualEntry }: AIPromptBoxProps) {
             )}
           </Button>
           {isListening && (
-            <div className="absolute -bottom-6 right-2 text-xs text-primary font-medium animate-fade-in">
+            <div className="absolute -bottom-7 right-3 text-xs text-primary font-medium animate-fade-in">
               Listening...
             </div>
           )}
         </div>
 
         {/* Suggestion Chips */}
-        <div className="overflow-x-auto scrollbar-hide -mx-2 px-2">
-          <div className="flex gap-2 pb-1">
+        <div className="overflow-x-auto scrollbar-hide -mx-3 px-3">
+          <div className="flex gap-2.5 pb-1">
             {quickPrompts.map((quickPrompt) => (
               <button
                 key={quickPrompt}
                 onClick={() => setPrompt(quickPrompt)}
-                className="flex-shrink-0 px-4 py-2 rounded-full bg-surface/80 hover:bg-surface border border-border/50 text-sm font-medium text-fg hover:shadow-md hover:scale-[1.02] transition-all duration-200 whitespace-nowrap"
+                className="flex-shrink-0 px-5 py-2.5 rounded-full bg-surface hover:bg-surface-muted border border-border/50 hover:border-border text-sm font-medium text-fg hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 whitespace-nowrap"
               >
                 {quickPrompt}
               </button>
@@ -110,20 +116,20 @@ export function AIPromptBox({ onDraft, onManualEntry }: AIPromptBoxProps) {
         </div>
 
         {/* Actions */}
-        <div className="flex flex-col items-center gap-4 pt-2">
+        <div className="flex flex-col items-center gap-5 pt-3">
           <Button 
             onClick={handleDraft}
             disabled={!prompt.trim()}
-            className="w-full sm:w-auto px-8 py-6 rounded-full text-base font-semibold bg-primary hover:bg-primary/90 text-on-primary shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:hover:scale-100"
+            className="w-full sm:w-auto px-10 py-6 rounded-full text-base font-semibold bg-gradient-to-r from-primary via-primary to-primary/90 hover:from-primary/95 hover:via-primary/95 hover:to-primary/85 text-on-primary shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 disabled:opacity-40 disabled:hover:scale-100 disabled:shadow-lg"
             size="lg"
           >
-            <Sparkles className="h-5 w-5 mr-2" />
+            <Sparkles className="h-5 w-5 mr-2.5" />
             Draft with AI
           </Button>
           
           <button 
             onClick={onManualEntry}
-            className="text-sm text-fg-muted hover:text-fg transition-colors duration-200 relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:bg-fg after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-200"
+            className="text-sm text-fg-muted hover:text-fg transition-colors duration-200 relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:bg-fg/70 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-200 after:origin-left"
           >
             Or fill the form manually
           </button>
