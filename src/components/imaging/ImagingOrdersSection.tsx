@@ -17,7 +17,7 @@ const ImagingIcon = ({ className }: { className?: string }) => (
     <path d="M15.4593 7.96406H13.7297V9.11719H14.8828C15.4807 9.11719 16.0213 9.35181 16.4315 9.72654C16.5447 9.54588 16.6125 9.33824 16.6125 9.11719C16.6125 8.48093 16.0956 7.96406 15.4593 7.96406ZM15.4593 16.0359H13.6306C13.3929 16.7071 12.7522 17.1891 12 17.1891C11.2478 17.1891 10.607 16.7071 10.3694 16.0359H8.5406C8.22303 16.0359 7.96404 16.2949 7.96404 16.6125C7.96404 16.9132 8.19601 17.1136 8.42575 17.1778C9.64306 17.474 10.7568 18.2059 11.5416 19.2329C11.6182 19.3376 11.7669 19.4953 12 19.4953C12.2353 19.4953 12.4031 19.332 12.4831 19.2352C13.2001 18.2585 14.2936 17.4946 15.5708 17.1553C15.8107 17.099 16.0359 16.9109 16.0359 16.6125C16.0359 16.2949 15.7769 16.0359 15.4593 16.0359ZM7.96404 5.65781C7.32778 5.65781 6.81091 6.17468 6.81091 6.81094C6.81091 7.03195 6.87868 7.23971 6.99191 7.42029C7.40219 7.04556 7.9427 6.81094 8.5406 6.81094H10.2703V5.65781H7.96404ZM8.5406 7.96406C7.90434 7.96406 7.38747 8.48093 7.38747 9.11719C7.38747 9.3382 7.45524 9.54596 7.56848 9.72654C7.97876 9.35181 8.51927 9.11719 9.11716 9.11719H10.2703V7.96406H8.5406Z" fill="currentColor"/>
   </svg>
 );
-import PageContainer from "@/components/layout/PageContainer";
+
 import ComboboxChips from "@/components/ui/ComboboxChips";
 import { useConsultStore, type ImagingOrder as ConsultImagingOrder } from "@/store/useConsultStore";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
@@ -320,8 +320,7 @@ export default function ImagingOrdersSection() {
 
   return (
     <TooltipProvider>
-      <PageContainer>
-        <div className="space-y-6">
+      <div className="space-y-6">
           <PageHeader
             title="Imaging Orders"
             description="Create and manage imaging orders for your patients"
@@ -546,8 +545,7 @@ export default function ImagingOrdersSection() {
               + Add another imaging order
             </Button>
           </div>
-        </div>
-      </PageContainer>
+      </div>
     </TooltipProvider>
   );
 }

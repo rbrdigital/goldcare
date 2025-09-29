@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { PageHeader } from "@/components/ui/page-header";
 import { FlaskConical } from "lucide-react";
-import PageContainer from "@/components/layout/PageContainer";
+
 import ComboboxChips from "@/components/ui/ComboboxChips";
 import OrderSetModal from "./OrderSetModal";
 import { useConsultStore, type LabOrder as ConsultLabOrder } from "@/store/useConsultStore";
@@ -349,8 +349,7 @@ export default function AddLabOrderScreen() {
 
   return (
     <TooltipProvider>
-      <PageContainer>
-        <div className="space-y-6">
+      <div className="space-y-6">
         <PageHeader
           title="Lab orders"
           description="Create and manage lab orders for your patients"
@@ -498,8 +497,7 @@ export default function AddLabOrderScreen() {
             + Add another order
           </Button>
         </div>
-        </div>
-      </PageContainer>
+      </div>
 
       {/* Modal: preselect ALL items for the chosen set; user can uncheck then Confirm */}
       {modal.open && modal.category && modal.orderIndex !== null ? (
