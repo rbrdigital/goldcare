@@ -328,6 +328,11 @@ export default function ImagingOrdersSection() {
     setImagingOrdersPanelState('manual');
   };
 
+  const handleResetToAI = () => {
+    // Reset to AI drafting state
+    setImagingOrdersPanelState('ai-ready');
+  };
+
   return (
     <TooltipProvider>
       <div className="space-y-6">
@@ -354,6 +359,18 @@ export default function ImagingOrdersSection() {
                 </button>
               </div>
             </>
+          )}
+
+          {/* Reset to AI link - Visible when form is shown */}
+          {(imagingOrdersPanelState === 'drafted' || imagingOrdersPanelState === 'manual') && (
+            <div className="flex justify-end">
+              <button
+                onClick={handleResetToAI}
+                className="text-sm text-fg-muted hover:text-fg transition-colors duration-200 relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:bg-fg after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-200"
+              >
+                ← Restart with AI
+              </button>
+            </div>
           )}
 
           {/* Form - Only visible after draft or manual entry */}

@@ -145,6 +145,18 @@ export function RXPanel() {
         />
       )}
       
+      {/* Reset to AI link - Visible when form is shown */}
+      {(panelState === 'drafted' || panelState === 'manual') && (
+        <div className="flex justify-end">
+          <button
+            onClick={handleReopenAI}
+            className="text-sm text-fg-muted hover:text-fg transition-colors duration-200 relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:bg-fg after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-200"
+          >
+            ← Restart with AI
+          </button>
+        </div>
+      )}
+      
       {/* Prescription Header - Visible when drafted or manual with valid data */}
       {(panelState === 'drafted' || (panelState === 'manual' && hasValidPrescription)) && currentPrescription && (
         <PrescriptionHeader 
