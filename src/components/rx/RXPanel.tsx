@@ -135,8 +135,6 @@ export function RXPanel() {
         </Button>
       </PageHeader>
       
-      <Separator />
-      
       {/* AI Prompt Box - Only visible in ai-ready state */}
       {panelState === 'ai-ready' && (
         <AIPromptBox 
