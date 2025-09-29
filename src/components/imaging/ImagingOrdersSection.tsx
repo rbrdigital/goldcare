@@ -80,7 +80,9 @@ export default function ImagingOrdersSection() {
     imagingOrders,
     addImagingOrder,
     updateImagingOrder,
-    removeImagingOrder
+    removeImagingOrder,
+    imagingOrdersPanelState,
+    setImagingOrdersPanelState
   } = useConsultStore();
   
   const [searchTerm, setSearchTerm] = React.useState("");
@@ -316,6 +318,14 @@ export default function ImagingOrdersSection() {
     }
     
     setIsDrafting(false);
+    
+    // Update panel state to show form
+    setImagingOrdersPanelState('drafted');
+  };
+
+  const handleManualEntry = () => {
+    // Show empty form for manual entry
+    setImagingOrdersPanelState('manual');
   };
 
   return (
@@ -328,14 +338,26 @@ export default function ImagingOrdersSection() {
             onSave={handleSave}
           />
 
-          {/* AI Imaging Order Box */}
-          <AIImagingOrderBox 
-            onDraft={handleAIDraft}
-            isLoading={isDrafting}
-          />
+          {/* AI Imaging Order Box - Only visible in ai-ready state */}
+          {imagingOrdersPanelState === 'ai-ready' && (
+            <>
+              <AIImagingOrderBox 
+                onDraft={handleAIDraft}
+                isLoading={isDrafting}
+              />
+              <div className="text-center">
+                <button
+                  onClick={handleManualEntry}
+                  className="text-sm text-fg-muted hover:text-fg hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                >
+                  Or fill the form manually
+                </button>
+              </div>
+            </>
+          )}
 
-          {/* Always render orders - never show empty state */}
-          {imagingOrders.map((order, orderIndex) => (
+          {/* Form - Only visible after draft or manual entry */}
+          {(imagingOrdersPanelState === 'drafted' || imagingOrdersPanelState === 'manual') && imagingOrders.map((order, orderIndex) => (
             <div key={order.id} className="space-y-6">
               {/* Imaging order section header */}
               <div className="flex items-center justify-between">
@@ -539,12 +561,14 @@ export default function ImagingOrdersSection() {
             </div>
           ))}
 
-          {/* Add another order */}
-          <div className="mt-4">
-            <Button variant="outline" className="text-sm" onClick={addImagingOrderItem}>
-              + Add another imaging order
-            </Button>
-          </div>
+          {/* Add another order - Only visible when form is shown */}
+          {(imagingOrdersPanelState === 'drafted' || imagingOrdersPanelState === 'manual') && (
+            <div className="mt-4">
+              <Button variant="outline" className="text-sm" onClick={addImagingOrderItem}>
+                + Add another imaging order
+              </Button>
+            </div>
+          )}
       </div>
     </TooltipProvider>
   );

@@ -145,7 +145,9 @@ export default function AddLabOrderScreen() {
     labOrders,
     addLabOrder,
     updateLabOrder,
-    removeLabOrder
+    removeLabOrder,
+    labOrdersPanelState,
+    setLabOrdersPanelState
   } = useConsultStore();
   
   const [modal, setModal] = React.useState<{ 
@@ -345,6 +347,14 @@ export default function AddLabOrderScreen() {
     }
     
     setIsDrafting(false);
+    
+    // Update panel state to show form
+    setLabOrdersPanelState('drafted');
+  };
+
+  const handleManualEntry = () => {
+    // Show empty form for manual entry
+    setLabOrdersPanelState('manual');
   };
 
   return (
@@ -357,14 +367,26 @@ export default function AddLabOrderScreen() {
           onSave={handleSave}
         />
 
-        {/* AI Lab Order Box */}
-        <AILabOrderBox 
-          onDraft={handleAIDraft}
-          isLoading={isDrafting}
-        />
+        {/* AI Lab Order Box - Only visible in ai-ready state */}
+        {labOrdersPanelState === 'ai-ready' && (
+          <>
+            <AILabOrderBox 
+              onDraft={handleAIDraft}
+              isLoading={isDrafting}
+            />
+            <div className="text-center">
+              <button
+                onClick={handleManualEntry}
+                className="text-sm text-fg-muted hover:text-fg hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              >
+                Or fill the form manually
+              </button>
+            </div>
+          </>
+        )}
 
-        {/* Always render orders - never show empty state */}
-        {labOrders.map((order, orderIndex) => (
+        {/* Form - Only visible after draft or manual entry */}
+        {(labOrdersPanelState === 'drafted' || labOrdersPanelState === 'manual') && labOrders.map((order, orderIndex) => (
           <div key={order.id} className="space-y-6">
             {/* Lab order section header */}
             <div className="flex items-center justify-between">
@@ -491,12 +513,14 @@ export default function AddLabOrderScreen() {
           </div>
         ))}
 
-        {/* Add another order */}
-        <div className="mt-4">
-          <Button variant="outline" className="text-sm" onClick={addLabOrderItem}>
-            + Add another order
-          </Button>
-        </div>
+        {/* Add another order - Only visible when form is shown */}
+        {(labOrdersPanelState === 'drafted' || labOrdersPanelState === 'manual') && (
+          <div className="mt-4">
+            <Button variant="outline" className="text-sm" onClick={addLabOrderItem}>
+              + Add another order
+            </Button>
+          </div>
+        )}
       </div>
 
       {/* Modal: preselect ALL items for the chosen set; user can uncheck then Confirm */}

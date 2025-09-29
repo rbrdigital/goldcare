@@ -113,6 +113,8 @@ export interface ConsultState {
   
   // UI state
   isAIVisible: boolean;
+  labOrdersPanelState: 'ai-ready' | 'drafted' | 'manual';
+  imagingOrdersPanelState: 'ai-ready' | 'drafted' | 'manual';
   
   // Status
   finished: boolean;
@@ -160,6 +162,10 @@ export interface ConsultActions {
   // AI visibility actions
   toggleAIVisibility: () => void;
   
+  // Panel state actions
+  setLabOrdersPanelState: (state: 'ai-ready' | 'drafted' | 'manual') => void;
+  setImagingOrdersPanelState: (state: 'ai-ready' | 'drafted' | 'manual') => void;
+  
   // Session actions
   initializeSession: (patientId: string, encounterId: string) => void;
   setFinished: (finished: boolean) => void;
@@ -202,6 +208,8 @@ const initialState: ConsultState = {
   outsideOrders: [],
   privateNotes: "",
   isAIVisible: true,
+  labOrdersPanelState: 'ai-ready',
+  imagingOrdersPanelState: 'ai-ready',
   finished: false,
   lastSaved: ""
 };
@@ -523,6 +531,21 @@ export const useConsultStore = create<ConsultState & ConsultActions>()(
         }));
       },
 
+      // Panel state actions
+      setLabOrdersPanelState: (panelState) => {
+        set(() => ({
+          labOrdersPanelState: panelState,
+          lastSaved: new Date().toISOString()
+        }));
+      },
+
+      setImagingOrdersPanelState: (panelState) => {
+        set(() => ({
+          imagingOrdersPanelState: panelState,
+          lastSaved: new Date().toISOString()
+        }));
+      },
+
       // Session actions
       initializeSession: (patientId, encounterId) => {
         set((state) => ({
@@ -561,6 +584,8 @@ export const useConsultStore = create<ConsultState & ConsultActions>()(
         outsideOrders: state.outsideOrders,
         privateNotes: state.privateNotes,
         isAIVisible: state.isAIVisible,
+        labOrdersPanelState: state.labOrdersPanelState,
+        imagingOrdersPanelState: state.imagingOrdersPanelState,
         finished: state.finished,
         lastSaved: state.lastSaved
       })
