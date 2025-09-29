@@ -345,10 +345,10 @@ export default function ImagingOrdersSection() {
                 onDraft={handleAIDraft}
                 isLoading={isDrafting}
               />
-              <div className="text-center">
+              <div className="flex justify-center pt-2">
                 <button
                   onClick={handleManualEntry}
-                  className="text-sm text-fg-muted hover:text-fg hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  className="text-sm text-fg-muted hover:text-fg transition-colors duration-200 relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:bg-fg after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-200"
                 >
                   Or fill the form manually
                 </button>
