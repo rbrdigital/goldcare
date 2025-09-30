@@ -23,6 +23,7 @@ import { useConsultStore, type ImagingOrder as ConsultImagingOrder } from "@/sto
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
 import { searchOrders, formatOrderDisplayName, type ImagingOrderData } from "@/data/imagingOrders";
 import { AIImagingOrderBox } from "./AIImagingOrderBox";
+import { ImagingOrderHeader } from "./summary/ImagingOrderHeader";
 
 // Top common ICD-10 diagnoses (same as Lab Orders for consistency)
 const TOP_DIAGNOSES = [
@@ -374,8 +375,24 @@ export default function ImagingOrdersSection() {
           )}
 
           {/* Form - Only visible after draft or manual entry */}
-          {(imagingOrdersPanelState === 'drafted' || imagingOrdersPanelState === 'manual') && imagingOrders.map((order, orderIndex) => (
+          {(imagingOrdersPanelState === 'drafted' || imagingOrdersPanelState === 'manual') && imagingOrders.map((order, orderIndex) => {
+            // Check if order has any data for the header
+            const hasData = order.diagnosisCodes.length > 0 || order.studies.length > 0;
+            
+            return (
             <div key={order.id} className="space-y-6">
+              {/* Imaging Order Header - Show when there's data */}
+              {hasData && (
+                <ImagingOrderHeader
+                  order={order}
+                  orderNumber={orderIndex + 1}
+                  onEditDetails={() => {
+                    // Scroll to the form or focus on edit
+                  }}
+                  onReopenAI={handleResetToAI}
+                />
+              )}
+
               {/* Imaging order section header */}
               <div className="flex items-center justify-between">
                 <h2 className="text-lg font-semibold">Order #{orderIndex + 1}</h2>
@@ -563,20 +580,11 @@ export default function ImagingOrdersSection() {
                 </div>
               </section>
 
-              {/* Summary card for this order */}
-              <section>
-                <div className="rounded-md border border-border bg-surface p-4">
-                  <div className="font-medium mb-1">Order summary</div>
-                  <div className="text-sm text-fg-muted leading-6">
-                    {renderSummary(order.diagnosisCodes, order.diagnosisText, order.studies, order.notes)}
-                  </div>
-                </div>
-              </section>
-
               {/* Separator between orders */}
               {orderIndex < imagingOrders.length - 1 && <Separator className="my-6" />}
             </div>
-          ))}
+          );
+          })}
 
           {/* Add another order - Only visible when form is shown */}
           {(imagingOrdersPanelState === 'drafted' || imagingOrdersPanelState === 'manual') && (

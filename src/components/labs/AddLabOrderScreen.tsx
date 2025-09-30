@@ -14,6 +14,7 @@ import OrderSetModal from "./OrderSetModal";
 import { useConsultStore, type LabOrder as ConsultLabOrder } from "@/store/useConsultStore";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
 import { AILabOrderBox } from "./AILabOrderBox";
+import { LabOrderHeader } from "./summary/LabOrderHeader";
 
 type Diagnosis = { code: string; label: string };
 type Request = { id: string; category: string; exams: string[] };
@@ -403,8 +404,24 @@ export default function AddLabOrderScreen() {
         )}
 
         {/* Form - Only visible after draft or manual entry */}
-        {(labOrdersPanelState === 'drafted' || labOrdersPanelState === 'manual') && labOrders.map((order, orderIndex) => (
+        {(labOrdersPanelState === 'drafted' || labOrdersPanelState === 'manual') && labOrders.map((order, orderIndex) => {
+          // Check if order has any data for the header
+          const hasData = order.diagnoses.length > 0 || order.requests.length > 0;
+          
+          return (
           <div key={order.id} className="space-y-6">
+            {/* Lab Order Header - Show when there's data */}
+            {hasData && (
+              <LabOrderHeader
+                order={order}
+                orderNumber={orderIndex + 1}
+                onEditDetails={() => {
+                  // Scroll to the form or focus on edit
+                }}
+                onReopenAI={handleResetToAI}
+              />
+            )}
+
             {/* Lab order section header */}
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold">Lab order #{orderIndex + 1}</h2>
@@ -515,20 +532,11 @@ export default function AddLabOrderScreen() {
               </div>
             </section>
 
-            {/* Summary card for this order */}
-            <section>
-              <div className="rounded-md border border-border bg-surface p-4">
-                <div className="font-medium mb-1">Order summary</div>
-                <div className="text-sm text-fg-muted leading-6">
-                  {renderSummary(order.diagnoses, order.otherDx, order.requests)}
-                </div>
-              </div>
-            </section>
-
             {/* Separator between orders */}
             {orderIndex < labOrders.length - 1 && <Separator className="my-6" />}
           </div>
-        ))}
+        );
+        })}
 
         {/* Add another order - Only visible when form is shown */}
         {(labOrdersPanelState === 'drafted' || labOrdersPanelState === 'manual') && (
