@@ -121,7 +121,7 @@ function SOAPNoteSection() {
       <div className="space-y-8">
         {/* ========== Subjective ========== */}
         <section>
-          <h3 className="text-lg font-semibold text-fg mb-4">{copy.subjective}</h3>
+          <h3 className="text-lg font-semibold text-fg mb-4">{copy.subjective.toUpperCase()}</h3>
           <div className="space-y-6">
             {/* CC/HPI */}
             <div>
@@ -218,7 +218,7 @@ function SOAPNoteSection() {
 
         {/* ========== Objective ========== */}
         <section>
-          <h3 className="text-lg font-semibold text-fg mb-4">{copy.objective}</h3>
+          <h3 className="text-lg font-semibold text-fg mb-4">{copy.objective.toUpperCase()}</h3>
 
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -328,7 +328,7 @@ function SOAPNoteSection() {
 
         {/* ========== Assessment / Plan ========== */}
         <section>
-          <h3 className="text-lg font-semibold text-fg mb-4">Assessment / Plan</h3>
+          <h3 className="text-lg font-semibold text-fg mb-4">ASSESSMENT / PLAN</h3>
           <div className="space-y-6">
             <div>
               <Label className="text-sm font-medium text-fg mb-2">Assessment</Label>
