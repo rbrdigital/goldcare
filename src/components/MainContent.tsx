@@ -305,8 +305,6 @@ function SOAPNoteSection() {
             </div>
           </div>
 
-          <Separator className="my-6" />
-
           {/* Clinical Observations */}
           <div>
             <Label className="text-sm font-medium text-fg mb-2">{copy.clinicalObservations}</Label>
