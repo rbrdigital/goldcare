@@ -306,7 +306,7 @@ function SOAPNoteSection() {
           </div>
 
           {/* Clinical Observations */}
-          <div>
+          <div className="mt-6">
             <Label className="text-sm font-medium text-fg mb-2">{copy.clinicalObservations}</Label>
             <AutosizeTextarea
               value={soapNote.observations}
