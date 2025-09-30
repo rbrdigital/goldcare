@@ -6,6 +6,9 @@ import { PageHeader } from "@/components/ui/page-header";
 import { FileBarChart, Calendar, User, Stethoscope, Pill, FlaskConical, Activity, Upload, StickyNote, ClipboardCheck } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useConsultSelectors, useConsultStore } from "@/store/useConsultStore";
+import { PrescriptionSummaryCard } from "@/components/rx/summary/PrescriptionSummaryCard";
+import { LabOrderSummaryCard } from "@/components/labs/summary/LabOrderSummaryCard";
+import { ImagingOrderSummaryCard } from "@/components/imaging/summary/ImagingOrderSummaryCard";
 
 export function SummarySection() {
   const consultData = useConsultSelectors();
@@ -249,83 +252,82 @@ export function SummarySection() {
           </CardContent>
         </Card>
 
-        {/* Medications - only show if there are prescriptions */}
-        {formatPrescriptions().length > 0 && (
+        {/* Medications Prescribed - show if there are prescriptions */}
+        {consultData.prescriptions.filter(rx => {
+          const name = rx?.medicine?.trim();
+          const qtyPerDose = Number(rx?.qtyPerDose) || 0;
+          const formulation = rx?.formulation?.trim();
+          const route = rx?.route?.trim();
+          const frequency = rx?.frequency?.trim();
+          const duration = Number(rx?.duration) || 0;
+          const hasName = !!name;
+          const hasMeaningfulDosing = !!(qtyPerDose > 0 || formulation || route || frequency || duration > 0);
+          return hasName && hasMeaningfulDosing;
+        }).length > 0 && (
+          <div className="space-y-3">
+            <h3 className="text-base font-semibold text-fg flex items-center gap-2">
+              <Pill className="h-4 w-4" />
+              Medications Prescribed
+            </h3>
+            {consultData.prescriptions
+              .filter(rx => {
+                const name = rx?.medicine?.trim();
+                const qtyPerDose = Number(rx?.qtyPerDose) || 0;
+                const formulation = rx?.formulation?.trim();
+                const route = rx?.route?.trim();
+                const frequency = rx?.frequency?.trim();
+                const duration = Number(rx?.duration) || 0;
+                const hasName = !!name;
+                const hasMeaningfulDosing = !!(qtyPerDose > 0 || formulation || route || frequency || duration > 0);
+                return hasName && hasMeaningfulDosing;
+              })
+              .map((rx, idx) => (
+                <PrescriptionSummaryCard key={rx.id} prescription={rx} />
+              ))}
+          </div>
+        )}
+
+        {/* Lab Orders - show if there are lab orders */}
+        {consultData.labOrders.length > 0 && (
+          <div className="space-y-3">
+            <h3 className="text-base font-semibold text-fg flex items-center gap-2">
+              <FlaskConical className="h-4 w-4" />
+              Lab Orders
+            </h3>
+            {consultData.labOrders.map((order, idx) => (
+              <LabOrderSummaryCard key={order.id} order={order} orderNumber={idx + 1} />
+            ))}
+          </div>
+        )}
+
+        {/* Imaging Orders - show if there are imaging orders */}
+        {consultData.imagingOrders.length > 0 && (
+          <div className="space-y-3">
+            <h3 className="text-base font-semibold text-fg flex items-center gap-2">
+              <Activity className="h-4 w-4" />
+              Imaging Orders
+            </h3>
+            {consultData.imagingOrders.map((order, idx) => (
+              <ImagingOrderSummaryCard key={order.id} order={order} orderNumber={idx + 1} />
+            ))}
+          </div>
+        )}
+
+        {/* Outside Orders - show if there are outside orders */}
+        {formatOutsideOrders().length > 0 && (
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center gap-2 text-base">
-                <Pill className="h-4 w-4" />
-                Medications Prescribed
+                <Upload className="h-4 w-4" />
+                Outside Orders & Referrals
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3">
-                {formatPrescriptions().map((rx, idx) => (
-                  <div key={idx} className="p-3 bg-surface-muted rounded-lg">
-                    <div className="font-medium text-sm text-fg">{rx.medication}</div>
-                    <div className="text-xs text-fg-muted mt-1">{rx.instructions}</div>
-                    <div className="flex gap-4 mt-2 text-xs text-fg-muted">
-                      <span>Duration: {rx.quantity}</span>
-                      <span>Refills: {rx.refills}</span>
-                    </div>
-                  </div>
+              <div className="flex flex-wrap gap-1">
+                {formatOutsideOrders().map((order, idx) => (
+                  <Badge key={idx} variant="secondary" className="text-xs">{order}</Badge>
                 ))}
               </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Orders - only show if there are any orders */}
-        {(formatLabOrders().length > 0 || formatImagingOrders().length > 0 || formatOutsideOrders().length > 0) && (
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="flex items-center gap-2 text-base">
-                <Activity className="h-4 w-4" />
-                Orders & Referrals
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {formatLabOrders().length > 0 && (
-                <div>
-                  <h4 className="flex items-center gap-2 font-medium text-sm text-fg mb-2">
-                    <FlaskConical className="h-4 w-4" />
-                    Lab Orders
-                  </h4>
-                  <div className="flex flex-wrap gap-1">
-                    {formatLabOrders().map((lab, idx) => (
-                      <Badge key={idx} variant="secondary" className="text-xs">{lab}</Badge>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {formatImagingOrders().length > 0 && (
-                <div>
-                  <h4 className="flex items-center gap-2 font-medium text-sm text-fg mb-2">
-                    <Activity className="h-4 w-4" />
-                    Imaging Orders
-                  </h4>
-                  <div className="flex flex-wrap gap-1">
-                    {formatImagingOrders().map((imaging, idx) => (
-                      <Badge key={idx} variant="secondary" className="text-xs">{imaging}</Badge>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {formatOutsideOrders().length > 0 && (
-                <div>
-                  <h4 className="flex items-center gap-2 font-medium text-sm text-fg mb-2">
-                    <Upload className="h-4 w-4" />
-                    Outside Orders
-                  </h4>
-                  <div className="flex flex-wrap gap-1">
-                    {formatOutsideOrders().map((order, idx) => (
-                      <Badge key={idx} variant="secondary" className="text-xs">{order}</Badge>
-                    ))}
-                  </div>
-                </div>
-              )}
             </CardContent>
           </Card>
         )}
