@@ -17,7 +17,13 @@ export function IntelligentHeroSurface() {
         }}
       />
 
-      <div className="relative px-4 sm:px-6 md:px-8 lg:px-12 py-20">
+      <div 
+        className="relative py-20"
+        style={{
+          paddingLeft: '1rem',
+          paddingRight: '1rem'
+        }}
+      >
         {/* AI Icon with perpetual glow - Full width header */}
         <div className="flex items-center gap-5 animate-fade-in mb-12">
           <div 
