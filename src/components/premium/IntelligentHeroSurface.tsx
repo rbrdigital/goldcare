@@ -47,15 +47,7 @@ export function IntelligentHeroSurface() {
           className="space-y-4 animate-fade-in"
           style={{ animationDelay: "0.2s", animationFillMode: "backwards" }}
         >
-          <h1 
-            className="text-5xl md:text-6xl font-bold tracking-tight"
-            style={{
-              background: "linear-gradient(135deg, hsl(var(--fg)) 0%, hsl(var(--fg-muted)) 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text"
-            }}
-          >
+          <h1 className="text-5xl md:text-6xl font-bold tracking-tight text-fg">
             Welcome back, Dr. Chen
           </h1>
           <p className="text-lg text-fg-muted max-w-2xl leading-relaxed">

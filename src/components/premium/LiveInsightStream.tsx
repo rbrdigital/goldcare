@@ -36,17 +36,20 @@ const insights: Insight[] = [
   }
 ];
 
-const insightStyles: Record<InsightType, { icon: typeof TrendingUp; accentColor: string }> = {
+const insightStyles: Record<InsightType, { icon: typeof TrendingUp; iconColor: string; accentColor: string }> = {
   context: {
     icon: TrendingUp,
+    iconColor: "text-primary",
     accentColor: "border-t-primary"
   },
   alert: {
     icon: AlertTriangle,
+    iconColor: "text-danger",
     accentColor: "border-t-danger"
   },
   suggestion: {
     icon: Lightbulb,
+    iconColor: "text-gc-gold-500",
     accentColor: "border-t-gc-gold-500"
   }
 };
@@ -79,7 +82,7 @@ export function LiveInsightStream() {
         }}
       >
         {insights.map((insight, index) => {
-          const { icon: Icon, accentColor } = insightStyles[insight.type];
+          const { icon: Icon, iconColor, accentColor } = insightStyles[insight.type];
           
           return (
             <GlassCard
@@ -96,8 +99,8 @@ export function LiveInsightStream() {
             >
               {/* Icon */}
               <div className="flex items-start justify-between">
-                <Icon className="h-5 w-5 text-fg-muted" />
-                <span className="text-xs px-2 py-0.5 rounded-full bg-surface-muted text-fg-muted capitalize">
+                <Icon className={`h-5 w-5 ${iconColor}`} />
+                <span className="text-xs px-2 py-0.5 rounded-full bg-surface text-fg-muted capitalize border border-border">
                   {insight.type}
                 </span>
               </div>

@@ -84,8 +84,8 @@ export function CapabilityShowcase() {
       {/* Header */}
       <h2 className="text-2xl font-semibold text-fg">Clinical Capabilities</h2>
 
-      {/* Masonry-style grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-auto">
+      {/* Grid layout with proper spacing */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {capabilities.map((capability, index) => {
           const Icon = capability.icon;
           const isHovered = hoveredId === capability.id;
@@ -95,16 +95,17 @@ export function CapabilityShowcase() {
             <GlassCard
               key={capability.id}
               className={`
-                p-6 space-y-4 cursor-pointer
+                p-6 cursor-pointer flex flex-col
                 animate-fade-in
-                ${isFeatured ? "md:row-span-2" : ""}
+                ${isFeatured ? "lg:col-span-1" : ""}
               `}
               hover
               onMouseEnter={() => setHoveredId(capability.id)}
               onMouseLeave={() => setHoveredId(null)}
               style={{
                 animationDelay: `${index * 0.05}s`,
-                animationFillMode: "backwards"
+                animationFillMode: "backwards",
+                minHeight: isFeatured ? "320px" : "240px"
               }}
             >
               {/* Header with icon and status */}
@@ -149,7 +150,7 @@ export function CapabilityShowcase() {
               </div>
 
               {/* Content */}
-              <div className="space-y-2">
+              <div className="space-y-2 flex-1">
                 <h3 className="text-lg font-semibold text-fg">
                   {capability.title}
                 </h3>
@@ -160,7 +161,7 @@ export function CapabilityShowcase() {
 
               {/* Featured content gets extra space */}
               {isFeatured && (
-                <div className="pt-4 border-t border-border">
+                <div className="pt-4 mt-auto border-t border-border">
                   <p className="text-xs text-fg-muted">
                     {capability.id === "soap" && "Last note: 2 days ago"}
                     {capability.id === "rx" && "3 active prescriptions"}
@@ -172,9 +173,9 @@ export function CapabilityShowcase() {
               {/* Action - appears on hover */}
               <div 
                 className={`
-                  flex items-center justify-between text-sm font-medium
+                  flex items-center justify-between text-sm font-medium mt-4
                   transition-all duration-300
-                  ${isHovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}
+                  ${isHovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2 pointer-events-none"}
                 `}
               >
                 <span className="text-fg">{capability.action}</span>
