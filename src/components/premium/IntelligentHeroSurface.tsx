@@ -17,7 +17,7 @@ export function IntelligentHeroSurface() {
         }}
       />
 
-      <div className="relative py-20">
+      <div className="relative px-4 sm:px-6 md:px-8 lg:px-12 py-20">
         {/* AI Icon with perpetual glow - Full width header */}
         <div className="flex items-center gap-5 animate-fade-in mb-12">
           <div 
@@ -37,9 +37,9 @@ export function IntelligentHeroSurface() {
         </div>
 
         {/* Two-column grid layout */}
-        <div className="grid lg:grid-cols-[1.5fr_1fr] gap-12 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-6 lg:gap-8 items-start">
           {/* LEFT COLUMN: Hero content */}
-          <div className="space-y-8">
+          <div className="space-y-8 min-w-0">
             <div 
               className="space-y-4 animate-fade-in"
               style={{ animationDelay: "0.2s", animationFillMode: "backwards" }}
@@ -75,7 +75,7 @@ export function IntelligentHeroSurface() {
           </div>
 
           {/* RIGHT COLUMN: Context Cards Stack */}
-          <div className="space-y-4">
+          <div className="space-y-4 min-w-0">
             {/* Live Context Panel */}
             <GlassCard 
               className="p-6 space-y-3 animate-fade-in"
