@@ -119,7 +119,6 @@ export interface ConsultState {
   // Status
   finished: boolean;
   lastSaved: string;
-  hasSeenEmptyAnimation: boolean;
 }
 
 export interface ConsultActions {
@@ -171,7 +170,6 @@ export interface ConsultActions {
   initializeSession: (patientId: string, encounterId: string) => void;
   setFinished: (finished: boolean) => void;
   clearSession: () => void;
-  markEmptyAnimationSeen: () => void;
 }
 
 const initialState: ConsultState = {
@@ -213,8 +211,7 @@ const initialState: ConsultState = {
   labOrdersPanelState: 'ai-ready',
   imagingOrdersPanelState: 'ai-ready',
   finished: false,
-  lastSaved: "",
-  hasSeenEmptyAnimation: false
+  lastSaved: ""
 };
 
 // Debounced save function
@@ -566,10 +563,6 @@ export const useConsultStore = create<ConsultState & ConsultActions>()(
         }));
       },
       
-      markEmptyAnimationSeen: () => {
-        set(() => ({ hasSeenEmptyAnimation: true }));
-      },
-      
       clearSession: () => {
         set(() => ({
           ...initialState,
@@ -594,8 +587,7 @@ export const useConsultStore = create<ConsultState & ConsultActions>()(
         labOrdersPanelState: state.labOrdersPanelState,
         imagingOrdersPanelState: state.imagingOrdersPanelState,
         finished: state.finished,
-        lastSaved: state.lastSaved,
-        hasSeenEmptyAnimation: state.hasSeenEmptyAnimation
+        lastSaved: state.lastSaved
       })
     }
   )
@@ -698,9 +690,6 @@ export const useConsultSelectors = () => {
              store.labOrders.some(isMeaningfulLab) || 
              store.imagingOrders.some(isMeaningfulImaging) || 
              store.outsideOrders.length > 0 || 
-             !!store.privateNotes?.trim(),
-    
-    // Animation state
-    hasSeenEmptyAnimation: store.hasSeenEmptyAnimation
+             !!store.privateNotes?.trim()
   };
 };
