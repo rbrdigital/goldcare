@@ -80,7 +80,7 @@ export function CapabilityShowcase() {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
   return (
-    <div className="space-y-4 px-1">
+    <div className="space-y-4">
       {/* Header */}
       <h2 className="text-2xl font-semibold text-fg">Clinical Capabilities</h2>
 

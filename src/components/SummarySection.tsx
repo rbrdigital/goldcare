@@ -134,7 +134,7 @@ export function SummarySection({ onNavigateToAI }: SummarySectionProps) {
       <>
         {showLoading && <PremiumLoadingSequence onComplete={() => setShowLoading(false)} />}
         {!showLoading && (
-          <div className="space-y-16 py-6 px-4 sm:px-6 md:px-8 lg:px-12 animate-fade-in">
+          <div className="space-y-16 py-6 animate-fade-in">
             <IntelligentHeroSurface />
             <LiveInsightStream />
             <CapabilityShowcase />

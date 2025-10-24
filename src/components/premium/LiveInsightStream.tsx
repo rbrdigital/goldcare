@@ -56,9 +56,9 @@ const insightStyles: Record<InsightType, { icon: typeof TrendingUp; iconColor: s
 
 export function LiveInsightStream() {
   return (
-    <div className="space-y-4 overflow-hidden">
+    <div className="space-y-4">
       {/* Header */}
-      <div className="flex items-center justify-between px-1">
+      <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <h2 className="text-2xl font-semibold text-fg">AI Insights</h2>
           <div className="flex items-center gap-1.5">
@@ -74,11 +74,11 @@ export function LiveInsightStream() {
 
       {/* Horizontal scrolling insight cards */}
       <div 
-        className="-mx-4 sm:-mx-6 md:-mx-8 lg:-mx-12 px-4 sm:px-6 md:px-8 lg:px-12 flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden"
+        className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide snap-x snap-mandatory"
         style={{
           scrollbarWidth: "none",
           msOverflowStyle: "none",
-          WebkitOverflowScrolling: "touch"
+          overscrollBehaviorX: "contain"
         }}
       >
         {insights.map((insight, index) => {
@@ -87,15 +87,18 @@ export function LiveInsightStream() {
           return (
             <GlassCard
               key={insight.id}
-              className="flex-shrink-0 w-80 min-w-[320px] p-6 space-y-4 snap-start relative animate-fade-in"
+              className={`
+                flex-shrink-0 w-80 p-6 space-y-4 snap-start relative
+                animate-fade-in
+              `}
               hover
               style={{ 
                 animationDelay: `${index * 0.1}s`,
                 animationFillMode: "backwards"
               }}
             >
-              {/* Accent bar - more visible */}
-              <div className={`absolute top-0 left-0 right-0 h-1 rounded-t-lg ${accentColor.replace('border-t-', 'bg-')}`} />
+              {/* Accent bar */}
+              <div className={`absolute top-0 left-0 right-0 h-0.5 ${accentColor.replace('border-t-', 'bg-')}`} />
               
               {/* Icon */}
               <div className="flex items-start justify-between">
