@@ -18,24 +18,6 @@ export function IntelligentHeroSurface() {
       />
 
       <div className="relative px-4 sm:px-6 md:px-8 lg:px-12 py-20">
-        {/* AI Icon with perpetual glow - Full width header */}
-        <div className="flex items-center gap-5 animate-fade-in mb-12">
-          <div 
-            className="relative"
-            style={{
-              animation: "rotate-glow 20s linear infinite"
-            }}
-          >
-            <GoldCareAIIcon 
-              className="h-10 w-10 text-gc-gold-500"
-              style={{
-                filter: "drop-shadow(0 0 12px hsl(var(--gc-gold-500) / 0.4))"
-              }}
-            />
-          </div>
-          <span className="text-sm font-medium text-gc-gold-600">GoldCare AI</span>
-        </div>
-
         {/* Two-column grid layout */}
         <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-6 lg:gap-8 items-start">
           {/* LEFT COLUMN: Hero content */}
@@ -44,11 +26,14 @@ export function IntelligentHeroSurface() {
               className="space-y-4 animate-fade-in"
               style={{ animationDelay: "0.2s", animationFillMode: "backwards" }}
             >
-              <h1 className="text-5xl md:text-6xl font-bold tracking-tight text-fg">
-                Welcome back, Dr. Smith
+              <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-fg">
+                GoldCare AI
               </h1>
-              <p className="text-lg text-fg-muted max-w-2xl leading-relaxed">
-                Your patient chart is ready. AI has prepared comprehensive insights to help you deliver exceptional care.
+              <h2 className="text-2xl md:text-3xl font-semibold text-fg">
+                Visit Overview
+              </h2>
+              <p className="text-base text-fg-muted max-w-2xl leading-relaxed">
+                GoldCare AI has analyzed the live appointment transcription, prior clinical notes, intake responses, and uploaded records. Below is the structured summary to guide your next actions.
               </p>
             </div>
 
@@ -61,15 +46,14 @@ export function IntelligentHeroSurface() {
                 size="lg"
                 className="bg-fg text-bg hover:bg-fg/90 shadow-sm hover:shadow-md transition-all duration-200"
               >
-                <Sparkles className="h-4 w-4 mr-2" />
-                Start with AI
+                Open AI Draft
               </Button>
               <Button 
                 size="lg"
                 variant="outline"
                 className="hover:bg-surface-muted hover:border-fg/20 transition-all duration-200"
               >
-                Traditional Documentation
+                Document Manually
               </Button>
             </div>
           </div>
@@ -89,11 +73,11 @@ export function IntelligentHeroSurface() {
               </div>
               <div className="space-y-2 text-sm">
                 <div className="flex items-center justify-between">
-                  <span className="text-fg-muted">Pending items</span>
+                  <span className="text-fg-muted">Outstanding tasks</span>
                   <span className="font-semibold text-fg">3</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-fg-muted">Last visit</span>
+                  <span className="text-fg-muted">Last encounter</span>
                   <span className="font-semibold text-fg">2 weeks ago</span>
                 </div>
                 <div className="flex items-center justify-between">
@@ -101,9 +85,12 @@ export function IntelligentHeroSurface() {
                   <span className="font-semibold text-gc-gold-600">94%</span>
                 </div>
               </div>
+              <p className="text-xs text-fg-muted pt-2 border-t border-border">
+                Based on transcription clarity, data consistency, and prior history alignment
+              </p>
             </GlassCard>
 
-            {/* Quick Stats Panel - NEW */}
+            {/* Quick Stats Panel */}
             <GlassCard 
               className="p-6 space-y-3 animate-fade-in"
               hover
@@ -117,23 +104,23 @@ export function IntelligentHeroSurface() {
                 <div className="flex items-center justify-between">
                   <span className="flex items-center gap-2 text-fg-muted">
                     <Pill className="h-3.5 w-3.5" />
-                    Active Prescriptions
+                    Active medications
                   </span>
                   <span className="font-semibold text-fg">3</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="flex items-center gap-2 text-fg-muted">
                     <FlaskConical className="h-3.5 w-3.5" />
-                    Pending Lab Results
+                    Pending lab results
                   </span>
-                  <span className="font-semibold text-fg">1</span>
+                  <span className="font-semibold text-fg">1 (CMP)</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="flex items-center gap-2 text-fg-muted">
                     <Clock className="h-3.5 w-3.5" />
-                    Next Appointment
+                    Today's visit
                   </span>
-                  <span className="font-semibold text-fg">Today</span>
+                  <span className="font-semibold text-fg">Ongoing consultation</span>
                 </div>
               </div>
             </GlassCard>

@@ -27,7 +27,7 @@ const capabilities: Capability[] = [
     id: "soap",
     icon: FileText,
     title: "SOAP Notes",
-    description: "AI-powered clinical documentation with voice-to-text and smart templates.",
+    description: "AI-generated documentation built from real-time transcription, vitals, and previous entries. A new draft is ready for your review.",
     action: "Start Documenting",
     featured: true,
     status: "none"
@@ -36,7 +36,7 @@ const capabilities: Capability[] = [
     id: "rx",
     icon: Pill,
     title: "Prescriptions",
-    description: "Safety checks, interaction warnings, and direct pharmacy transmission.",
+    description: "AI verified against prior notes and interaction database. Current: Lisinopril 10 mg daily, Metformin 500 mg BID, Omega-3 1 g daily.",
     action: "Write Prescription",
     featured: true,
     status: "active"
@@ -45,7 +45,7 @@ const capabilities: Capability[] = [
     id: "labs",
     icon: TestTube,
     title: "Lab Orders",
-    description: "Quick ordering with diagnosis codes and result tracking.",
+    description: "Comprehensive Metabolic Panel collected today; AI will auto-update once results are synced.",
     action: "Order Labs",
     status: "pending"
   },
@@ -53,7 +53,7 @@ const capabilities: Capability[] = [
     id: "imaging",
     icon: Camera,
     title: "Imaging",
-    description: "Request imaging studies with clinical indications and urgency levels.",
+    description: "Request diagnostic studies with clear indication and urgency. None linked to this visit transcript.",
     action: "Request Imaging",
     status: "none"
   },
@@ -61,7 +61,7 @@ const capabilities: Capability[] = [
     id: "referrals",
     icon: Send,
     title: "Referrals",
-    description: "Seamless specialist referrals with comprehensive clinical context.",
+    description: "Generate referrals with attached transcript summary and clinical context. No referrals created yet.",
     action: "Create Referral",
     status: "none"
   },
@@ -69,7 +69,7 @@ const capabilities: Capability[] = [
     id: "private",
     icon: Lock,
     title: "Private Notes",
-    description: "Your confidential workspace for clinical observations and planning.",
+    description: "Encrypted notes for your own planning and reflections. AI data excluded from this section.",
     action: "Open Workspace",
     featured: true,
     status: "none"
@@ -163,7 +163,7 @@ export function CapabilityShowcase() {
               {isFeatured && (
                 <div className="pt-4 mt-auto border-t border-border">
                   <p className="text-xs text-fg-muted">
-                    {capability.id === "soap" && "Last note: 2 days ago"}
+                    {capability.id === "soap" && "Draft ready for review"}
                     {capability.id === "rx" && "3 active prescriptions"}
                     {capability.id === "private" && "Secure & encrypted"}
                   </p>
