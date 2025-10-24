@@ -20,12 +20,24 @@ import {
   Search,
   ChevronDown,
   ChevronRight,
-  ClipboardCheck
+  ClipboardCheck,
+  RotateCcw
 } from "lucide-react";
 import { GoldCareAIIcon } from "@/components/icons/GoldCareAIIcon";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
-import { useConsultSelectors } from "@/store/useConsultStore";
+import { useConsultSelectors, useConsultStore } from "@/store/useConsultStore";
+import { toast } from "@/hooks/use-toast";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface SidebarItem {
   id: string;
@@ -82,6 +94,7 @@ const patientDataItems: SidebarItem[] = [
 const manageApptItems: SidebarItem[] = [
   { id: "adjust-member", label: "Adjust Member Information", icon: <UserCheck className="h-4 w-4" />, href: "#adjust-member" },
   { id: "change-family", label: "Change Family Member", icon: <Users className="h-4 w-4" />, href: "#change-family" },
+  { id: "reset-appointment", label: "Reset Appointment", icon: <RotateCcw className="h-4 w-4" />, href: "#reset" },
   { id: "cancel", label: "Cancel Appointment", icon: <XCircle className="h-4 w-4" />, href: "#cancel" },
   { id: "no-show", label: "No-show", icon: <Calendar className="h-4 w-4" />, href: "#no-show", disabled: true },
   { id: "report-error", label: "Report Error to Manager", icon: <AlertTriangle className="h-4 w-4" />, href: "#report-error" }
@@ -103,9 +116,11 @@ export function AppSidebar({ mini = false, activeItem = "soap", onItemClick }: A
     new Set(sections.filter(s => s.defaultOpen).map(s => s.id))
   );
   const [searchQuery, setSearchQuery] = useState("");
+  const [showResetDialog, setShowResetDialog] = useState(false);
   
   // Get consult data to determine which panels have content
   const consultData = useConsultSelectors();
+  const { clearSession } = useConsultStore();
   
   // Helper function to check if a panel has content
   const hasContent = (panelId: string): boolean => {
@@ -143,7 +158,21 @@ export function AppSidebar({ mini = false, activeItem = "soap", onItemClick }: A
   };
 
   const handleItemClick = (itemId: string) => {
-    onItemClick?.(itemId);
+    if (itemId === "reset-appointment") {
+      setShowResetDialog(true);
+    } else {
+      onItemClick?.(itemId);
+    }
+  };
+
+  const handleResetConfirm = () => {
+    clearSession();
+    setShowResetDialog(false);
+    toast({
+      title: "Appointment Reset",
+      description: "All consultation data has been cleared. Starting fresh.",
+    });
+    onItemClick?.("soap");
   };
 
   const filteredSections = sections.map(section => ({
@@ -192,111 +221,131 @@ export function AppSidebar({ mini = false, activeItem = "soap", onItemClick }: A
   }
 
   return (
-    <div className="h-full bg-bg flex flex-col">
-      <div className="p-4">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <input
-            type="text"
-            placeholder="Search chart (⌘K)"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-muted rounded-md text-sm border-0 focus:ring-2 focus:ring-primary focus:outline-none"
-          />
+    <>
+      <div className="h-full bg-bg flex flex-col">
+        <div className="p-4">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <input
+              type="text"
+              placeholder="Search chart (⌘K)"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 bg-muted rounded-md text-sm border-0 focus:ring-2 focus:ring-primary focus:outline-none"
+            />
+          </div>
+        </div>
+
+        <div className="flex-1 overflow-y-auto">
+          {filteredSections.map((section) => (
+            <div key={section.id} className="border-b last:border-b-0">
+              <button
+                onClick={() => toggleSection(section.id)}
+                className={cn(
+                  "w-full flex items-center justify-between p-4 text-left transition-colors",
+                  section.id === "chart" ? "cursor-default" : "hover:bg-muted/50"
+                )}
+              >
+                <h3 className="font-semibold text-sm uppercase tracking-wide text-muted-foreground">
+                  {section.title}
+                </h3>
+                {section.id !== "chart" && (
+                  <>
+                    {openSections.has(section.id) ? (
+                      <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                    ) : (
+                      <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                    )}
+                  </>
+                )}
+              </button>
+
+              {(openSections.has(section.id) || section.id === "chart") && (
+                <div className="pb-2">
+                  {section.id === "chart" && (
+                    <>
+                      <div className="px-4 pb-2">
+                        <SidebarItem
+                          key={visitSummaryItem.id}
+                          item={visitSummaryItem}
+                          isActive={activeItem === visitSummaryItem.id}
+                          onClick={() => handleItemClick(visitSummaryItem.id)}
+                        />
+                      </div>
+                      <div className="px-4 pb-2">
+                        <SidebarItem
+                          key={goldcareAIItem.id}
+                          item={goldcareAIItem}
+                          isActive={activeItem === goldcareAIItem.id}
+                          onClick={() => handleItemClick(goldcareAIItem.id)}
+                        />
+                      </div>
+                      <div className="px-4 pb-2">
+                        <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground mb-2">
+                          Clinical Entries
+                        </div>
+                        {clinicalItems.map((item) => (
+                          <SidebarItem
+                            key={item.id}
+                            item={{ ...item, dirty: hasContent(item.id) }}
+                            isActive={activeItem === item.id}
+                            onClick={() => handleItemClick(item.id)}
+                          />
+                        ))}
+                      </div>
+                      <div className="px-4">
+                        <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground mb-2">
+                          Patient Data
+                        </div>
+                        {patientDataItems.map((item) => (
+                          <SidebarItem
+                            key={item.id}
+                            item={item}
+                            isActive={activeItem === item.id}
+                            onClick={() => handleItemClick(item.id)}
+                          />
+                        ))}
+                      </div>
+                    </>
+                  )}
+                  
+                  {section.id === "appointment" && (
+                    <div className="px-4">
+                      {section.items.map((item) => (
+                      <SidebarItem
+                        key={item.id}
+                        item={item}
+                        isActive={activeItem === item.id}
+                        onClick={() => handleItemClick(item.id)}
+                      />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          ))}
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto">
-        {filteredSections.map((section) => (
-          <div key={section.id} className="border-b last:border-b-0">
-            <button
-              onClick={() => toggleSection(section.id)}
-              className={cn(
-                "w-full flex items-center justify-between p-4 text-left transition-colors",
-                section.id === "chart" ? "cursor-default" : "hover:bg-muted/50"
-              )}
-            >
-              <h3 className="font-semibold text-sm uppercase tracking-wide text-muted-foreground">
-                {section.title}
-              </h3>
-              {section.id !== "chart" && (
-                <>
-                  {openSections.has(section.id) ? (
-                    <ChevronDown className="h-4 w-4 text-muted-foreground" />
-                  ) : (
-                    <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                  )}
-                </>
-              )}
-            </button>
-
-            {(openSections.has(section.id) || section.id === "chart") && (
-              <div className="pb-2">
-                {section.id === "chart" && (
-                  <>
-                    <div className="px-4 pb-2">
-                      <SidebarItem
-                        key={visitSummaryItem.id}
-                        item={visitSummaryItem}
-                        isActive={activeItem === visitSummaryItem.id}
-                        onClick={() => handleItemClick(visitSummaryItem.id)}
-                      />
-                    </div>
-                    <div className="px-4 pb-2">
-                      <SidebarItem
-                        key={goldcareAIItem.id}
-                        item={goldcareAIItem}
-                        isActive={activeItem === goldcareAIItem.id}
-                        onClick={() => handleItemClick(goldcareAIItem.id)}
-                      />
-                    </div>
-                    <div className="px-4 pb-2">
-                      <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground mb-2">
-                        Clinical Entries
-                      </div>
-                      {clinicalItems.map((item) => (
-                        <SidebarItem
-                          key={item.id}
-                          item={{ ...item, dirty: hasContent(item.id) }}
-                          isActive={activeItem === item.id}
-                          onClick={() => handleItemClick(item.id)}
-                        />
-                      ))}
-                    </div>
-                    <div className="px-4">
-                      <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground mb-2">
-                        Patient Data
-                      </div>
-                      {patientDataItems.map((item) => (
-                        <SidebarItem
-                          key={item.id}
-                          item={item}
-                          isActive={activeItem === item.id}
-                          onClick={() => handleItemClick(item.id)}
-                        />
-                      ))}
-                    </div>
-                  </>
-                )}
-                
-                {section.id === "appointment" && (
-                  <div className="px-4">
-                    {section.items.map((item) => (
-                    <SidebarItem
-                      key={item.id}
-                      item={item}
-                      isActive={activeItem === item.id}
-                      onClick={() => handleItemClick(item.id)}
-                    />
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-    </div>
+      <AlertDialog open={showResetDialog} onOpenChange={setShowResetDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Reset Appointment?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will clear all consultation data including SOAP notes, prescriptions, lab orders, 
+              imaging orders, outside orders, and private notes. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleResetConfirm} className="bg-medical-red text-white hover:opacity-95">
+              Reset Appointment
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 }
 
