@@ -10,6 +10,7 @@ import { PrescriptionSummaryCard } from "@/components/rx/summary/PrescriptionSum
 import { LabOrderSummaryCard } from "@/components/labs/summary/LabOrderSummaryCard";
 import { ImagingOrderSummaryCard } from "@/components/imaging/summary/ImagingOrderSummaryCard";
 import { GoldCareAIIcon } from "@/components/icons/GoldCareAIIcon";
+import { AIBriefingCard } from "@/components/AIBriefingCard";
 
 interface SummarySectionProps {
   onNavigateToAI?: () => void;
@@ -202,6 +203,9 @@ export function SummarySection({ onNavigateToAI }: SummarySectionProps) {
             </div>
           </div>
         </div>
+
+        {/* AI Briefing Card */}
+        <AIBriefingCard />
 
         {/* Feature Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
