@@ -64,6 +64,10 @@ export function Dashboard() {
     }
   };
 
+  const handleNavigateToSection = (section: string) => {
+    setActiveSection(section);
+  };
+
   // Handle keyboard shortcuts and URL hash
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -143,7 +147,7 @@ export function Dashboard() {
               : "md:grid-cols-[minmax(0,1fr)]"
           )}>
             <main className="min-w-0 py-6">
-              <MainContent activeSection={activeSection} />
+              <MainContent activeSection={activeSection} onNavigateToSection={handleNavigateToSection} />
             </main>
             
             {/* Right Panel */}

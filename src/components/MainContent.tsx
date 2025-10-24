@@ -38,13 +38,14 @@ import { useConsultStore } from "@/store/useConsultStore";
 
 interface MainContentProps {
   activeSection: string;
+  onNavigateToSection?: (section: string) => void;
 }
 
-export function MainContent({ activeSection }: MainContentProps) {
+export function MainContent({ activeSection, onNavigateToSection }: MainContentProps) {
   const renderSection = () => {
     switch (activeSection) {
       case "summary":
-        return <SummarySection />;
+        return <SummarySection onNavigateToAI={() => onNavigateToSection?.('goldcare-ai')} />;
       case "goldcare-ai":
         return <GoldCareAISection />;
       case "soap":
