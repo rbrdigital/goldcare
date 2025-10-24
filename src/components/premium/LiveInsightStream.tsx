@@ -74,7 +74,7 @@ export function LiveInsightStream() {
 
       {/* Horizontal scrolling insight cards */}
       <div 
-        className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide snap-x snap-mandatory"
+        className="flex gap-4 pb-4 scrollbar-hide snap-x snap-mandatory"
         style={{
           scrollbarWidth: "none",
           msOverflowStyle: "none",
