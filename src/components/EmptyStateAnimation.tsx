@@ -1,8 +1,15 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useConsultStore } from '@/store/useConsultStore';
 
 export function EmptyStateAnimation() {
+  const { markEmptyAnimationSeen } = useConsultStore();
   const [showText, setShowText] = React.useState(false);
+
+  // Mark animation as seen on mount
+  React.useEffect(() => {
+    markEmptyAnimationSeen();
+  }, [markEmptyAnimationSeen]);
 
   // Show text after cards fade out (3.5 seconds)
   React.useEffect(() => {

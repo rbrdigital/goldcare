@@ -132,13 +132,32 @@ export function SummarySection({ onNavigateToAI }: SummarySectionProps) {
     });
   };
 
-  // If no data exists, show premium empty state animation
+  // If no data exists, show appropriate empty state
   if (!consultData.hasData) {
-    return <EmptyStateAnimation />;
+    // Show one-time animation only on first encounter
+    if (!consultData.hasSeenEmptyAnimation) {
+      return <EmptyStateAnimation />;
+    }
+    
+    // Show clean static empty state for subsequent visits
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center px-4">
+        <div className="text-center space-y-4 max-w-md">
+          <div className="space-y-2">
+            <p className="text-xl font-medium text-fg-muted">
+              No visit data yet
+            </p>
+            <p className="text-sm text-fg-muted">
+              Start by adding SOAP notes, prescriptions, lab orders, or other clinical data
+            </p>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in">
       <PageHeader
         title="Visit Summary"
         description="Review all data collected during this consultation"
