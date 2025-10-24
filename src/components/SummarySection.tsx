@@ -169,7 +169,7 @@ export function SummarySection({ onNavigateToAI }: SummarySectionProps) {
             <div className="relative z-10 max-w-3xl">
               {/* AI Icon - Single, clean */}
               <div className="mb-6">
-                <GoldCareAIIcon className="h-12 w-12 md:h-16 md:w-16 text-fg" />
+                <GoldCareAIIcon className="h-6 w-6 md:h-8 md:w-8 text-fg" />
               </div>
               
               {/* Main Heading */}
