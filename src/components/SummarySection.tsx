@@ -174,12 +174,12 @@ export function SummarySection({ onNavigateToAI }: SummarySectionProps) {
               
               {/* Main Heading */}
               <h1 className="text-3xl md:text-4xl font-bold text-fg mb-4">
-                Begin Your Clinical Documentation
+                You're Ready to Begin the Visit
               </h1>
               
               {/* Subtitle */}
               <p className="text-lg md:text-xl text-fg-muted mb-8 max-w-2xl">
-                Let GoldCare AI handle the groundwork. Instantly review AI-generated clinical notes or start documenting manually in any section.
+                GoldCare AI has everything prepped. Review the patient's latest vitals, notes, and suggested actions—or jump straight into documentation.
               </p>
               
               {/* CTAs */}
@@ -190,13 +190,13 @@ export function SummarySection({ onNavigateToAI }: SummarySectionProps) {
                   onClick={onNavigateToAI}
                 >
                   <GoldCareAIIcon className="h-5 w-5 mr-2" />
-                  Review AI Notes
+                  View AI Summary
                 </Button>
                 <Button 
                   size="lg"
                   variant="outline"
                 >
-                  Learn More
+                  Start Documentation
                 </Button>
               </div>
             </div>
