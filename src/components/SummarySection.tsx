@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { PageHeader } from "@/components/ui/page-header";
-import { FileBarChart, Calendar, User, Stethoscope, Pill, FlaskConical, Activity, Upload, StickyNote, ClipboardCheck } from "lucide-react";
+import { FileBarChart, Calendar, User, Stethoscope, Pill, FlaskConical, Activity, Upload, StickyNote, ClipboardCheck, Sparkles } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useConsultSelectors, useConsultStore } from "@/store/useConsultStore";
 import { PrescriptionSummaryCard } from "@/components/rx/summary/PrescriptionSummaryCard";
@@ -119,54 +119,125 @@ export function SummarySection({ onNavigateToAI }: SummarySectionProps) {
     });
   };
 
-  // If no data exists, show empty state
+  // If no data exists, show empty state with hero banner and feature grid
   if (!consultData.hasData) {
+    const featureCards = [
+      {
+        icon: Stethoscope,
+        title: "SOAP Notes",
+        description: "Document vitals, history, observations, assessment, and treatment plan",
+        color: "text-primary"
+      },
+      {
+        icon: Pill,
+        title: "Prescriptions",
+        description: "Write and manage prescriptions with AI-powered drug interaction checks",
+        color: "text-medical-blue"
+      },
+      {
+        icon: FlaskConical,
+        title: "Lab Orders",
+        description: "Order laboratory tests and track results with clinical decision support",
+        color: "text-medical-green"
+      },
+      {
+        icon: Activity,
+        title: "Imaging Orders",
+        description: "Request diagnostic imaging studies with appropriate clinical indications",
+        color: "text-medical-amber"
+      },
+      {
+        icon: Upload,
+        title: "Outside Orders",
+        description: "Manage external referrals and specialty consultations",
+        color: "text-medical-blue"
+      },
+      {
+        icon: StickyNote,
+        title: "Private Notes",
+        description: "Add confidential clinical notes visible only to you",
+        color: "text-fg-muted"
+      }
+    ];
+
     return (
-      <div className="space-y-6">
-        <PageHeader
-          title="Visit Summary"
-          description="Review all data collected during this consultation"
-          icon={ClipboardCheck}
-        />
-        
-        <Card>
-          <CardContent className="py-16 px-6 space-y-6">
-            {/* Icon */}
-            <div className="flex justify-center">
-              <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center">
-                <ClipboardCheck className="h-8 w-8 text-primary" />
+      <div className="space-y-8">
+        {/* Hero Banner with Gold Gradient */}
+        <div className="relative overflow-hidden rounded-lg">
+          <div 
+            className="relative px-8 md:px-12 py-12 md:py-16"
+            style={{ background: 'var(--gc-gold-gradient)' }}
+          >
+            {/* Subtle pattern overlay */}
+            <div className="absolute inset-0 opacity-10">
+              <div className="absolute inset-0" style={{
+                backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)',
+                backgroundSize: '32px 32px'
+              }} />
+            </div>
+            
+            {/* Content */}
+            <div className="relative z-10 max-w-3xl">
+              {/* AI Icon */}
+              <div className="mb-6 flex items-center gap-3">
+                <GoldCareAIIcon className="h-12 w-12 md:h-16 md:w-16 text-white" />
+                <Sparkles className="h-6 w-6 text-white animate-pulse" />
+              </div>
+              
+              {/* Main Heading */}
+              <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                Ready to Start Your Clinical Documentation
+              </h1>
+              
+              {/* Subtitle */}
+              <p className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl">
+                Let GoldCare AI do the heavy lifting. Review AI-generated clinical notes, 
+                or start entering data manually in any section.
+              </p>
+              
+              {/* CTAs */}
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                <Button 
+                  size="lg"
+                  className="bg-white text-fg hover:bg-white/90 shadow-lg"
+                  onClick={onNavigateToAI}
+                >
+                  <GoldCareAIIcon className="h-5 w-5 mr-2" />
+                  Review AI Notes
+                </Button>
+                <Button 
+                  size="lg"
+                  variant="ghost"
+                  className="text-white border-2 border-white/30 hover:bg-white/10"
+                >
+                  Learn More
+                </Button>
               </div>
             </div>
-            
-            {/* Heading */}
-            <div className="space-y-2 text-center">
-              <h2 className="text-2xl font-semibold text-fg">
-                Ready to Start Your Clinical Documentation
-              </h2>
-              <p className="text-base text-fg-muted max-w-2xl mx-auto">
-                Begin by reviewing AI-generated notes and suggestions from the patient encounter, or start entering data manually in any section.
-              </p>
-            </div>
-            
-            {/* CTA Button */}
-            <div className="flex flex-col items-center gap-4 pt-4">
-              <Button 
-                onClick={onNavigateToAI}
-                size="lg"
-                variant="primary"
-                className="gap-2"
-              >
-                <GoldCareAIIcon className="h-5 w-5" />
-                Review AI Notes
-              </Button>
-              
-              {/* Helper text */}
-              <p className="text-sm text-fg-muted text-center">
-                Or use the sidebar to navigate to SOAP notes, prescriptions, lab orders, or other sections
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
+
+        {/* Feature Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {featureCards.map((feature, index) => {
+            const Icon = feature.icon;
+            return (
+              <Card key={index} className="group hover:shadow-md transition-all duration-200">
+                <CardContent className="p-6">
+                  <div className="mb-4">
+                    <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center">
+                      <Icon className={`h-6 w-6 ${feature.color}`} />
+                    </div>
+                  </div>
+                  <h3 className="text-lg font-semibold text-fg mb-2">{feature.title}</h3>
+                  <p className="text-sm text-fg-muted">
+                    {feature.description}
+                  </p>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
       </div>
     );
   }
