@@ -17,11 +17,42 @@ interface SummarySectionProps {
   onNavigateToAI?: () => void;
 }
 
+type StatusBadge = "In Progress" | "Ready to Review" | "Awaiting Results" | "Draft Saved";
+
 export function SummarySection({ onNavigateToAI }: SummarySectionProps) {
   const consultData = useConsultSelectors();
   const { setFinished } = useConsultStore();
   const [showBubble, setShowBubble] = React.useState(true);
   const [bubbleHovered, setBubbleHovered] = React.useState(false);
+  
+  // Track status changes to trigger shimmer animation
+  const [statusShimmer, setStatusShimmer] = React.useState<Record<number, boolean>>({});
+  const [previousStatuses, setPreviousStatuses] = React.useState<Record<string, StatusBadge>>({});
+
+  // Monitor status changes and trigger shimmer
+  React.useEffect(() => {
+    const featureCards = [
+      { title: "SOAP Notes" },
+      { title: "Prescriptions" },
+      { title: "Lab Orders" },
+      { title: "Imaging Orders" },
+      { title: "Outside Orders" },
+      { title: "Private Notes" }
+    ];
+
+    featureCards.forEach((card, index) => {
+      const { status } = getCardStatus(card.title);
+      const prevStatus = previousStatuses[card.title];
+      
+      if (prevStatus && prevStatus !== status) {
+        // Status changed - trigger shimmer
+        triggerShimmer(index);
+      }
+      
+      // Update previous status
+      setPreviousStatuses(prev => ({ ...prev, [card.title]: status }));
+    });
+  }, [consultData]); // Re-run when consultation data changes
 
   const handleSave = () => {
     toast({
@@ -129,6 +160,52 @@ export function SummarySection({ onNavigateToAI }: SummarySectionProps) {
       }
       return "External Order";
     });
+  };
+
+  // Determine status for each card based on appointment data
+  const getCardStatus = (cardTitle: string): { status: StatusBadge; isActive: boolean } => {
+    switch (cardTitle) {
+      case "SOAP Notes":
+        const hasSOAPData = consultData.soapNote.chiefComplaint || consultData.soapNote.observations;
+        return hasSOAPData 
+          ? { status: "Ready to Review", isActive: true }
+          : { status: "Draft Saved", isActive: false };
+      case "Prescriptions":
+        const hasPrescriptions = consultData.prescriptions.length > 0;
+        return hasPrescriptions
+          ? { status: "Ready to Review", isActive: true }
+          : { status: "Draft Saved", isActive: false };
+      case "Lab Orders":
+        const hasLabOrders = consultData.labOrders.length > 0;
+        return hasLabOrders
+          ? { status: "Awaiting Results", isActive: true }
+          : { status: "Draft Saved", isActive: false };
+      case "Imaging Orders":
+        const hasImagingOrders = consultData.imagingOrders.length > 0;
+        return hasImagingOrders
+          ? { status: "Awaiting Results", isActive: true }
+          : { status: "Draft Saved", isActive: false };
+      case "Outside Orders":
+        const hasOutsideOrders = consultData.outsideOrders.length > 0;
+        return hasOutsideOrders
+          ? { status: "In Progress", isActive: true }
+          : { status: "Draft Saved", isActive: false };
+      case "Private Notes":
+        const hasPrivateNotes = consultData.privateNotes && consultData.privateNotes.trim().length > 0;
+        return hasPrivateNotes
+          ? { status: "Draft Saved", isActive: false }
+          : { status: "Draft Saved", isActive: false };
+      default:
+        return { status: "Draft Saved", isActive: false };
+    }
+  };
+
+  // Trigger shimmer animation when status changes
+  const triggerShimmer = (index: number) => {
+    setStatusShimmer(prev => ({ ...prev, [index]: true }));
+    setTimeout(() => {
+      setStatusShimmer(prev => ({ ...prev, [index]: false }));
+    }, 1000);
   };
 
   // If no data exists, show empty state with hero banner and feature grid
@@ -241,15 +318,38 @@ export function SummarySection({ onNavigateToAI }: SummarySectionProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {featureCards.map((feature, index) => {
             const Icon = feature.icon;
+            const { status, isActive } = getCardStatus(feature.title);
+            const hasShimmer = statusShimmer[index];
+            
             return (
-              <Card key={index} className="group hover:shadow-md transition-all duration-200">
+              <Card key={index} className="group hover:shadow-md transition-all duration-200 relative">
+                {/* Status Badge - Top Right */}
+                <div className="absolute top-4 right-4 z-10">
+                  <Badge 
+                    className={`
+                      text-xs font-medium px-2 py-1 transition-all duration-300
+                      ${isActive 
+                        ? 'bg-warning text-fg border-warning' 
+                        : 'bg-surface-muted text-fg-muted border-border'
+                      }
+                    `}
+                    style={{
+                      ...(hasShimmer && {
+                        animation: 'shimmer 1s ease-in-out',
+                      })
+                    }}
+                  >
+                    {status}
+                  </Badge>
+                </div>
+
                 <CardContent className="p-6">
                   <div className="mb-4">
                     <div className="h-12 w-12 rounded-lg bg-surface-muted flex items-center justify-center">
                       <Icon className={`h-6 w-6 ${feature.color}`} />
                     </div>
                   </div>
-                  <h3 className="text-lg font-semibold text-fg mb-2">{feature.title}</h3>
+                  <h3 className="text-lg font-semibold text-fg mb-2 pr-20">{feature.title}</h3>
                   <p className="text-sm text-fg-muted">
                     {feature.description}
                   </p>
