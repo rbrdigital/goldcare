@@ -6,6 +6,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { FileBarChart, Calendar, User, FileText, Pill, FlaskConical, Scan, Upload, StickyNote, ClipboardCheck } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useConsultSelectors, useConsultStore } from "@/store/useConsultStore";
+import React from "react";
 import { PrescriptionSummaryCard } from "@/components/rx/summary/PrescriptionSummaryCard";
 import { LabOrderSummaryCard } from "@/components/labs/summary/LabOrderSummaryCard";
 import { ImagingOrderSummaryCard } from "@/components/imaging/summary/ImagingOrderSummaryCard";
@@ -19,6 +20,8 @@ interface SummarySectionProps {
 export function SummarySection({ onNavigateToAI }: SummarySectionProps) {
   const consultData = useConsultSelectors();
   const { setFinished } = useConsultStore();
+  const [showBubble, setShowBubble] = React.useState(true);
+  const [bubbleHovered, setBubbleHovered] = React.useState(false);
 
   const handleSave = () => {
     toast({
@@ -34,6 +37,14 @@ export function SummarySection({ onNavigateToAI }: SummarySectionProps) {
       description: "The consultation has been marked complete.",
     });
   };
+
+  // Bubble animation: show on mount, hide after 4s
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowBubble(false);
+    }, 5000); // visible for 1s animation + 4s display
+    return () => clearTimeout(timer);
+  }, []);
 
   // Patient info with fallback
   const patientName = "Sarah Johnson"; // In real app, would come from patient context
@@ -165,6 +176,23 @@ export function SummarySection({ onNavigateToAI }: SummarySectionProps) {
       <div className="space-y-8">
         {/* Hero Banner - Clean & Minimal */}
         <div className="relative overflow-hidden rounded-lg bg-surface border border-border">
+          {/* Floating System Bubble */}
+          <div
+            className={`
+              absolute bottom-4 right-4 max-w-xs z-20
+              transition-all duration-1000 ease-out
+              ${showBubble || bubbleHovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}
+            `}
+          >
+            <div className="bg-surface rounded-lg px-4 py-3 border border-border shadow-lg text-sm text-fg-muted"
+              style={{
+                boxShadow: "0 4px 20px hsla(var(--warning) / 0.15), 0 2px 8px hsla(0, 0%, 0% / 0.1)"
+              }}
+            >
+              GoldCare AI has pre-filled your documentation so you can focus on care, not clicks.
+            </div>
+          </div>
+
           <div className="relative px-8 md:px-12 py-12 md:py-16">
             {/* Content */}
             <div className="relative z-10 max-w-3xl">
@@ -189,6 +217,8 @@ export function SummarySection({ onNavigateToAI }: SummarySectionProps) {
                   size="lg"
                   className="bg-fg text-bg hover:bg-fg/90 font-semibold"
                   onClick={onNavigateToAI}
+                  onMouseEnter={() => setBubbleHovered(true)}
+                  onMouseLeave={() => setBubbleHovered(false)}
                 >
                   <GoldCareAIIcon className="h-5 w-5 mr-2" />
                   View AI Summary
