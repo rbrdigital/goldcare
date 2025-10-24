@@ -12,6 +12,7 @@ import { LabOrderSummaryCard } from "@/components/labs/summary/LabOrderSummaryCa
 import { ImagingOrderSummaryCard } from "@/components/imaging/summary/ImagingOrderSummaryCard";
 import { GoldCareAIIcon } from "@/components/icons/GoldCareAIIcon";
 import { AIBriefingCard } from "@/components/AIBriefingCard";
+import { OnboardingHero } from "@/components/OnboardingHero";
 
 interface SummarySectionProps {
   onNavigateToAI?: () => void;
@@ -22,6 +23,8 @@ export function SummarySection({ onNavigateToAI }: SummarySectionProps) {
   const { setFinished } = useConsultStore();
   const [showBubble, setShowBubble] = React.useState(true);
   const [bubbleHovered, setBubbleHovered] = React.useState(false);
+  const [showOnboarding, setShowOnboarding] = React.useState(true);
+  const [onboardingComplete, setOnboardingComplete] = React.useState(false);
 
   const handleSave = () => {
     toast({
@@ -43,6 +46,14 @@ export function SummarySection({ onNavigateToAI }: SummarySectionProps) {
     const timer = setTimeout(() => {
       setShowBubble(false);
     }, 5000); // visible for 1s animation + 4s display
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Hide onboarding after animation completes (4s total)
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowOnboarding(false);
+    }, 4000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -174,65 +185,69 @@ export function SummarySection({ onNavigateToAI }: SummarySectionProps) {
 
     return (
       <div className="space-y-8">
-        {/* Hero Banner - Clean & Minimal */}
-        <div className="relative overflow-hidden rounded-lg bg-surface border border-border">
-          {/* Floating System Bubble */}
-          <div
-            className={`
-              absolute bottom-4 right-4 max-w-xs z-20
-              transition-all duration-1000 ease-out
-              ${showBubble || bubbleHovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}
-            `}
-          >
-            <div className="bg-surface rounded-lg px-4 py-3 border border-border shadow-lg text-sm text-fg-muted"
-              style={{
-                boxShadow: "0 4px 20px hsla(var(--warning) / 0.15), 0 2px 8px hsla(0, 0%, 0% / 0.1)"
-              }}
+        {/* Hero Banner - Show onboarding animation first, then regular hero */}
+        {showOnboarding ? (
+          <OnboardingHero onComplete={() => setOnboardingComplete(true)} />
+        ) : (
+          <div className="relative overflow-hidden rounded-lg bg-surface border border-border animate-fade-in">
+            {/* Floating System Bubble */}
+            <div
+              className={`
+                absolute bottom-4 right-4 max-w-xs z-20
+                transition-all duration-1000 ease-out
+                ${showBubble || bubbleHovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}
+              `}
             >
-              GoldCare AI has pre-filled your documentation so you can focus on care, not clicks.
+              <div className="bg-surface rounded-lg px-4 py-3 border border-border shadow-lg text-sm text-fg-muted"
+                style={{
+                  boxShadow: "0 4px 20px hsla(var(--warning) / 0.15), 0 2px 8px hsla(0, 0%, 0% / 0.1)"
+                }}
+              >
+                GoldCare AI has pre-filled your documentation so you can focus on care, not clicks.
+              </div>
             </div>
-          </div>
 
-          <div className="relative px-8 md:px-12 py-12 md:py-16">
-            {/* Content */}
-            <div className="relative z-10 max-w-3xl">
-              {/* AI Icon - Single, clean */}
-              <div className="mb-6">
-                <GoldCareAIIcon className="h-6 w-6 md:h-8 md:w-8 text-fg" />
-              </div>
-              
-              {/* Main Heading */}
-              <h1 className="text-3xl md:text-4xl font-bold text-fg mb-4">
-                You're Ready to Begin the Visit
-              </h1>
-              
-              {/* Subtitle */}
-              <p className="text-lg md:text-xl text-fg-muted mb-8 max-w-2xl">
-                GoldCare AI has everything prepped. Review the patient's latest vitals, notes, and suggested actions—or jump straight into documentation.
-              </p>
-              
-              {/* CTAs */}
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                <Button 
-                  size="lg"
-                  className="bg-fg text-bg hover:bg-fg/90 font-semibold"
-                  onClick={onNavigateToAI}
-                  onMouseEnter={() => setBubbleHovered(true)}
-                  onMouseLeave={() => setBubbleHovered(false)}
-                >
-                  <GoldCareAIIcon className="h-5 w-5 mr-2" />
-                  View AI Summary
-                </Button>
-                <Button 
-                  size="lg"
-                  variant="outline"
-                >
-                  Start Documentation
-                </Button>
+            <div className="relative px-8 md:px-12 py-12 md:py-16">
+              {/* Content */}
+              <div className="relative z-10 max-w-3xl">
+                {/* AI Icon - Single, clean */}
+                <div className="mb-6">
+                  <GoldCareAIIcon className="h-6 w-6 md:h-8 md:w-8 text-fg" />
+                </div>
+                
+                {/* Main Heading */}
+                <h1 className="text-3xl md:text-4xl font-bold text-fg mb-4">
+                  You're Ready to Begin the Visit
+                </h1>
+                
+                {/* Subtitle */}
+                <p className="text-lg md:text-xl text-fg-muted mb-8 max-w-2xl">
+                  GoldCare AI has everything prepped. Review the patient's latest vitals, notes, and suggested actions—or jump straight into documentation.
+                </p>
+                
+                {/* CTAs */}
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                  <Button 
+                    size="lg"
+                    className="bg-fg text-bg hover:bg-fg/90 font-semibold"
+                    onClick={onNavigateToAI}
+                    onMouseEnter={() => setBubbleHovered(true)}
+                    onMouseLeave={() => setBubbleHovered(false)}
+                  >
+                    <GoldCareAIIcon className="h-5 w-5 mr-2" />
+                    View AI Summary
+                  </Button>
+                  <Button 
+                    size="lg"
+                    variant="outline"
+                  >
+                    Start Documentation
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* Smart Summary Card */}
         <AIBriefingCard />
