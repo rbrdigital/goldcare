@@ -160,6 +160,24 @@ const config: Config = {
             opacity: '1',
             transform: 'translateY(0)'
           }
+        },
+        'scale-pulse': {
+          '0%, 100%': {
+            transform: 'scale(1)'
+          },
+          '50%': {
+            transform: 'scale(1.02)'
+          }
+        },
+        'breathe': {
+          '0%, 100%': {
+            transform: 'scale(1)',
+            opacity: '1'
+          },
+          '50%': {
+            transform: 'scale(1.01)',
+            opacity: '0.95'
+          }
         }
       },
       animation: {
@@ -169,7 +187,9 @@ const config: Config = {
         'ai-glow': 'ai-glow 3s ease-in-out infinite',
         'ai-glow-hover': 'ai-glow-hover 2s ease-in-out infinite',
         'shimmer': 'shimmer 2s ease-in-out infinite',
-        'fade-in': 'fade-in 0.3s ease-out'
+        'fade-in': 'fade-in 0.3s ease-out',
+        'scale-pulse': 'scale-pulse 2s ease-in-out infinite',
+        'breathe': 'breathe 4s ease-in-out infinite'
       }
     }
   },

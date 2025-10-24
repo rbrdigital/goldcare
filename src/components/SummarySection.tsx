@@ -10,9 +10,10 @@ import React from "react";
 import { PrescriptionSummaryCard } from "@/components/rx/summary/PrescriptionSummaryCard";
 import { LabOrderSummaryCard } from "@/components/labs/summary/LabOrderSummaryCard";
 import { ImagingOrderSummaryCard } from "@/components/imaging/summary/ImagingOrderSummaryCard";
-import { GoldCareAIIcon } from "@/components/icons/GoldCareAIIcon";
-import { AIBriefingCard } from "@/components/AIBriefingCard";
-import { OnboardingHero } from "@/components/OnboardingHero";
+import { PremiumLoadingSequence } from "@/components/premium/PremiumLoadingSequence";
+import { IntelligentHeroSurface } from "@/components/premium/IntelligentHeroSurface";
+import { LiveInsightStream } from "@/components/premium/LiveInsightStream";
+import { CapabilityShowcase } from "@/components/premium/CapabilityShowcase";
 
 interface SummarySectionProps {
   onNavigateToAI?: () => void;
@@ -21,10 +22,7 @@ interface SummarySectionProps {
 export function SummarySection({ onNavigateToAI }: SummarySectionProps) {
   const consultData = useConsultSelectors();
   const { setFinished } = useConsultStore();
-  const [showBubble, setShowBubble] = React.useState(true);
-  const [bubbleHovered, setBubbleHovered] = React.useState(false);
-  const [showOnboarding, setShowOnboarding] = React.useState(true);
-  const [onboardingComplete, setOnboardingComplete] = React.useState(false);
+  const [showLoading, setShowLoading] = React.useState(true);
 
   const handleSave = () => {
     toast({
@@ -41,19 +39,8 @@ export function SummarySection({ onNavigateToAI }: SummarySectionProps) {
     });
   };
 
-  // Bubble animation: show on mount, hide after 4s
   React.useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowBubble(false);
-    }, 5000); // visible for 1s animation + 4s display
-    return () => clearTimeout(timer);
-  }, []);
-
-  // Hide onboarding after animation completes (4s total)
-  React.useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowOnboarding(false);
-    }, 4000);
+    const timer = setTimeout(() => setShowLoading(false), 4200);
     return () => clearTimeout(timer);
   }, []);
 
@@ -142,138 +129,18 @@ export function SummarySection({ onNavigateToAI }: SummarySectionProps) {
     });
   };
 
-  // If no data exists, show empty state with hero banner and feature grid
   if (!consultData.hasData) {
-    const featureCards = [
-      {
-        icon: FileText,
-        title: "SOAP Notes",
-        description: "Record vitals, history, observations, assessments, and treatment plans.",
-        color: "text-fg"
-      },
-      {
-        icon: Pill,
-        title: "Prescriptions",
-        description: "Create and manage prescriptions with AI-powered safety and interaction checks.",
-        color: "text-fg"
-      },
-      {
-        icon: FlaskConical,
-        title: "Lab Orders",
-        description: "Order and track lab tests with built-in clinical decision support.",
-        color: "text-fg"
-      },
-      {
-        icon: Scan,
-        title: "Imaging Orders",
-        description: "Request diagnostic imaging with the correct clinical indications.",
-        color: "text-fg"
-      },
-      {
-        icon: Upload,
-        title: "Outside Orders",
-        description: "Coordinate external referrals and specialty consultations.",
-        color: "text-fg"
-      },
-      {
-        icon: StickyNote,
-        title: "Private Notes",
-        description: "Keep confidential notes for your personal clinical reference.",
-        color: "text-fg"
-      }
-    ];
-
     return (
-      <div className="space-y-8">
-        {/* Hero Banner - Show onboarding animation first, then regular hero */}
-        {showOnboarding ? (
-          <OnboardingHero onComplete={() => setOnboardingComplete(true)} />
-        ) : (
-          <div className="relative overflow-hidden rounded-lg bg-surface border border-border animate-fade-in">
-            {/* Floating System Bubble */}
-            <div
-              className={`
-                absolute bottom-4 right-4 max-w-xs z-20
-                transition-all duration-1000 ease-out
-                ${showBubble || bubbleHovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}
-              `}
-            >
-              <div className="bg-surface rounded-lg px-4 py-3 border border-border shadow-lg text-sm text-fg-muted"
-                style={{
-                  boxShadow: "0 4px 20px hsla(var(--warning) / 0.15), 0 2px 8px hsla(0, 0%, 0% / 0.1)"
-                }}
-              >
-                GoldCare AI has pre-filled your documentation so you can focus on care, not clicks.
-              </div>
-            </div>
-
-            <div className="relative px-8 md:px-12 py-12 md:py-16">
-              {/* Content */}
-              <div className="relative z-10 max-w-3xl">
-                {/* AI Icon - Single, clean */}
-                <div className="mb-6">
-                  <GoldCareAIIcon className="h-6 w-6 md:h-8 md:w-8 text-fg" />
-                </div>
-                
-                {/* Main Heading */}
-                <h1 className="text-3xl md:text-4xl font-bold text-fg mb-4">
-                  You're Ready to Begin the Visit
-                </h1>
-                
-                {/* Subtitle */}
-                <p className="text-lg md:text-xl text-fg-muted mb-8 max-w-2xl">
-                  GoldCare AI has everything prepped. Review the patient's latest vitals, notes, and suggested actions—or jump straight into documentation.
-                </p>
-                
-                {/* CTAs */}
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                  <Button 
-                    size="lg"
-                    className="bg-fg text-bg hover:bg-fg/90 font-semibold"
-                    onClick={onNavigateToAI}
-                    onMouseEnter={() => setBubbleHovered(true)}
-                    onMouseLeave={() => setBubbleHovered(false)}
-                  >
-                    <GoldCareAIIcon className="h-5 w-5 mr-2" />
-                    View AI Summary
-                  </Button>
-                  <Button 
-                    size="lg"
-                    variant="outline"
-                  >
-                    Start Documentation
-                  </Button>
-                </div>
-              </div>
-            </div>
+      <>
+        {showLoading && <PremiumLoadingSequence onComplete={() => setShowLoading(false)} />}
+        {!showLoading && (
+          <div className="space-y-16 py-6 animate-fade-in">
+            <IntelligentHeroSurface />
+            <LiveInsightStream />
+            <CapabilityShowcase />
           </div>
         )}
-
-        {/* Smart Summary Card */}
-        <AIBriefingCard />
-
-        {/* Feature Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {featureCards.map((feature, index) => {
-            const Icon = feature.icon;
-            return (
-              <Card key={index} className="group hover:shadow-md transition-all duration-200">
-                <CardContent className="p-6">
-                  <div className="mb-4">
-                    <div className="h-12 w-12 rounded-lg bg-surface-muted flex items-center justify-center">
-                      <Icon className={`h-6 w-6 ${feature.color}`} />
-                    </div>
-                  </div>
-                  <h3 className="text-lg font-semibold text-fg mb-2">{feature.title}</h3>
-                  <p className="text-sm text-fg-muted">
-                    {feature.description}
-                  </p>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
-      </div>
+      </>
     );
   }
 
