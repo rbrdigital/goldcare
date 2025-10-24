@@ -187,8 +187,7 @@ export function SummarySection({ onNavigateToAI }: SummarySectionProps) {
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                 <Button 
                   size="lg"
-                  variant="secondary"
-                  className="font-semibold"
+                  className="bg-fg text-bg hover:bg-fg/90 font-semibold"
                   onClick={onNavigateToAI}
                 >
                   <GoldCareAIIcon className="h-5 w-5 mr-2" />
