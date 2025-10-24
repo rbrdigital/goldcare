@@ -95,7 +95,7 @@ export function CapabilityShowcase() {
             <GlassCard
               key={capability.id}
               className={`
-                p-6 cursor-pointer flex flex-col
+                p-6 cursor-pointer flex flex-col overflow-hidden
                 animate-fade-in
                 ${isFeatured ? "lg:col-span-1" : ""}
               `}

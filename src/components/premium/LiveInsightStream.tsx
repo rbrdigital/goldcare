@@ -88,7 +88,7 @@ export function LiveInsightStream() {
             <GlassCard
               key={insight.id}
               className={`
-                flex-shrink-0 w-80 p-6 space-y-4 snap-start border-t-2 ${accentColor}
+                flex-shrink-0 w-80 p-6 space-y-4 snap-start relative
                 animate-fade-in
               `}
               hover
@@ -97,6 +97,9 @@ export function LiveInsightStream() {
                 animationFillMode: "backwards"
               }}
             >
+              {/* Accent bar */}
+              <div className={`absolute top-0 left-0 right-0 h-0.5 ${accentColor.replace('border-t-', 'bg-')}`} />
+              
               {/* Icon */}
               <div className="flex items-start justify-between">
                 <Icon className={`h-5 w-5 ${iconColor}`} />
