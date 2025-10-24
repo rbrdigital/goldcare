@@ -16,22 +16,22 @@ const insights: Insight[] = [
   {
     id: "1",
     type: "context",
-    title: "TSH Trending Up",
-    description: "Patient's TSH levels have increased from 3.8 to 4.2 over past 3 months.",
+    title: "A1c Trending Up",
+    description: "From patient transcript and lab history: A1c increased from 5.6% → 6.1% in 6 months. Diet adjustments discussed in today's call. Consider medication review if trend continues.",
     action: "View Trend"
   },
   {
     id: "2",
     type: "alert",
-    title: "Drug Interaction Risk",
-    description: "Current medications may interact. Review before prescribing.",
+    title: "Renal Risk Combination",
+    description: "Transcription flagged chronic ibuprofen mention. Combined with lisinopril, may impact renal function. AI cross-referenced prior CMP; recommends monitoring creatinine/eGFR once current labs return.",
     action: "Review Now"
   },
   {
     id: "3",
     type: "suggestion",
-    title: "Consider Vitamin D",
-    description: "Based on symptoms and geographic location. Last tested 8 months ago.",
+    title: "Add Ferritin & B12 Tests",
+    description: "Patient described fatigue and lightheadedness during intake and in transcript. No recent iron studies found in uploaded labs (last 9 months).",
     action: "Add to Labs"
   }
 ];
