@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { PageHeader } from "@/components/ui/page-header";
-import { FileBarChart, Calendar, User, Stethoscope, Pill, FlaskConical, Activity, Upload, StickyNote, ClipboardCheck, Sparkles } from "lucide-react";
+import { FileBarChart, Calendar, User, FileText, Pill, FlaskConical, Scan, Upload, StickyNote, ClipboardCheck } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useConsultSelectors, useConsultStore } from "@/store/useConsultStore";
 import { PrescriptionSummaryCard } from "@/components/rx/summary/PrescriptionSummaryCard";
@@ -123,54 +123,53 @@ export function SummarySection({ onNavigateToAI }: SummarySectionProps) {
   if (!consultData.hasData) {
     const featureCards = [
       {
-        icon: Stethoscope,
+        icon: FileText,
         title: "SOAP Notes",
         description: "Document vitals, history, observations, assessment, and treatment plan",
-        color: "text-primary"
+        color: "text-fg"
       },
       {
         icon: Pill,
         title: "Prescriptions",
         description: "Write and manage prescriptions with AI-powered drug interaction checks",
-        color: "text-medical-blue"
+        color: "text-fg"
       },
       {
         icon: FlaskConical,
         title: "Lab Orders",
         description: "Order laboratory tests and track results with clinical decision support",
-        color: "text-medical-green"
+        color: "text-fg"
       },
       {
-        icon: Activity,
+        icon: Scan,
         title: "Imaging Orders",
         description: "Request diagnostic imaging studies with appropriate clinical indications",
-        color: "text-medical-amber"
+        color: "text-fg"
       },
       {
         icon: Upload,
         title: "Outside Orders",
         description: "Manage external referrals and specialty consultations",
-        color: "text-medical-blue"
+        color: "text-fg"
       },
       {
         icon: StickyNote,
         title: "Private Notes",
         description: "Add confidential clinical notes visible only to you",
-        color: "text-fg-muted"
+        color: "text-fg"
       }
     ];
 
     return (
       <div className="space-y-8">
-        {/* Hero Banner - Modern Gradient */}
-        <div className="relative overflow-hidden rounded-lg bg-gradient-to-br from-primary/10 via-primary/5 to-bg border border-border">
+        {/* Hero Banner - Clean & Minimal */}
+        <div className="relative overflow-hidden rounded-lg bg-surface border border-border">
           <div className="relative px-8 md:px-12 py-12 md:py-16">
             {/* Content */}
             <div className="relative z-10 max-w-3xl">
-              {/* AI Icon */}
-              <div className="mb-6 flex items-center gap-3">
-                <GoldCareAIIcon className="h-12 w-12 md:h-16 md:w-16 text-primary" />
-                <Sparkles className="h-6 w-6 text-primary animate-pulse" />
+              {/* AI Icon - Single, clean */}
+              <div className="mb-6">
+                <GoldCareAIIcon className="h-12 w-12 md:h-16 md:w-16 text-fg" />
               </div>
               
               {/* Main Heading */}
@@ -188,7 +187,8 @@ export function SummarySection({ onNavigateToAI }: SummarySectionProps) {
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                 <Button 
                   size="lg"
-                  className="bg-primary text-on-primary hover:bg-primary/90"
+                  variant="secondary"
+                  className="font-semibold"
                   onClick={onNavigateToAI}
                 >
                   <GoldCareAIIcon className="h-5 w-5 mr-2" />
@@ -213,7 +213,7 @@ export function SummarySection({ onNavigateToAI }: SummarySectionProps) {
               <Card key={index} className="group hover:shadow-md transition-all duration-200">
                 <CardContent className="p-6">
                   <div className="mb-4">
-                    <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center">
+                    <div className="h-12 w-12 rounded-lg bg-surface-muted flex items-center justify-center">
                       <Icon className={`h-6 w-6 ${feature.color}`} />
                     </div>
                   </div>
@@ -274,7 +274,7 @@ export function SummarySection({ onNavigateToAI }: SummarySectionProps) {
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-base">
-              <Stethoscope className="h-4 w-4" />
+              <FileText className="h-4 w-4" />
               SOAP Note Summary
             </CardTitle>
           </CardHeader>
@@ -420,7 +420,7 @@ export function SummarySection({ onNavigateToAI }: SummarySectionProps) {
         {consultData.imagingOrders.length > 0 && (
           <div className="space-y-3">
             <h3 className="text-base font-semibold text-fg flex items-center gap-2">
-              <Activity className="h-4 w-4" />
+              <Scan className="h-4 w-4" />
               Imaging Orders
             </h3>
             {consultData.imagingOrders.map((order, idx) => (
