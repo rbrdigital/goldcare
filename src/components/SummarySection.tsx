@@ -162,35 +162,24 @@ export function SummarySection({ onNavigateToAI }: SummarySectionProps) {
 
     return (
       <div className="space-y-8">
-        {/* Hero Banner with Gold Gradient */}
-        <div className="relative overflow-hidden rounded-lg">
-          <div 
-            className="relative px-8 md:px-12 py-12 md:py-16"
-            style={{ background: 'var(--gc-gold-gradient)' }}
-          >
-            {/* Subtle pattern overlay */}
-            <div className="absolute inset-0 opacity-10">
-              <div className="absolute inset-0" style={{
-                backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)',
-                backgroundSize: '32px 32px'
-              }} />
-            </div>
-            
+        {/* Hero Banner - Modern Gradient */}
+        <div className="relative overflow-hidden rounded-lg bg-gradient-to-br from-primary/10 via-primary/5 to-bg border border-border">
+          <div className="relative px-8 md:px-12 py-12 md:py-16">
             {/* Content */}
             <div className="relative z-10 max-w-3xl">
               {/* AI Icon */}
               <div className="mb-6 flex items-center gap-3">
-                <GoldCareAIIcon className="h-12 w-12 md:h-16 md:w-16 text-white" />
-                <Sparkles className="h-6 w-6 text-white animate-pulse" />
+                <GoldCareAIIcon className="h-12 w-12 md:h-16 md:w-16 text-primary" />
+                <Sparkles className="h-6 w-6 text-primary animate-pulse" />
               </div>
               
               {/* Main Heading */}
-              <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              <h1 className="text-3xl md:text-4xl font-bold text-fg mb-4">
                 Ready to Start Your Clinical Documentation
               </h1>
               
               {/* Subtitle */}
-              <p className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl">
+              <p className="text-lg md:text-xl text-fg-muted mb-8 max-w-2xl">
                 Let GoldCare AI do the heavy lifting. Review AI-generated clinical notes, 
                 or start entering data manually in any section.
               </p>
@@ -199,7 +188,7 @@ export function SummarySection({ onNavigateToAI }: SummarySectionProps) {
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                 <Button 
                   size="lg"
-                  className="bg-white text-fg hover:bg-white/90 shadow-lg"
+                  className="bg-primary text-on-primary hover:bg-primary/90"
                   onClick={onNavigateToAI}
                 >
                   <GoldCareAIIcon className="h-5 w-5 mr-2" />
@@ -207,8 +196,7 @@ export function SummarySection({ onNavigateToAI }: SummarySectionProps) {
                 </Button>
                 <Button 
                   size="lg"
-                  variant="ghost"
-                  className="text-white border-2 border-white/30 hover:bg-white/10"
+                  variant="outline"
                 >
                   Learn More
                 </Button>
