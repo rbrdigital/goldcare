@@ -23,9 +23,9 @@ export function GlassCard({
   return (
     <div
       className={cn(
-        "relative rounded-lg border border-border bg-surface/70 backdrop-blur-xl",
+        "relative rounded-lg outline outline-1 outline-border bg-surface/70 backdrop-blur-xl",
         "transition-all duration-300",
-        hover && "hover:translate-y-[-2px] hover:shadow-lg hover:border-gc-gold-500/30",
+        hover && "hover:translate-y-[-2px] hover:shadow-lg hover:outline-gc-gold-500/30",
         glow && "shadow-[0_0_20px_rgba(212,175,55,0.1)]",
         className
       )}
