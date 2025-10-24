@@ -16,22 +16,22 @@ const insights: Insight[] = [
   {
     id: "1",
     type: "context",
-    title: "A1c Trending Up",
-    description: "From patient transcript and lab history: A1c increased from 5.6% → 6.1% in 6 months. Diet adjustments discussed in today's call. Consider medication review if trend continues.",
+    title: "TSH Trending Up",
+    description: "Patient's TSH levels have increased from 3.8 to 4.2 over past 3 months.",
     action: "View Trend"
   },
   {
     id: "2",
     type: "alert",
-    title: "Renal Risk Combination",
-    description: "Transcription flagged chronic ibuprofen mention. Combined with lisinopril, may impact renal function. AI cross-referenced prior CMP; recommends monitoring creatinine/eGFR once current labs return.",
+    title: "Drug Interaction Risk",
+    description: "Current medications may interact. Review before prescribing.",
     action: "Review Now"
   },
   {
     id: "3",
     type: "suggestion",
-    title: "Add Ferritin & B12 Tests",
-    description: "Patient described fatigue and lightheadedness during intake and in transcript. No recent iron studies found in uploaded labs (last 9 months).",
+    title: "Consider Vitamin D",
+    description: "Based on symptoms and geographic location. Last tested 8 months ago.",
     action: "Add to Labs"
   }
 ];
@@ -56,9 +56,9 @@ const insightStyles: Record<InsightType, { icon: typeof TrendingUp; iconColor: s
 
 export function LiveInsightStream() {
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between px-1">
         <div className="flex items-center gap-2">
           <h2 className="text-2xl font-semibold text-fg">AI Insights</h2>
           <div className="flex items-center gap-1.5">
@@ -74,11 +74,11 @@ export function LiveInsightStream() {
 
       {/* Horizontal scrolling insight cards */}
       <div 
-        className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide snap-x snap-mandatory"
+        className="-mx-4 sm:-mx-6 md:-mx-8 lg:-mx-12 px-4 sm:px-6 md:px-8 lg:px-12 flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden"
         style={{
           scrollbarWidth: "none",
           msOverflowStyle: "none",
-          overscrollBehaviorX: "contain"
+          WebkitOverflowScrolling: "touch"
         }}
       >
         {insights.map((insight, index) => {
@@ -87,18 +87,15 @@ export function LiveInsightStream() {
           return (
             <GlassCard
               key={insight.id}
-              className={`
-                flex-shrink-0 w-80 p-6 space-y-4 snap-start relative
-                animate-fade-in
-              `}
+              className="flex-shrink-0 w-80 min-w-[320px] p-6 space-y-4 snap-start relative animate-fade-in"
               hover
               style={{ 
                 animationDelay: `${index * 0.1}s`,
                 animationFillMode: "backwards"
               }}
             >
-              {/* Accent bar */}
-              <div className={`absolute top-0 left-0 right-0 h-0.5 ${accentColor.replace('border-t-', 'bg-')}`} />
+              {/* Accent bar - more visible */}
+              <div className={`absolute top-0 left-0 right-0 h-1 rounded-t-lg ${accentColor.replace('border-t-', 'bg-')}`} />
               
               {/* Icon */}
               <div className="flex items-start justify-between">
