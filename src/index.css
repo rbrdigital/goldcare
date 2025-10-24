@@ -3,21 +3,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@keyframes shimmer {
-  0% {
-    box-shadow: 0 0 0 0 hsla(var(--warning) / 0.7);
-    transform: scale(1);
-  }
-  50% {
-    box-shadow: 0 0 12px 4px hsla(var(--warning) / 0.4);
-    transform: scale(1.05);
-  }
-  100% {
-    box-shadow: 0 0 0 0 hsla(var(--warning) / 0);
-    transform: scale(1);
-  }
-}
-
 @layer base {
   * {
     @apply border-border;
