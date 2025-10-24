@@ -129,46 +129,44 @@ export function SummarySection({ onNavigateToAI }: SummarySectionProps) {
           icon={ClipboardCheck}
         />
         
-        <div className="flex items-center justify-center min-h-[calc(100vh-200px)]">
-          <Card className="max-w-2xl w-full">
-            <CardContent className="pt-12 pb-12 px-8 text-center space-y-6">
-              {/* Icon */}
-              <div className="flex justify-center">
-                <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center">
-                  <ClipboardCheck className="h-8 w-8 text-primary" />
-                </div>
+        <Card>
+          <CardContent className="py-16 px-6 space-y-6">
+            {/* Icon */}
+            <div className="flex justify-center">
+              <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center">
+                <ClipboardCheck className="h-8 w-8 text-primary" />
               </div>
+            </div>
+            
+            {/* Heading */}
+            <div className="space-y-2 text-center">
+              <h2 className="text-2xl font-semibold text-fg">
+                Ready to Start Your Clinical Documentation
+              </h2>
+              <p className="text-base text-fg-muted max-w-2xl mx-auto">
+                Begin by reviewing AI-generated notes and suggestions from the patient encounter, or start entering data manually in any section.
+              </p>
+            </div>
+            
+            {/* CTA Button */}
+            <div className="flex flex-col items-center gap-4 pt-4">
+              <Button 
+                onClick={onNavigateToAI}
+                size="lg"
+                variant="primary"
+                className="gap-2"
+              >
+                <GoldCareAIIcon className="h-5 w-5" />
+                Review AI Notes
+              </Button>
               
-              {/* Heading */}
-              <div className="space-y-2">
-                <h2 className="text-2xl font-semibold text-fg">
-                  Ready to Start Your Clinical Documentation
-                </h2>
-                <p className="text-base text-fg-muted max-w-lg mx-auto">
-                  Begin by reviewing AI-generated notes and suggestions from the patient encounter, or start entering data manually in any section.
-                </p>
-              </div>
-              
-              {/* CTA Button */}
-              <div className="flex flex-col items-center gap-4 pt-4">
-                <Button 
-                  onClick={onNavigateToAI}
-                  size="lg"
-                  variant="primary"
-                  className="gap-2"
-                >
-                  <GoldCareAIIcon className="h-5 w-5" />
-                  Review AI Notes
-                </Button>
-                
-                {/* Helper text */}
-                <p className="text-sm text-fg-muted">
-                  Or use the sidebar to navigate to SOAP notes, prescriptions, lab orders, or other sections
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+              {/* Helper text */}
+              <p className="text-sm text-fg-muted text-center">
+                Or use the sidebar to navigate to SOAP notes, prescriptions, lab orders, or other sections
+              </p>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     );
   }
