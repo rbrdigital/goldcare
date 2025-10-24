@@ -125,37 +125,37 @@ export function SummarySection({ onNavigateToAI }: SummarySectionProps) {
       {
         icon: FileText,
         title: "SOAP Notes",
-        description: "Document vitals, history, observations, assessment, and treatment plan",
+        description: "Record vitals, history, observations, assessments, and treatment plans.",
         color: "text-fg"
       },
       {
         icon: Pill,
         title: "Prescriptions",
-        description: "Write and manage prescriptions with AI-powered drug interaction checks",
+        description: "Create and manage prescriptions with AI-powered safety and interaction checks.",
         color: "text-fg"
       },
       {
         icon: FlaskConical,
         title: "Lab Orders",
-        description: "Order laboratory tests and track results with clinical decision support",
+        description: "Order and track lab tests with built-in clinical decision support.",
         color: "text-fg"
       },
       {
         icon: Scan,
         title: "Imaging Orders",
-        description: "Request diagnostic imaging studies with appropriate clinical indications",
+        description: "Request diagnostic imaging with the correct clinical indications.",
         color: "text-fg"
       },
       {
         icon: Upload,
         title: "Outside Orders",
-        description: "Manage external referrals and specialty consultations",
+        description: "Coordinate external referrals and specialty consultations.",
         color: "text-fg"
       },
       {
         icon: StickyNote,
         title: "Private Notes",
-        description: "Add confidential clinical notes visible only to you",
+        description: "Keep confidential notes for your personal clinical reference.",
         color: "text-fg"
       }
     ];
@@ -174,13 +174,12 @@ export function SummarySection({ onNavigateToAI }: SummarySectionProps) {
               
               {/* Main Heading */}
               <h1 className="text-3xl md:text-4xl font-bold text-fg mb-4">
-                Ready to Start Your Clinical Documentation
+                Begin Your Clinical Documentation
               </h1>
               
               {/* Subtitle */}
               <p className="text-lg md:text-xl text-fg-muted mb-8 max-w-2xl">
-                Let GoldCare AI do the heavy lifting. Review AI-generated clinical notes, 
-                or start entering data manually in any section.
+                Let GoldCare AI handle the groundwork. Instantly review AI-generated clinical notes or start documenting manually in any section.
               </p>
               
               {/* CTAs */}
