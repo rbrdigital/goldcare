@@ -18,32 +18,31 @@ export function IntelligentHeroSurface() {
       />
 
       <div 
-        className="relative py-20"
+        className="relative py-20 flex items-center justify-center min-h-[600px]"
         style={{
           paddingLeft: '1rem',
           paddingRight: '1rem'
         }}
       >
-        {/* AI Icon with perpetual glow - Full width header */}
-        <div className="flex items-center gap-5 animate-fade-in mb-12">
-          <div 
-            className="relative"
-            style={{
-              animation: "rotate-glow 20s linear infinite"
-            }}
-          >
-            <GoldCareAIIcon 
-              className="h-10 w-10 text-gc-gold-500"
+        {/* Two-column grid layout with GoldCare AI header */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-6 lg:gap-8 items-start w-full">
+          {/* AI Icon with perpetual glow - Full width header */}
+          <div className="flex items-center gap-5 animate-fade-in mb-8 lg:col-span-2">
+            <div 
+              className="relative"
               style={{
-                filter: "drop-shadow(0 0 12px hsl(var(--gc-gold-500) / 0.4))"
+                animation: "rotate-glow 20s linear infinite"
               }}
-            />
+            >
+              <GoldCareAIIcon 
+                className="h-10 w-10 text-gc-gold-500"
+                style={{
+                  filter: "drop-shadow(0 0 12px hsl(var(--gc-gold-500) / 0.4))"
+                }}
+              />
+            </div>
+            <span className="text-sm font-medium text-gc-gold-600">GoldCare AI</span>
           </div>
-          <span className="text-sm font-medium text-gc-gold-600">GoldCare AI</span>
-        </div>
-
-        {/* Two-column grid layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-6 lg:gap-8 items-start">
           {/* LEFT COLUMN: Hero content */}
           <div className="space-y-8 min-w-0">
             <div 
