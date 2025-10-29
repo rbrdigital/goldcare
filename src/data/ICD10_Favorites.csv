@@ -1,0 +1,236 @@
+Category,ICD-10 Code,Diagnosis,Auto-Resolve,Notes
+Chronic cardiometabolic,,,
+,I10,Hypertension,No,
+,E10.9,Type 1 diabetes mellitus,No,
+,E11.9,Type 2 diabetes mellitus,No,
+,R73.03,Prediabetes,Yes,R-code auto-resolves in 6 months
+,E78.5,Hyperlipidemia,No,
+,E03.9,Hypothyroidism,No,
+,E06.3,Thyroiditis, autoimmune,No,
+,E07.9,Thyroid disorder, unspecified,No,
+,E66.9,Obesity,No,
+,E66.3,Overweight,No,
+,E88.81,Metabolic syndrome,No,
+,E55.9,Vitamin D deficiency,No,
+,E53.8,B-vitamin deficiency,No,
+,E87.8,Electrolyte and fluid balance disorder,No,
+,N18.2,Chronic kidney disease (mild),No,
+,D64.9,Anemia,No,
+,I25,Atherosclerotic heart disease without angina,No,
+,I48.0,Paroxysmal atrial fibrillation,No,
+,I48.11,Persistent atrial fibrillation,No,
+,I63.9,Cerebral infarction,No,
+,I16.0,Hypertensive urgency,No,
+Eye,,,
+,H40.9,Glaucoma,No,
+,H26.9,Cataract,No,
+,H04.123,Dry eye,No,
+,E11.319,Retinopathy and diabetes,No,
+,H54.1,Blindness,No,
+,H34.10,Central retinal artery occlusion,No,
+,H10.9,Conjunctivitis,Yes,Auto-resolve for acute use
+,H00.019,Hordeolum unspecified eye,Yes,Auto-resolve
+Respiratory / sleep,,,
+,J44.9,COPD,No,
+,J45.909,Asthma,No,
+,J20.9,Bronchitis,Yes,Auto-resolve
+,J20.0,Bronchitis due to mycoplasma pneumoniae,Yes,Auto-resolve
+,J30.9,Rhinitis,No,
+,J10.1,Influenza,Yes,Auto-resolve
+,G47.00,Insomnia,No,
+,G47.33,Sleep apnea,No,
+Musculoskeletal / pain,,,
+,M19.90,Osteoarthritis, unspecified,No,
+,M17.10,Unilateral osteoarthritis, knee,No,
+,M54.50,Low back pain,No,
+,M54.2,Cervicalgia (neck pain),No,
+,G89.29,Other chronic pain,No,
+,M72.2,Plantar fascial fibromatosis,No,
+,G60.3,Idiopathic progressive neuropathy,No,
+,M81.8,Osteoporosis without pathological fracture,No,
+,M81.0,Osteoporosis,No,
+,M85.80,Osteopenia,No,
+,M25.5,Pain in joint, unspecified,No,
+,M54.10,Radiculopathy, unspecified,No,
+,M54.16,Radiculopathy, lumbar,No,
+,G62.9,Polyneuropathy,No,
+,M79.10,Myalgia,No,
+,M79.7,Fibromyalgia,No,
+,M79.2,Neuralgia and neuritis,No,
+,G56.0,Carpal tunnel syndrome,No,
+,C43.9,Skin neoplasm,No,
+,M10.9,Gout,No,
+,M62.838,Muscle spasm, other,No,
+Genitourinary (common ≥50),,, 
+,N39.0,Urinary tract infection,Yes,Auto-resolve
+,N30.0,Cystitis,Yes,Auto-resolve
+,R35.0,Frequency of micturition,Yes,R-code auto-resolves
+,R39.15,Urgency of urination,Yes,R-code auto-resolves
+,R30.0,Pain with urination (dysuria),Yes,R-code auto-resolves
+,N39.41,Urge incontinence,No,
+,N18.4,Chronic kidney disease (severe),No,
+,N18.6,ESRD (dialysis),No,
+,N20.0,Kidney stone,Yes,Auto-resolve then replace with Z87.442
+GI & endocrine,,,
+,K21.9,GERD,No,
+,K59.00,Constipation,No,
+,K52.9,Gastroenteritis,Yes,Auto-resolve
+,K58.9,Irritable bowel syndrome,No,
+,K64.9,Hemorrhoids,No,
+,K57.32,Diverticulitis,No,
+,C18.9,Colon neoplasm,No,
+,K12.1,Stomatitis,Yes,Auto-resolve
+,K92.2,GI bleed, unspecified,No,
+,K08.9,Teeth disorder, unspecified,No,
+,E34.9,Endocrine disorder, unspecified,No,
+,E06.3,Thyroiditis, autoimmune,No,
+,K90.0,Celiac disease,No,
+Behavioral health,,,
+,F41.1,Generalized anxiety disorder,No,
+,F41.0,Panic disorder,No,
+,F32.A,Depression, unspecified,No,
+,F43.0,Stress, acute,Yes,Auto-resolve
+,F43.10,Post-traumatic stress disorder,No,
+,G43.909,Migraine, unspecified,No,
+,F10.10,Alcohol abuse (mild),No,
+,F10.20,Alcohol dependence (moderate/severe),No,
+,F90.2,Attention-deficit disorder,No,
+,G31.84,Mild cognitive impairment,No,
+Acute / episodic telehealth,,,
+,J06.9,Acute upper respiratory infection,Yes,Auto-resolve
+,Z11.5,Screening for other viral diseases,Yes,Exception to Z rule
+,J01.90,Acute sinusitis,Yes,Auto-resolve
+,J02.9,Acute pharyngitis,Yes,Auto-resolve
+,H10.9,Conjunctivitis,Yes,Auto-resolve
+,H66.90,Otitis media,Yes,Auto-resolve
+,H93.13,Tinnitus,No,
+,L03.90,Cellulitis,Yes,Auto-resolve
+,L30.9,Dermatitis,No,
+,L50.1,Urticaria,Yes,Auto-resolve
+,E86.0,Dehydration,Yes,Auto-resolve
+,G93.31,Postviral fatigue syndrome,No,
+,G93.32,Chronic fatigue syndrome,No,
+,B34.9,Viral infection,Yes,Auto-resolve
+,A49.9,Bacterial infection, unspecified,Yes,Auto-resolve
+Environmental & exposure,,,
+,Z77.22,Exposure to second-hand smoke,No,
+,Z77.120,Exposure to mold (toxic),No,
+,Z77.118,Exposure to other environmental pollution,No,
+,B86,Scabies,Yes,Auto-resolve
+,A69.2,Lyme disease,No,
+,T50.Z95A,Vaccine adverse effect,Yes,Auto-resolve
+Preventive & screening (Z-code exceptions),,, 
+,Z00.00,Adult general medical exam,Yes,Auto-resolve
+,Z12.11,Screening for colon cancer,Yes,Auto-resolve
+,Z13.1,Screening for diabetes,Yes,Auto-resolve
+,Z13.22,Screening for lipid disorders,Yes,Auto-resolve
+,Z13.9,Screening, unspecified,Yes,Auto-resolve
+,Z71.3,Dietary counseling,Yes,Auto-resolve
+,Z71.82,Exercise counseling,Yes,Auto-resolve
+,Z71.9,Counseling, unspecified,Yes,Auto-resolve
+,Z23,Encounter for immunization,Yes,Auto-resolve
+,Z29.9,Prophylactic measures, unspecified,Yes,Auto-resolve
+,Z76.0,Repeat prescription,Yes,Auto-resolve
+Medication / risk status,,,
+,Z79.84,Long-term use of oral hypoglycemics,No,
+,Z79.4,Long-term use of insulin,No,
+,Z79.01,Long-term use of anticoagulants,No,
+,Z79.89,Hormone replacement therapy,No,
+COVID and Post-COVID,,,
+,U09.9,Post COVID-19 condition,No,
+,Z86.16,Personal history of COVID-19,No,
+,U07.1,COVID-19,Yes,Auto-resolve
+,Z20.822,Suspected exposure to COVID-19,Yes,Auto-resolve exception
+,Z11.52,Screening for COVID-19,Yes,Auto-resolve exception
+R Codes (symptoms and signs),,, 
+,R05.1,Cough, acute,Yes,Auto-resolve
+,R05.3,Cough, chronic,Yes,Auto-resolve
+,R50.9,Fever, unspecified,Yes,Auto-resolve
+,R06.02,Shortness of breath,Yes,Auto-resolve
+,R06.2,Wheezing,Yes,Auto-resolve
+,R09.81,Nasal discharge/congestion,Yes,Auto-resolve
+,R09.82,Postnasal drip,Yes,Auto-resolve
+,R07.0,Pain in throat,Yes,Auto-resolve
+,R51.9,Headache, unspecified,Yes,Auto-resolve
+,H81.13,Vertigo,No,
+,R42,Dizziness and giddiness,Yes,Auto-resolve
+,R55,Syncope and collapse,Yes,Auto-resolve
+,R53.1,Weakness,Yes,Auto-resolve
+,R53.83,Fatigue,Yes,Auto-resolve
+,R53.82,Fatigue, chronic,Yes,Auto-resolve
+,R20.2,Paresthesia of skin,Yes,Auto-resolve
+,R25.1,Tremor,Yes,Auto-resolve
+,R07.9,Chest pain,Yes,Auto-resolve
+,R00.2,Palpitations,Yes,Auto-resolve
+,R60.9,Edema,Yes,Auto-resolve
+,R11.2,Nausea with vomiting,Yes,Auto-resolve
+,R19.7,Diarrhea,Yes,Auto-resolve
+,R10.9,Abdominal pain,Yes,Auto-resolve
+,R63.4,Abnormal weight loss,Yes,Auto-resolve
+,R68.2,Dry mouth,Yes,Auto-resolve
+Sex-specific: female,,,
+,E28.2,Polycystic ovarian syndrome,No,
+,N39.3,Stress incontinence (female),No,
+,N95.1,Menopausal & perimenopausal states,No,
+,N95.0,Postmenopausal bleeding,No,
+,N95.2,Postmenopausal atrophic vaginitis,No,
+,N95.9,Perimenopausal disorder, unspecified,No,
+,B37.31,Candida of vulva and vagina,Yes,Auto-resolve in 6 months
+,N94.10,Dyspareunia,No,
+,N76.0,Acute vaginitis,Yes,Auto-resolve in 6 months
+,N92.6,Irregular menstruation,No,
+,N93.9,Abnormal uterine bleeding,No,
+,N64.4,Breast pain (mastodynia),No,
+,N63.10,Breast lump right,No,
+,N63.20,Breast lump left,No,
+,C50.919,Malignant neoplasm of breast,No,
+Sex-specific: male,,,
+,N40.1,Benign prostatic hyperplasia,BPH,No,
+,C61,Malignant neoplasm of prostate,No,
+,N52.9,Erectile dysfunction,No,
+,R97.20,Elevated PSA,Yes,Lab-based R-code
+,R79.89,Testosterone level low,Yes,Lab-based R-code
+,E29.1,Testicular hypofunction,No,
+Past history (Z-codes),,, 
+,Z90.11,History of right mastectomy,No,
+,Z90.12,History of left mastectomy,No,
+,Z90.13,History of bilateral mastectomy,No,
+,Z90.71,History of hysterectomy,No,
+,Z98.82,History of breast implant,No,
+,Z96.649,Presence of artificial hip joint,No,
+,Z96.659,Presence of artificial knee joint,No,
+,Z95.0,Presence of cardiac pacemaker,No,
+,Z95.81,Presence of AICD,No,
+,Z95.2,Presence of artificial heart valve,No,
+,Z95.5,Presence of coronary angioplasty stent,No,
+,Z90.49,S/p cholecystectomy or appendectomy,No,
+,Z93.3,Colostomy status,No,
+,Z93.2,Ileostomy status,No,
+,Z96.1,Presence of intraocular lens,No,
+,Z97.5,Presence of IUD,No,
+,Z98.84,Bariatric surgery status,No,
+,Z85.3,Personal history of breast cancer,No,
+,Z85.46,Personal history of prostate cancer,No,
+,Z85.038,Personal history of colon cancer,No,
+,Z85.118,Personal history of lung cancer,No,
+,Z85.85,Personal history of thyroid cancer,No,
+,Z86.73,Personal history of stroke/TIA,No,
+,Z87.442,Personal history of urinary calculi,No,
+Lifestyle & family history,,,
+,Z72.3,Lack of physical exercise,No,
+,Z72.4,Inappropriate diet/eating,No,
+,Z72.5,High-risk sexual behavior,No,
+,Z72.89,Lifestyle problems,No,
+,Z87.891,Past smoker,No,
+,Z72.0,Current smoker,No,
+,Z80.3,Family history of breast cancer,No,
+,Z80.41,Family history of ovarian cancer,No,
+,Z82.49,Family history of ischemic heart disease,No,
+,Z83.3,Family history of diabetes,No,
+,Z82.3,Family history of stroke,No,
+,Z82.5,Family history of asthma/COPD,No,
+,Z83.71,Family history of colon polyps,No,
+,Z84.1,Family history of kidney disease,No,
+,Z81.1,Family history of alcohol abuse,No,
+,Z81.8,Family history of mental/behavioral disorders,No,
+,Z82.62,Family history of osteoporosis,No,
