@@ -7,6 +7,7 @@ import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { PageHeader } from "@/components/ui/page-header";
 import { AIChipClosedSmart } from "@/components/ai/AIChipClosedSmart";
 import { InlineAddInput } from "@/components/ui/inline-add-input";
+import { DiagnosisSelector } from "@/components/diagnosis/DiagnosisSelector";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import AddLabOrderScreen from "@/components/labs/AddLabOrderScreen";
 import ImagingOrdersSection from "./imaging/ImagingOrdersSection";
@@ -350,10 +351,16 @@ function SOAPNoteSection() {
 
             <div>
               <Label className="text-sm font-medium text-fg mb-2">Diagnosis</Label>
-              <p className="text-xs text-fg-muted mb-2">{copy.acuteDiagnosisPlaceholder}</p>
-              <InlineAddInput
-                placeholder={copy.acuteDiagnosisPlaceholder}
-                onAdd={(value) => addDiagnosis(value)}
+              <p className="text-xs text-fg-muted mb-2">Search ICD-10 codes by diagnosis name or code</p>
+              <DiagnosisSelector
+                label=""
+                placeholder="Search for diagnosis..."
+                showAdvancedSearch={true}
+                onSelect={(diagnosis) => {
+                  // Format as "CODE - Description"
+                  const formatted = `${diagnosis.code} — ${diagnosis.diagnosis}`;
+                  addDiagnosis(formatted);
+                }}
               />
               {soapNote.diagnoses.length > 0 && (
                 <div className="flex flex-wrap gap-2 mt-3">

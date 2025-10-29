@@ -19,6 +19,7 @@ const ImagingIcon = ({ className }: { className?: string }) => (
 );
 
 import ComboboxChips from "@/components/ui/ComboboxChips";
+import { DiagnosisSelector } from "@/components/diagnosis/DiagnosisSelector";
 import { useConsultStore, type ImagingOrder as ConsultImagingOrder } from "@/store/useConsultStore";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
 import { searchOrders, formatOrderDisplayName, type ImagingOrderData } from "@/data/imagingOrders";
@@ -432,14 +433,48 @@ export default function ImagingOrdersSection() {
               <section>
                 <h3 className="text-base font-medium mb-3">Clinical diagnosis</h3>
                 <div className="space-y-4">
-                  <ComboboxChips
-                    id={`diagnoses-${orderIndex}`}
-                    label="Common diagnoses"
-                    placeholder="Search diagnoses or add custom text..."
-                    options={diagnosisOptions}
-                    selected={order.diagnosisCodes}
-                    onSelectionChange={(diagnosisCodes) => updateImagingOrderItem(orderIndex, { diagnosisCodes })}
-                  />
+                  <div>
+                    <Label>ICD-10 Diagnosis</Label>
+                    <DiagnosisSelector
+                      label=""
+                      placeholder="Search for diagnosis..."
+                      showAdvancedSearch={true}
+                      onSelect={(diagnosis) => {
+                        // Format as "CODE - Description" and add to selected diagnoses
+                        const formatted = `${diagnosis.code} — ${diagnosis.diagnosis}`;
+                        const current = order.diagnosisCodes || [];
+                        if (!current.includes(formatted)) {
+                          updateImagingOrderItem(orderIndex, { 
+                            diagnosisCodes: [...current, formatted] 
+                          });
+                        }
+                      }}
+                    />
+                    {order.diagnosisCodes && order.diagnosisCodes.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mt-3">
+                        {order.diagnosisCodes.map((diagnosis, idx) => (
+                          <Badge
+                            key={idx}
+                            variant="outline"
+                            className="gap-1.5"
+                          >
+                            {diagnosis}
+                            <button
+                              onClick={() => {
+                                const current = order.diagnosisCodes || [];
+                                updateImagingOrderItem(orderIndex, {
+                                  diagnosisCodes: current.filter((_, i) => i !== idx)
+                                });
+                              }}
+                              className="ml-1 hover:text-medical-red"
+                            >
+                              ×
+                            </button>
+                          </Badge>
+                        ))}
+                      </div>
+                    )}
+                  </div>
 
                   <div>
                     <Label htmlFor={`diagnosis-text-${orderIndex}`}>Additional diagnosis notes</Label>
