@@ -241,7 +241,16 @@ function SOAPNoteSection() {
 
         {/* ========== Objective ========== */}
         <section>
-          <h3 className="text-lg font-semibold text-fg mb-4">{copy.objective.toUpperCase()}</h3>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-fg">{copy.objective.toUpperCase()}</h3>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-fg-muted">BMI:</span>
+              <span className="text-base font-medium text-fg">{soapNote.vitals.bmi || "—"}</span>
+              <FieldTips
+                tip="Ensure height and weight entries are accurate; BMI will auto‑calculate from these values."
+              />
+            </div>
+          </div>
 
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -318,23 +327,6 @@ function SOAPNoteSection() {
                   onInsert={() => updateVitals('weightLbs', "165")}
                 />
               </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label className="text-sm font-medium text-fg mb-1 inline-flex items-center">
-                  {copy.bmi}
-                  <FieldTips
-                    tip="Ensure height and weight entries are accurate; BMI will auto‑calculate from these values."
-                  />
-                </Label>
-                <Input disabled value={soapNote.vitals.bmi} placeholder="—" className="bg-surface-muted text-fg-muted" />
-                <AIChipClosedSmart
-                  text="BMI will be calculated automatically based on height and weight"
-                  onInsert={() => {}} // BMI is auto-calculated, no insert action
-                />
-              </div>
-              <div></div>
             </div>
           </div>
           <div className="mt-6">
