@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils"
 import AIChipPanel from "./AIChipPanel"
 import { AIChipPanelCustomizable } from "./AIChipPanelCustomizable"
 import { useConsultStore } from "@/store/useConsultStore"
+import { GoldCareAIIcon } from "@/components/icons/GoldCareAIIcon"
 
 interface AIChipClosedSmartProps {
   text: string;
@@ -27,6 +28,7 @@ export function AIChipClosedSmart({ text, onInsert, onGenerateInsert, useCustomi
   const [isOverflowing, setIsOverflowing] = React.useState(false);
   const [isExpanded, setIsExpanded] = React.useState(false);
   const [isHovered, setIsHovered] = React.useState(false);
+  const [isInserted, setIsInserted] = React.useState(false);
 
   const measure = React.useCallback(() => {
     const el = previewRef.current;
@@ -58,6 +60,32 @@ export function AIChipClosedSmart({ text, onInsert, onGenerateInsert, useCustomi
     return null;
   }
 
+  // Handle insert with state update
+  const handleInsert = () => {
+    console.log('🐛 AIChipClosedSmart: Insert button clicked, hiding chip');
+    onInsert();
+    setIsInserted(true);
+    setIsExpanded(false);
+  };
+
+  // If inserted, show only the icon
+  if (isInserted) {
+    return (
+      <button
+        type="button"
+        onClick={() => {
+          console.log('🐛 AIChipClosedSmart: Icon clicked, showing chip again');
+          setIsInserted(false);
+        }}
+        className="mt-2 inline-flex items-center justify-center w-6 h-6 rounded-full hover:bg-surface transition-colors"
+        aria-label="Show GoldCare AI suggestion"
+        title="Show GoldCare AI suggestion"
+      >
+        <GoldCareAIIcon className="w-4 h-4" />
+      </button>
+    );
+  }
+
   // If overflowing and not expanded, pre-truncate to a pleasant word boundary
   const displayText = (isOverflowing && !isExpanded) ? truncateAtWord(text, 140) : text;
 
@@ -69,11 +97,14 @@ export function AIChipClosedSmart({ text, onInsert, onGenerateInsert, useCustomi
       return (
         <AIChipPanelCustomizable
           text={text}
-          onInsert={() => {
-            console.log('🐛 AIChipClosedSmart: Insert clicked in customizable expanded state');
-            onInsert();
+          onInsert={handleInsert}
+          onGenerateInsert={(generatedText) => {
+            if (onGenerateInsert) {
+              onGenerateInsert(generatedText);
+              setIsInserted(true);
+              setIsExpanded(false);
+            }
           }}
-          onGenerateInsert={onGenerateInsert}
           onClose={() => {
             console.log('🐛 AIChipClosedSmart: Close clicked, collapsing');
             setIsExpanded(false);
@@ -87,10 +118,7 @@ export function AIChipClosedSmart({ text, onInsert, onGenerateInsert, useCustomi
     return (
       <AIChipPanel
         text={text}
-        onInsert={() => {
-          console.log('🐛 AIChipClosedSmart: Insert clicked in expanded state');
-          onInsert();
-        }}
+        onInsert={handleInsert}
         onClose={() => {
           console.log('🐛 AIChipClosedSmart: Close clicked, collapsing');
           setIsExpanded(false);
@@ -180,10 +208,7 @@ export function AIChipClosedSmart({ text, onInsert, onGenerateInsert, useCustomi
       ) : (
         <button
           type="button"
-          onClick={() => {
-            console.log('🐛 AIChipClosedSmart: Insert button clicked (not overflowing)');
-            onInsert();
-          }}
+          onClick={handleInsert}
           className="ml-3 shrink-0 text-[12px] font-medium text-primary hover:underline focus:outline-none"
           aria-label="Insert GoldCare AI suggestion"
           data-testid="gcai-insert-btn"
