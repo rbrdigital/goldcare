@@ -512,7 +512,7 @@ function SOAPNoteSection() {
                     onValueChange={(value) => updateSOAPField('followUpLength', value)}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Length" />
+                      <SelectValue placeholder="Select length (optional)" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="15">15 min</SelectItem>
