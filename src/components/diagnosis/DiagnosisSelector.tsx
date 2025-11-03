@@ -235,7 +235,7 @@ export function DiagnosisSelector({
               {/* Filters */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label className="text-xs">Category</Label>
+                  <Label>Category</Label>
                   <Select value={categoryFilter} onValueChange={setCategoryFilter}>
                     <SelectTrigger>
                       <SelectValue />
@@ -250,7 +250,7 @@ export function DiagnosisSelector({
                 </div>
 
                 <div className="space-y-2">
-                  <Label className="text-xs">Auto-Resolve</Label>
+                  <Label>Auto-Resolve</Label>
                   <Select value={autoResolveFilter} onValueChange={setAutoResolveFilter}>
                     <SelectTrigger>
                       <SelectValue />

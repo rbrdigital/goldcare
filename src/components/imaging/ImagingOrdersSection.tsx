@@ -497,7 +497,7 @@ export default function ImagingOrdersSection() {
                 
                 {/* Common studies pills */}
                 <div className="mb-4">
-                  <Label className="text-sm text-fg-muted mb-2 block">Common studies</Label>
+                  <Label className="text-fg-muted mb-2 block">Common studies</Label>
                   <div className="flex flex-wrap gap-2">
                     {COMMON_STUDIES.map((study) => {
                       const isSelected = order.studies.some(s => s.label === study);
@@ -521,7 +521,7 @@ export default function ImagingOrdersSection() {
 
                 {/* Additional studies search */}
                 <div className="mb-4">
-                  <Label className="text-sm text-fg-muted mb-2 block">Additional studies</Label>
+                  <Label className="text-fg-muted mb-2 block">Additional studies</Label>
                   <div className="relative">
                     <Input
                       placeholder="Search for imaging studies..."

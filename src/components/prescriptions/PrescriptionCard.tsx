@@ -4,6 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -222,7 +223,7 @@ export function PrescriptionCard({
             <CollapsibleContent className="space-y-4 pt-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-sm font-medium">Refills</label>
+                  <Label>Refills</Label>
                   <div className="flex items-center gap-2 mt-1">
                     <Button
                       size="sm"
@@ -244,7 +245,7 @@ export function PrescriptionCard({
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium">Substitutions</label>
+                  <Label>Substitutions</Label>
                   <div className="flex items-center gap-2 mt-1">
                     <Switch
                       checked={prescription.substitutions}
@@ -256,7 +257,7 @@ export function PrescriptionCard({
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium">PRN (As Needed)</label>
+                <Label>PRN (As Needed)</Label>
                 <div className="flex flex-wrap gap-2">
                   {PRN_OPTIONS.map(option => (
                     <div key={option.id} className="flex items-center gap-2">
@@ -279,7 +280,7 @@ export function PrescriptionCard({
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-sm font-medium">Start Date</label>
+                  <Label>Start Date</Label>
                   <Input
                     type="date"
                     value={prescription.startDate}
@@ -289,7 +290,7 @@ export function PrescriptionCard({
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium">Earliest Fill</label>
+                  <Label>Earliest Fill</Label>
                   <Input
                     type="date"
                     value={prescription.earlyFill}
@@ -300,7 +301,7 @@ export function PrescriptionCard({
               </div>
 
               <div>
-                <label className="text-sm font-medium">Location Override</label>
+                <Label>Location Override</Label>
                 <Select onValueChange={(value) => onUpdate({ location: value })}>
                   <SelectTrigger className="mt-1">
                     <SelectValue placeholder="Select state" />

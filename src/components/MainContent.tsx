@@ -130,7 +130,7 @@ function SOAPNoteSection() {
           <div className="space-y-6">
             {/* CC/HPI */}
             <div>
-              <Label className="text-sm font-medium text-fg mb-2 inline-flex items-center">
+              <Label className="text-fg mb-2 inline-flex items-center">
                 {copy.chiefComplaint}
                 <FieldTips
                   tip="Summarize the patient's main concern (onset, duration, triggers) along with any relevant context to help the provider focus the telehealth consultation."
@@ -153,7 +153,7 @@ function SOAPNoteSection() {
             
             {/* Current Medications */}
             <div>
-              <Label className="text-sm font-medium text-fg mb-2 inline-flex items-center">
+              <Label className="text-fg mb-2 inline-flex items-center">
                 {copy.currentMedications}
                 <FieldTips
                   tip="List all prescription medications with dosages and frequencies to ensure accurate EMR records and prevent drug interactions."
@@ -181,7 +181,7 @@ function SOAPNoteSection() {
 
             {/* Supplements & OTC */}
             <div>
-              <Label className="text-sm font-medium text-fg mb-2 inline-flex items-center">
+              <Label className="text-fg mb-2 inline-flex items-center">
                 {copy.supplementsOtc}
                 <FieldTips
                   tip="Include all over‑the‑counter medicines and supplements with dosages; these can interact with prescriptions and influence care plans."
@@ -209,7 +209,7 @@ function SOAPNoteSection() {
 
             {/* Allergies */}
             <div>
-              <Label className="text-sm font-medium text-fg mb-2 inline-flex items-center">
+              <Label className="text-fg mb-2 inline-flex items-center">
                 {copy.allergies}
                 <FieldTips
                   tip="Document drug, food and environmental allergies, including reaction types, or indicate 'NKDA' if none."
@@ -255,7 +255,7 @@ function SOAPNoteSection() {
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label className="text-sm font-medium text-fg mb-1 inline-flex items-center">
+                <Label className="text-fg mb-1 inline-flex items-center">
                   {copy.waist}
                   <FieldTips
                     tip="Measure waist circumference at the narrowest point after exhaling normally to monitor metabolic health trends."
@@ -273,7 +273,7 @@ function SOAPNoteSection() {
                 />
               </div>
               <div>
-                <Label className="text-sm font-medium text-fg mb-1 inline-flex items-center">
+                <Label className="text-fg mb-1 inline-flex items-center">
                   {copy.hip}
                   <FieldTips
                     tip="Measure the fullest part of the hips/buttocks; together with waist, this helps calculate waist–hip ratio."
@@ -294,7 +294,7 @@ function SOAPNoteSection() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label className="text-sm font-medium text-fg mb-1 inline-flex items-center">
+                <Label className="text-fg mb-1 inline-flex items-center">
                   {copy.height}
                   <FieldTips
                     tip="Record height using a stadiometer if the patient can stand; otherwise measure supine with a tape measure."
@@ -315,7 +315,7 @@ function SOAPNoteSection() {
                 />
               </div>
               <div>
-                <Label className="text-sm font-medium text-fg mb-1 inline-flex items-center">
+                <Label className="text-fg mb-1 inline-flex items-center">
                   {copy.weight}
                   <FieldTips
                     tip="Enter the current weight in pounds, noting the measurement date to track changes over time."
@@ -330,7 +330,7 @@ function SOAPNoteSection() {
             </div>
           </div>
           <div className="mt-6">
-            <Label className="text-sm font-medium text-fg mb-2 inline-flex items-center">
+            <Label className="text-fg mb-2 inline-flex items-center">
               {copy.clinicalObservations}
               <FieldTips
                 tip="Summarize general appearance and notable findings (e.g., distress, orientation) observed during the telehealth exam."
@@ -359,7 +359,7 @@ function SOAPNoteSection() {
           <h3 className="text-lg font-semibold text-fg mb-4">ASSESSMENT / PLAN</h3>
           <div className="space-y-6">
             <div>
-              <Label className="text-sm font-medium text-fg mb-2 inline-flex items-center">
+              <Label className="text-fg mb-2 inline-flex items-center">
                 Assessment
                 <FieldTips
                   tip="Outline key clinical issues and provisional diagnoses, prioritizing conditions for follow‑up and treatment."
@@ -381,7 +381,7 @@ function SOAPNoteSection() {
             </div>
 
             <div>
-              <Label className="text-sm font-medium text-fg mb-2 inline-flex items-center">
+              <Label className="text-fg mb-2 inline-flex items-center">
                 Diagnosis
                 <FieldTips
                   tip="Use ICD‑10 search to choose accurate codes; proper coding ensures correct billing and data reporting."
@@ -415,7 +415,7 @@ function SOAPNoteSection() {
             </div>
 
             <div>
-              <Label className="text-sm font-medium text-fg mb-2 inline-flex items-center">
+              <Label className="text-fg mb-2 inline-flex items-center">
                 Patient Education and Discharge Instructions
                 <FieldTips
                   tip="Provide clear, jargon‑free instructions and lifestyle recommendations; refer patients to trusted resources like GoldCare's WellnessU."
@@ -437,7 +437,7 @@ function SOAPNoteSection() {
             </div>
 
             <div>
-              <Label className="text-sm font-medium text-fg mb-2 inline-flex items-center">
+              <Label className="text-fg mb-2 inline-flex items-center">
                 Follow-up Appointment
                 <FieldTips
                   tip="Specify the timing and modality (virtual vs in‑person) of the next appointment based on clinical need."
