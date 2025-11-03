@@ -8,16 +8,20 @@ interface FieldProps {
   helper?: string;
   className?: string;
   required?: boolean;
+  aiAction?: React.ReactNode;
 }
 
-export function Field({ label, children, helper, className, required }: FieldProps) {
+export function Field({ label, children, helper, className, required, aiAction }: FieldProps) {
   return (
     <div className={cn("space-y-2", className)}>
       {label && (
-        <Label className="text-xs font-medium text-fg-muted">
-          {label}
-          {required && <span className="text-medical-red ml-1">*</span>}
-        </Label>
+        <div className="flex items-center justify-between">
+          <Label className="text-xs font-medium text-fg-muted">
+            {label}
+            {required && <span className="text-medical-red ml-1">*</span>}
+          </Label>
+          {aiAction && <div className="ml-auto">{aiAction}</div>}
+        </div>
       )}
       {children}
       {helper && (
