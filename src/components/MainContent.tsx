@@ -8,6 +8,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { AIChipClosedSmart } from "@/components/ai/AIChipClosedSmart";
 import { InlineAddInput } from "@/components/ui/inline-add-input";
 import { DiagnosisSelector } from "@/components/diagnosis/DiagnosisSelector";
+import { FieldTips } from "@/components/ui/field-tips";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import AddLabOrderScreen from "@/components/labs/AddLabOrderScreen";
 import ImagingOrdersSection from "./imaging/ImagingOrdersSection";
@@ -127,8 +128,12 @@ function SOAPNoteSection() {
           <div className="space-y-6">
             {/* CC/HPI */}
             <div>
-              <Label className="text-sm font-medium text-fg mb-2">
+              <Label className="text-sm font-medium text-fg mb-2 inline-flex items-center">
                 {copy.chiefComplaint}
+                <FieldTips
+                  tip1="State the main reason for the visit clearly (onset, duration, triggers). The provider needs a concise summary to focus the telehealth consultation."
+                  tip2="Include relevant context such as recent lifestyle changes, prior telehealth encounters, or home-monitoring data. GoldCare's emphasis on personalized care means richer narratives help tailor treatment."
+                />
               </Label>
               <AutosizeTextarea
                 value={soapNote.chiefComplaint}
@@ -147,7 +152,13 @@ function SOAPNoteSection() {
             
             {/* Current Medications */}
             <div>
-              <Label className="text-sm font-medium text-fg mb-2">{copy.currentMedications}</Label>
+              <Label className="text-sm font-medium text-fg mb-2 inline-flex items-center">
+                {copy.currentMedications}
+                <FieldTips
+                  tip1="List prescription medications with names, dosages, and frequencies. Accurate medication lists ensure the EMR flags interactions and helps with e‑prescribing."
+                  tip2="Add notes on recent dosage changes or refills. This assists providers in assessing adherence and adjusting therapy as needed."
+                />
+              </Label>
               <InlineAddInput
                 placeholder={copy.currentMedsPlaceholder}
                 onAdd={(value) => addMedication(value)}
@@ -170,7 +181,13 @@ function SOAPNoteSection() {
 
             {/* Supplements & OTC */}
             <div>
-              <Label className="text-sm font-medium text-fg mb-2">{copy.supplementsOtc}</Label>
+              <Label className="text-sm font-medium text-fg mb-2 inline-flex items-center">
+                {copy.supplementsOtc}
+                <FieldTips
+                  tip1="Document all supplements and over‑the‑counter drugs, including herbal products. These can interact with prescriptions and affect lab results."
+                  tip2="Briefly explain why each supplement is used. GoldCare's preventive-care ethos values understanding patient motivations."
+                />
+              </Label>
               <InlineAddInput
                 placeholder={copy.supplementsPlaceholder}
                 onAdd={(value) => addSupplement(value)}
@@ -193,7 +210,13 @@ function SOAPNoteSection() {
 
             {/* Allergies */}
             <div>
-              <Label className="text-sm font-medium text-fg mb-2">{copy.allergies}</Label>
+              <Label className="text-sm font-medium text-fg mb-2 inline-flex items-center">
+                {copy.allergies}
+                <FieldTips
+                  tip1="List drug, food, and environmental allergies along with reaction types (e.g., rash, anaphylaxis). If none, note 'NKDA'."
+                  tip2="Include the date or approximate timing of the last reaction and its severity. Detailed allergy history improves EMR alerts during prescribing."
+                />
+              </Label>
               <InlineAddInput
                 placeholder={copy.allergiesPlaceholder}
                 onAdd={(value) => addAllergy(value)}
@@ -225,7 +248,13 @@ function SOAPNoteSection() {
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label className="text-sm font-medium text-fg mb-1">{copy.waist}</Label>
+                <Label className="text-sm font-medium text-fg mb-1 inline-flex items-center">
+                  {copy.waist}
+                  <FieldTips
+                    tip1="Measure waist at the narrowest point after exhaling normally. A snug (not tight) tape yields consistent readings."
+                    tip2="Track waist circumference over time to assess metabolic risk; this helps in remote monitoring for conditions such as diabetes or cardiovascular disease."
+                  />
+                </Label>
                 <Input 
                   type="number" 
                   value={soapNote.vitals.waist} 
@@ -238,7 +267,13 @@ function SOAPNoteSection() {
                 />
               </div>
               <div>
-                <Label className="text-sm font-medium text-fg mb-1">{copy.hip}</Label>
+                <Label className="text-sm font-medium text-fg mb-1 inline-flex items-center">
+                  {copy.hip}
+                  <FieldTips
+                    tip1="Measure the fullest part of the hips/buttocks. Use the same positioning each time for comparability."
+                    tip2="Use waist and hip data to compute the waist‑hip ratio, a valuable indicator of obesity‑related health risks."
+                  />
+                </Label>
                 <Input 
                   type="number" 
                   value={soapNote.vitals.hip} 
@@ -253,7 +288,13 @@ function SOAPNoteSection() {
             </div>
 
             <div>
-              <Label className="text-sm font-medium text-fg mb-1">{copy.height}</Label>
+              <Label className="text-sm font-medium text-fg mb-1 inline-flex items-center">
+                {copy.height}
+                <FieldTips
+                  tip1="If the patient can stand, use a stadiometer or height rod; if not, measure supine with a tape measure."
+                  tip2="Record height in feet and inches and update only if a long time has passed or a significant change has occurred."
+                />
+              </Label>
               <div className="flex gap-2 items-center">
                 <div className="flex-1">
                   <Input 
@@ -289,7 +330,13 @@ function SOAPNoteSection() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label className="text-sm font-medium text-fg mb-1">{copy.weight}</Label>
+                <Label className="text-sm font-medium text-fg mb-1 inline-flex items-center">
+                  {copy.weight}
+                  <FieldTips
+                    tip1="Enter current weight in pounds using a calibrated scale on a flat surface. Remove heavy clothing or shoes for accuracy."
+                    tip2="Include the date of measurement so trends can be monitored; weight changes provide insight into disease progression or treatment efficacy."
+                  />
+                </Label>
                 <Input type="number" value={soapNote.vitals.weightLbs} onChange={e=>updateVitals('weightLbs', e.target.value)} placeholder="178" />
                 <AIChipClosedSmart
                   text="165"
@@ -297,7 +344,13 @@ function SOAPNoteSection() {
                 />
               </div>
               <div>
-                <Label className="text-sm font-medium text-fg mb-1">{copy.bmi}</Label>
+                <Label className="text-sm font-medium text-fg mb-1 inline-flex items-center">
+                  {copy.bmi}
+                  <FieldTips
+                    tip1="Ensure height and weight entries are accurate; BMI will auto‑calculate from them."
+                    tip2="Use BMI as a general screening tool and supplement it with waist‑hip ratio or body‑composition assessments when necessary."
+                  />
+                </Label>
                 <Input disabled value={soapNote.vitals.bmi} placeholder="—" className="bg-surface-muted text-fg-muted" />
                 <AIChipClosedSmart
                   text="BMI will be calculated automatically based on height and weight"
@@ -309,7 +362,13 @@ function SOAPNoteSection() {
 
           {/* Clinical Observations */}
           <div className="mt-6">
-            <Label className="text-sm font-medium text-fg mb-2">{copy.clinicalObservations}</Label>
+            <Label className="text-sm font-medium text-fg mb-2 inline-flex items-center">
+              {copy.clinicalObservations}
+              <FieldTips
+                tip1="Summarize the patient's appearance and vital signs (e.g., level of distress, orientation, speech patterns)."
+                tip2="Note telehealth‑specific observations such as environment safety, quality of video/audio, or signs of technology issues that might affect care."
+              />
+            </Label>
             <AutosizeTextarea
               value={soapNote.observations}
               onChange={(e) => updateSOAPField('observations', e.target.value)}
@@ -333,7 +392,13 @@ function SOAPNoteSection() {
           <h3 className="text-lg font-semibold text-fg mb-4">ASSESSMENT / PLAN</h3>
           <div className="space-y-6">
             <div>
-              <Label className="text-sm font-medium text-fg mb-2">Assessment</Label>
+              <Label className="text-sm font-medium text-fg mb-2 inline-flex items-center">
+                Assessment
+                <FieldTips
+                  tip1="Outline key clinical issues and possible diagnoses based on subjective and objective findings. Keep problem lists organized."
+                  tip2="Prioritize conditions for follow‑up and note any diagnostic tests or referrals needed. GoldCare's integrated EMR makes it easy to track these items across visits."
+                />
+              </Label>
               <AutosizeTextarea
                 value={soapNote.assessment}
                 onChange={(e) => updateSOAPField('assessment', e.target.value)}
@@ -350,7 +415,13 @@ function SOAPNoteSection() {
             </div>
 
             <div>
-              <Label className="text-sm font-medium text-fg mb-2">Diagnosis</Label>
+              <Label className="text-sm font-medium text-fg mb-2 inline-flex items-center">
+                Diagnosis
+                <FieldTips
+                  tip1="Use the ICD‑10 search to select accurate codes. Proper coding ensures claims accuracy and helps categorize conditions for population‑level analytics."
+                  tip2="If multiple diagnoses apply, list them in order of clinical importance. This helps providers prioritize treatment and ensures EMR records reflect the full scope of care."
+                />
+              </Label>
               <p className="text-xs text-fg-muted mb-2">Search ICD-10 codes by diagnosis name or code</p>
               <DiagnosisSelector
                 label=""
@@ -379,7 +450,13 @@ function SOAPNoteSection() {
             </div>
 
             <div>
-              <Label className="text-sm font-medium text-fg mb-2">Patient Education and Discharge Instructions</Label>
+              <Label className="text-sm font-medium text-fg mb-2 inline-flex items-center">
+                Patient Education and Discharge Instructions
+                <FieldTips
+                  tip1="Provide clear, jargon‑free instructions on medication use, warning signs, and lifestyle recommendations. Link to trusted resources like GoldCare's WellnessU for ongoing education."
+                  tip2="Include follow‑up steps (e.g., monitor blood glucose, perform home exercises) and confirm the patient understands. In telehealth, clear written guidance enhances adherence between visits."
+                />
+              </Label>
               <AutosizeTextarea
                 value={soapNote.patientEducation}
                 onChange={(e) => updateSOAPField('patientEducation', e.target.value)}
@@ -396,7 +473,13 @@ function SOAPNoteSection() {
             </div>
 
             <div>
-              <Label className="text-sm font-medium text-fg mb-2">Follow-up Appointment</Label>
+              <Label className="text-sm font-medium text-fg mb-2 inline-flex items-center">
+                Follow-up Appointment
+                <FieldTips
+                  tip1="Specify the timing for the next appointment in days, weeks, or months based on clinical urgency. Use GoldCare's scheduling tools to facilitate booking and send reminders."
+                  tip2="Clarify the modality (virtual vs in‑person) and purpose of the follow‑up (e.g., review labs, assess treatment response). Telehealth follow‑ups often work well for routine check‑ins or medication adjustments."
+                />
+              </Label>
               <div className="grid grid-cols-3 gap-2">
                 <div>
                   <Input 
