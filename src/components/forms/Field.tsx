@@ -1,6 +1,7 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
 import { Label } from "@/components/ui/label"
+import { FieldTips } from "@/components/ui/field-tips"
 
 interface FieldProps {
   label?: string;
@@ -9,17 +10,23 @@ interface FieldProps {
   className?: string;
   required?: boolean;
   aiAction?: React.ReactNode;
+  tooltip?: string;
 }
 
-export function Field({ label, children, helper, className, required, aiAction }: FieldProps) {
+export function Field({ label, children, helper, className, required, aiAction, tooltip }: FieldProps) {
   return (
     <div className={cn("space-y-2", className)}>
       {label && (
         <div className="flex items-center justify-between">
-          <Label className="text-xs font-medium text-fg-muted">
-            {label}
-            {required && <span className="text-medical-red ml-1">*</span>}
-          </Label>
+          <div className="flex items-center">
+            <Label className="text-sm font-medium text-fg">
+              {label}
+              {required && <span className="text-medical-red ml-1">*</span>}
+            </Label>
+            {tooltip && (
+              <FieldTips tip={tooltip} />
+            )}
+          </div>
           {aiAction && <div className="ml-auto">{aiAction}</div>}
         </div>
       )}

@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { PageHeader } from "@/components/ui/page-header";
-import { AIChipClosedSmart, AIChipIconButton } from "@/components/ai/AIChipClosedSmart";
+import { AIChipClosedSmart } from "@/components/ai/AIChipClosedSmart";
 import { InlineAddInput } from "@/components/ui/inline-add-input";
 import { DiagnosisSelector } from "@/components/diagnosis/DiagnosisSelector";
 import { FieldTips } from "@/components/ui/field-tips";
@@ -100,28 +100,7 @@ function SOAPNoteSection() {
     removeComorbidity
   } = useConsultStore();
 
-  // State to track which AI chips are currently showing
-  const [visibleChips, setVisibleChips] = useState<Record<string, boolean>>({
-    waist: false,
-    hip: false,
-    height: false,
-    weight: false,
-    currentMedications: false,
-    supplements: false,
-    allergies: false,
-  });
-
-  // Toggle visibility of a specific chip
-  const toggleChip = (fieldKey: string) => {
-    setVisibleChips(prev => ({ ...prev, [fieldKey]: !prev[fieldKey] }));
-  };
-
-  // Hide chip after insert
-  const hideChip = (fieldKey: string) => {
-    setVisibleChips(prev => ({ ...prev, [fieldKey]: false }));
-  };
-
-  // Auto-save functionality 
+  // Auto-save functionality
   const handleSave = () => {
     toast({
       title: "SOAP Note Saved",
@@ -176,12 +155,7 @@ function SOAPNoteSection() {
             {/* Current Medications */}
             <Field
               label={copy.currentMedications}
-              aiAction={
-                <div className="flex items-center gap-1.5">
-                  <FieldTips tip="List all prescription medications with dosages and frequencies to ensure accurate EMR records and prevent drug interactions." />
-                  <AIChipIconButton onClick={() => toggleChip('currentMedications')} />
-                </div>
-              }
+              tooltip="List all prescription medications with dosages and frequencies to ensure accurate EMR records and prevent drug interactions."
             >
               <InlineAddInput
                 placeholder={copy.currentMedsPlaceholder}
@@ -194,28 +168,20 @@ function SOAPNoteSection() {
                   ))}
                 </div>
               )}
-              {visibleChips.currentMedications && (
-                <AIChipClosedSmart
-                  text="Lisinopril 10 mg once daily • Atorvastatin 20 mg once nightly • Albuterol inhaler PRN"
-                  onInsert={() => {
-                    const meds = ["Lisinopril 10 mg once daily", "Atorvastatin 20 mg once nightly", "Albuterol inhaler PRN"];
-                    meds.forEach(med => addMedication(med));
-                    hideChip('currentMedications');
-                  }}
-                  renderIconInLabel={true}
-                />
-              )}
+              <AIChipClosedSmart
+                text="Lisinopril 10 mg once daily • Atorvastatin 20 mg once nightly • Albuterol inhaler PRN"
+                onInsert={() => {
+                  const meds = ["Lisinopril 10 mg once daily", "Atorvastatin 20 mg once nightly", "Albuterol inhaler PRN"];
+                  meds.forEach(med => addMedication(med));
+                }}
+                renderIconInLabel={true}
+              />
             </Field>
 
             {/* Supplements & OTC */}
             <Field
               label={copy.supplementsOtc}
-              aiAction={
-                <div className="flex items-center gap-1.5">
-                  <FieldTips tip="Include all over‑the‑counter medicines and supplements with dosages; these can interact with prescriptions and influence care plans." />
-                  <AIChipIconButton onClick={() => toggleChip('supplements')} />
-                </div>
-              }
+              tooltip="Include all over‑the‑counter medicines and supplements with dosages; these can interact with prescriptions and influence care plans."
             >
               <InlineAddInput
                 placeholder={copy.supplementsPlaceholder}
@@ -228,28 +194,20 @@ function SOAPNoteSection() {
                   ))}
                 </div>
               )}
-              {visibleChips.supplements && (
-                <AIChipClosedSmart
-                  text="Vitamin D3 2000 IU daily • Magnesium glycinate 400 mg nightly"
-                  onInsert={() => {
-                    const supps = ["Vitamin D3 2000 IU daily", "Magnesium glycinate 400 mg nightly"];
-                    supps.forEach(supp => addSupplement(supp));
-                    hideChip('supplements');
-                  }}
-                  renderIconInLabel={true}
-                />
-              )}
+              <AIChipClosedSmart
+                text="Vitamin D3 2000 IU daily • Magnesium glycinate 400 mg nightly"
+                onInsert={() => {
+                  const supps = ["Vitamin D3 2000 IU daily", "Magnesium glycinate 400 mg nightly"];
+                  supps.forEach(supp => addSupplement(supp));
+                }}
+                renderIconInLabel={true}
+              />
             </Field>
 
             {/* Allergies */}
             <Field
               label={copy.allergies}
-              aiAction={
-                <div className="flex items-center gap-1.5">
-                  <FieldTips tip="Document drug, food and environmental allergies, including reaction types, or indicate 'NKDA' if none." />
-                  <AIChipIconButton onClick={() => toggleChip('allergies')} />
-                </div>
-              }
+              tooltip="Document drug, food and environmental allergies, including reaction types, or indicate 'NKDA' if none."
             >
               <InlineAddInput
                 placeholder={copy.allergiesPlaceholder}
@@ -262,17 +220,14 @@ function SOAPNoteSection() {
                   ))}
                 </div>
               )}
-              {visibleChips.allergies && (
-                <AIChipClosedSmart
-                  text="Penicillin — rash • No food or environmental allergies reported"
-                  onInsert={() => {
-                    const allergyList = ["Penicillin — rash", "No food or environmental allergies reported"];
-                    allergyList.forEach(allergy => addAllergy(allergy));
-                    hideChip('allergies');
-                  }}
-                  renderIconInLabel={true}
-                />
-              )}
+              <AIChipClosedSmart
+                text="Penicillin — rash • No food or environmental allergies reported"
+                onInsert={() => {
+                  const allergyList = ["Penicillin — rash", "No food or environmental allergies reported"];
+                  allergyList.forEach(allergy => addAllergy(allergy));
+                }}
+                renderIconInLabel={true}
+              />
             </Field>
           </div>
         </section>
@@ -296,12 +251,7 @@ function SOAPNoteSection() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Field
                 label={copy.waist}
-                aiAction={
-                  <div className="flex items-center gap-1.5">
-                    <FieldTips tip="Measure waist circumference at the narrowest point after exhaling normally to monitor metabolic health trends." />
-                    <AIChipIconButton onClick={() => toggleChip('waist')} />
-                  </div>
-                }
+                tooltip="Measure waist circumference at the narrowest point after exhaling normally to monitor metabolic health trends."
               >
                 <Input 
                   type="number" 
@@ -309,26 +259,18 @@ function SOAPNoteSection() {
                   onChange={e=>updateVitals('waist', e.target.value)}
                   placeholder="34" 
                 />
-                {visibleChips.waist && (
-                  <AIChipClosedSmart
-                    text="32"
-                    onInsert={() => {
-                      updateVitals('waist', "32");
-                      hideChip('waist');
-                    }}
-                    renderIconInLabel={true}
-                  />
-                )}
+                <AIChipClosedSmart
+                  text="32"
+                  onInsert={() => {
+                    updateVitals('waist', "32");
+                  }}
+                  renderIconInLabel={true}
+                />
               </Field>
               
               <Field
                 label={copy.hip}
-                aiAction={
-                  <div className="flex items-center gap-1.5">
-                    <FieldTips tip="Measure the fullest part of the hips/buttocks; together with waist, this helps calculate waist–hip ratio." />
-                    <AIChipIconButton onClick={() => toggleChip('hip')} />
-                  </div>
-                }
+                tooltip="Measure the fullest part of the hips/buttocks; together with waist, this helps calculate waist–hip ratio."
               >
                 <Input 
                   type="number" 
@@ -336,28 +278,20 @@ function SOAPNoteSection() {
                   onChange={e=>updateVitals('hip', e.target.value)}
                   placeholder="40" 
                 />
-                {visibleChips.hip && (
-                  <AIChipClosedSmart
-                    text="38"
-                    onInsert={() => {
-                      updateVitals('hip', "38");
-                      hideChip('hip');
-                    }}
-                    renderIconInLabel={true}
-                  />
-                )}
+                <AIChipClosedSmart
+                  text="38"
+                  onInsert={() => {
+                    updateVitals('hip', "38");
+                  }}
+                  renderIconInLabel={true}
+                />
               </Field>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Field
                 label={copy.height}
-                aiAction={
-                  <div className="flex items-center gap-1.5">
-                    <FieldTips tip="Record height using a stadiometer if the patient can stand; otherwise measure supine with a tape measure." />
-                    <AIChipIconButton onClick={() => toggleChip('height')} />
-                  </div>
-                }
+                tooltip="Record height using a stadiometer if the patient can stand; otherwise measure supine with a tape measure."
               >
                 <HeightInput
                   feet={soapNote.vitals.heightFt}
@@ -365,27 +299,19 @@ function SOAPNoteSection() {
                   onFeetChange={(value) => updateVitals('heightFt', value)}
                   onInchesChange={(value) => updateVitals('heightIn', value)}
                 />
-                {visibleChips.height && (
-                  <AIChipClosedSmart
-                    text="5 feet 8 inches"
-                    onInsert={() => {
-                      updateVitals('heightFt', "5");
-                      updateVitals('heightIn', "8");
-                      hideChip('height');
-                    }}
-                    renderIconInLabel={true}
-                  />
-                )}
+                <AIChipClosedSmart
+                  text="5 feet 8 inches"
+                  onInsert={() => {
+                    updateVitals('heightFt', "5");
+                    updateVitals('heightIn', "8");
+                  }}
+                  renderIconInLabel={true}
+                />
               </Field>
               
               <Field
                 label={copy.weight}
-                aiAction={
-                  <div className="flex items-center gap-1.5">
-                    <FieldTips tip="Enter the current weight in pounds, noting the measurement date to track changes over time." />
-                    <AIChipIconButton onClick={() => toggleChip('weight')} />
-                  </div>
-                }
+                tooltip="Enter the current weight in pounds, noting the measurement date to track changes over time."
               >
                 <Input 
                   type="number" 
@@ -393,16 +319,13 @@ function SOAPNoteSection() {
                   onChange={e=>updateVitals('weightLbs', e.target.value)} 
                   placeholder="178" 
                 />
-                {visibleChips.weight && (
-                  <AIChipClosedSmart
-                    text="165"
-                    onInsert={() => {
-                      updateVitals('weightLbs', "165");
-                      hideChip('weight');
-                    }}
-                    renderIconInLabel={true}
-                  />
-                )}
+                <AIChipClosedSmart
+                  text="165"
+                  onInsert={() => {
+                    updateVitals('weightLbs', "165");
+                  }}
+                  renderIconInLabel={true}
+                />
               </Field>
             </div>
           </div>
