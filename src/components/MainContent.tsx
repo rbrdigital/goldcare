@@ -237,7 +237,7 @@ function SOAPNoteSection() {
           </div>
         </section>
 
-        <Separator className="my-8" />
+        <Separator className="my-14" />
 
         {/* ========== Objective ========== */}
         <section>
@@ -352,7 +352,7 @@ function SOAPNoteSection() {
           </div>
         </section>
 
-        <Separator className="my-8" />
+        <Separator className="my-14" />
 
         {/* ========== Assessment / Plan ========== */}
         <section>
