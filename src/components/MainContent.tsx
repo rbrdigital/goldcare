@@ -40,6 +40,7 @@ import { copy } from "@/copy/en";
 import PageContainer from "@/components/layout/PageContainer";
 import { useConsultStore } from "@/store/useConsultStore";
 import { Field } from "@/components/forms/Field";
+import { AIChipIconButton } from "./ai/AIChipClosedSmart";
 
 interface MainContentProps {
   activeSection: string;
@@ -84,6 +85,12 @@ export function MainContent({ activeSection, onNavigateToSection }: MainContentP
 }
 
 function SOAPNoteSection() {
+  // Track AI chip insertion states
+  const [waistInserted, setWaistInserted] = useState(false);
+  const [hipInserted, setHipInserted] = useState(false);
+  const [heightInserted, setHeightInserted] = useState(false);
+  const [weightInserted, setWeightInserted] = useState(false);
+
   const {
     soapNote,
     updateSOAPField,
@@ -252,6 +259,9 @@ function SOAPNoteSection() {
               <Field
                 label={copy.waist}
                 tooltip="Measure waist circumference at the narrowest point after exhaling normally to monitor metabolic health trends."
+                aiAction={waistInserted ? (
+                  <AIChipIconButton onClick={() => setWaistInserted(false)} />
+                ) : undefined}
               >
                 <Input 
                   type="number" 
@@ -265,12 +275,16 @@ function SOAPNoteSection() {
                     updateVitals('waist', "32");
                   }}
                   renderIconInLabel={true}
+                  onInsertedChange={setWaistInserted}
                 />
               </Field>
               
               <Field
                 label={copy.hip}
                 tooltip="Measure the fullest part of the hips/buttocks; together with waist, this helps calculate waist–hip ratio."
+                aiAction={hipInserted ? (
+                  <AIChipIconButton onClick={() => setHipInserted(false)} />
+                ) : undefined}
               >
                 <Input 
                   type="number" 
@@ -284,6 +298,7 @@ function SOAPNoteSection() {
                     updateVitals('hip', "38");
                   }}
                   renderIconInLabel={true}
+                  onInsertedChange={setHipInserted}
                 />
               </Field>
             </div>
@@ -292,6 +307,9 @@ function SOAPNoteSection() {
               <Field
                 label={copy.height}
                 tooltip="Record height using a stadiometer if the patient can stand; otherwise measure supine with a tape measure."
+                aiAction={heightInserted ? (
+                  <AIChipIconButton onClick={() => setHeightInserted(false)} />
+                ) : undefined}
               >
                 <HeightInput
                   feet={soapNote.vitals.heightFt}
@@ -306,12 +324,16 @@ function SOAPNoteSection() {
                     updateVitals('heightIn', "8");
                   }}
                   renderIconInLabel={true}
+                  onInsertedChange={setHeightInserted}
                 />
               </Field>
               
               <Field
                 label={copy.weight}
                 tooltip="Enter the current weight in pounds, noting the measurement date to track changes over time."
+                aiAction={weightInserted ? (
+                  <AIChipIconButton onClick={() => setWeightInserted(false)} />
+                ) : undefined}
               >
                 <Input 
                   type="number" 
@@ -325,6 +347,7 @@ function SOAPNoteSection() {
                     updateVitals('weightLbs', "165");
                   }}
                   renderIconInLabel={true}
+                  onInsertedChange={setWeightInserted}
                 />
               </Field>
             </div>

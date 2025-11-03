@@ -12,6 +12,7 @@ interface AIChipClosedSmartProps {
   useCustomizable?: boolean;
   className?: string;
   renderIconInLabel?: boolean;
+  onInsertedChange?: (inserted: boolean) => void;
 }
 
 interface AIChipIconButtonProps {
@@ -49,6 +50,7 @@ export function AIChipClosedSmart({
   useCustomizable = false,
   className,
   renderIconInLabel = false,
+  onInsertedChange,
 }: AIChipClosedSmartProps) {
   const { isAIVisible } = useConsultStore();
   const previewRef = React.useRef<HTMLSpanElement>(null);
@@ -93,6 +95,7 @@ export function AIChipClosedSmart({
     onInsert();
     setIsInserted(true);
     setIsExpanded(false);
+    onInsertedChange?.(true);
   };
 
   // If inserted and using label icon mode, don't render anything (icon is in label)
@@ -108,6 +111,7 @@ export function AIChipClosedSmart({
         onClick={() => {
           console.log('🐛 AIChipClosedSmart: Icon clicked, showing chip again');
           setIsInserted(false);
+          onInsertedChange?.(false);
         }}
         className="mt-2 inline-flex items-center justify-center w-6 h-6 rounded-full hover:bg-surface transition-colors"
         aria-label="Show GoldCare AI suggestion"
@@ -135,6 +139,7 @@ export function AIChipClosedSmart({
               onGenerateInsert(generatedText);
               setIsInserted(true);
               setIsExpanded(false);
+              onInsertedChange?.(true);
             }
           }}
           onClose={() => {
