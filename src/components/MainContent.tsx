@@ -10,6 +10,7 @@ import { InlineAddInput } from "@/components/ui/inline-add-input";
 import { DiagnosisSelector } from "@/components/diagnosis/DiagnosisSelector";
 import { FieldTips } from "@/components/ui/field-tips";
 import { NumberWithUnitInput } from "@/components/ui/number-with-unit-input";
+import { HeightInput } from "@/components/ui/height-input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import AddLabOrderScreen from "@/components/labs/AddLabOrderScreen";
 import ImagingOrdersSection from "./imaging/ImagingOrdersSection";
@@ -282,47 +283,28 @@ function SOAPNoteSection() {
               </div>
             </div>
 
-            <div>
-              <Label className="text-sm font-medium text-fg mb-1 inline-flex items-center">
-                {copy.height}
-                <FieldTips
-                  tip="Record height using a stadiometer if the patient can stand; otherwise measure supine with a tape measure."
-                />
-              </Label>
-              <div className="flex gap-2 items-center">
-                <div className="flex-1">
-                  <Input 
-                    type="number" 
-                    value={soapNote.vitals.heightFt} 
-                    onChange={e=>updateVitals('heightFt', e.target.value)} 
-                    placeholder="5" 
-                    min="0" 
-                    max="8"
-                  />
-                  <span className="text-xs text-fg-muted mt-1 block">{copy.feet}</span>
-                </div>
-                <div className="flex-1">
-                  <Input 
-                    type="number" 
-                    value={soapNote.vitals.heightIn} 
-                    onChange={e=>updateVitals('heightIn', e.target.value)} 
-                    placeholder="7" 
-                    min="0" 
-                    max="11"
-                  />
-                  <span className="text-xs text-fg-muted mt-1 block">{copy.inches}</span>
-                </div>
-              </div>
-              <AIChipClosedSmart
-                text="5 feet 8 inches"
-                onInsert={() => {
-                  updateVitals('heightFt', "5");
-                  updateVitals('heightIn', "8");
-                }}
-              />
-            </div>
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label className="text-sm font-medium text-fg mb-1 inline-flex items-center">
+                  {copy.height}
+                  <FieldTips
+                    tip="Record height using a stadiometer if the patient can stand; otherwise measure supine with a tape measure."
+                  />
+                </Label>
+                <HeightInput
+                  feet={soapNote.vitals.heightFt}
+                  inches={soapNote.vitals.heightIn}
+                  onFeetChange={(value) => updateVitals('heightFt', value)}
+                  onInchesChange={(value) => updateVitals('heightIn', value)}
+                />
+                <AIChipClosedSmart
+                  text="5 feet 8 inches"
+                  onInsert={() => {
+                    updateVitals('heightFt', "5");
+                    updateVitals('heightIn', "8");
+                  }}
+                />
+              </div>
               <div>
                 <Label className="text-sm font-medium text-fg mb-1 inline-flex items-center">
                   {copy.weight}
@@ -336,6 +318,9 @@ function SOAPNoteSection() {
                   onInsert={() => updateVitals('weightLbs', "165")}
                 />
               </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label className="text-sm font-medium text-fg mb-1 inline-flex items-center">
                   {copy.bmi}
@@ -349,10 +334,9 @@ function SOAPNoteSection() {
                   onInsert={() => {}} // BMI is auto-calculated, no insert action
                 />
               </div>
+              <div></div>
             </div>
           </div>
-
-          {/* Clinical Observations */}
           <div className="mt-6">
             <Label className="text-sm font-medium text-fg mb-2 inline-flex items-center">
               {copy.clinicalObservations}
