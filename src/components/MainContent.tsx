@@ -397,23 +397,23 @@ function SOAPNoteSection() {
 
             <div>
               <Label className="text-sm font-medium text-fg mb-2">Follow-up Appointment</Label>
-              <div className="flex gap-2 items-center">
-                <div className="flex-1">
+              <div className="grid grid-cols-3 gap-2">
+                <div>
                   <Input 
                     type="number" 
                     value={soapNote.followUpValue} 
                     onChange={(e) => updateSOAPField('followUpValue', e.target.value)}
-                    placeholder="Select days, weeks, or months" 
+                    placeholder="Amount" 
                     min="1"
                   />
                 </div>
-                <div className="flex-1">
+                <div>
                   <Select
                     value={soapNote.followUpUnit}
                     onValueChange={(value) => updateSOAPField('followUpUnit', value)}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select unit" />
+                      <SelectValue placeholder="Unit" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="Days">Days</SelectItem>
@@ -423,17 +423,36 @@ function SOAPNoteSection() {
                     </SelectContent>
                   </Select>
                 </div>
+                <div>
+                  <Select
+                    value={soapNote.followUpLength}
+                    onValueChange={(value) => updateSOAPField('followUpLength', value)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Length" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="15">15 min</SelectItem>
+                      <SelectItem value="30">30 min</SelectItem>
+                      <SelectItem value="45">45 min</SelectItem>
+                      <SelectItem value="60">60 min</SelectItem>
+                      <SelectItem value="90">90 min</SelectItem>
+                      <SelectItem value="120">120 min</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
               {soapNote.followUpValue && soapNote.followUpUnit && (
                 <p className="text-sm text-fg-muted mt-2">
-                  Follow-up in {soapNote.followUpValue} {soapNote.followUpUnit.toLowerCase()}
+                  Follow-up in {soapNote.followUpValue} {soapNote.followUpUnit.toLowerCase()}{soapNote.followUpLength && ` for ${soapNote.followUpLength} minutes`}
                 </p>
               )}
               <AIChipClosedSmart
-                text="6 weeks"
+                text="6 weeks for a 30-minute appointment"
                 onInsert={() => {
                   updateSOAPField('followUpValue', "6");
                   updateSOAPField('followUpUnit', "Weeks");
+                  updateSOAPField('followUpLength', "30");
                 }}
               />
             </div>

@@ -23,6 +23,7 @@ export interface SOAPData {
   patientEducation: string;
   followUpValue: string;
   followUpUnit: string;
+  followUpLength: string;
   currentMedications: string[];
   supplements: string[];
   allergies: string[];
@@ -185,6 +186,7 @@ const initialState: ConsultState = {
     patientEducation: "",
     followUpValue: "",
     followUpUnit: "",
+    followUpLength: "",
     currentMedications: [],
     supplements: [],
     allergies: [],
