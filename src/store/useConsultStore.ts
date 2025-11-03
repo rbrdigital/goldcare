@@ -185,7 +185,7 @@ const initialState: ConsultState = {
     plan: "",
     patientEducation: "",
     followUpValue: "",
-    followUpUnit: "",
+    followUpUnit: "Days",
     followUpLength: "",
     currentMedications: [],
     supplements: [],

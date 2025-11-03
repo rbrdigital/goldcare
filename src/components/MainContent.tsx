@@ -9,6 +9,7 @@ import { AIChipClosedSmart } from "@/components/ai/AIChipClosedSmart";
 import { InlineAddInput } from "@/components/ui/inline-add-input";
 import { DiagnosisSelector } from "@/components/diagnosis/DiagnosisSelector";
 import { FieldTips } from "@/components/ui/field-tips";
+import { NumberWithUnitInput } from "@/components/ui/number-with-unit-input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import AddLabOrderScreen from "@/components/labs/AddLabOrderScreen";
 import ImagingOrdersSection from "./imaging/ImagingOrdersSection";
@@ -480,32 +481,21 @@ function SOAPNoteSection() {
                   tip2="Clarify the modality (virtual vs in‑person) and purpose of the follow‑up (e.g., review labs, assess treatment response). Telehealth follow‑ups often work well for routine check‑ins or medication adjustments."
                 />
               </Label>
-              <div className="grid grid-cols-3 gap-2">
-                <div>
-                  <Input 
-                    type="number" 
-                    value={soapNote.followUpValue} 
-                    onChange={(e) => updateSOAPField('followUpValue', e.target.value)}
-                    placeholder="Amount" 
-                    min="1"
-                  />
-                </div>
-                <div>
-                  <Select
-                    value={soapNote.followUpUnit}
-                    onValueChange={(value) => updateSOAPField('followUpUnit', value)}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Unit" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Days">Days</SelectItem>
-                      <SelectItem value="Weeks">Weeks</SelectItem>
-                      <SelectItem value="Months">Months</SelectItem>
-                      <SelectItem value="Years">Years</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+              <div className="grid grid-cols-2 gap-2">
+                <NumberWithUnitInput
+                  value={soapNote.followUpValue}
+                  onValueChange={(value) => updateSOAPField('followUpValue', value)}
+                  unit={soapNote.followUpUnit || "Days"}
+                  onUnitChange={(value) => updateSOAPField('followUpUnit', value)}
+                  units={[
+                    { value: "Days", label: "Days" },
+                    { value: "Weeks", label: "Weeks" },
+                    { value: "Months", label: "Months" },
+                    { value: "Years", label: "Years" },
+                  ]}
+                  placeholder="Amount"
+                  min="1"
+                />
                 <div>
                   <Select
                     value={soapNote.followUpLength}
