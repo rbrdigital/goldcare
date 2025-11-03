@@ -11,27 +11,6 @@ interface AIChipClosedSmartProps {
   onGenerateInsert?: (text: string) => void;
   useCustomizable?: boolean;
   className?: string;
-  renderIconInLabel?: boolean;
-  onInsertedChange?: (inserted: boolean) => void;
-}
-
-interface AIChipIconButtonProps {
-  onClick: () => void;
-}
-
-// Separate icon button component for use in label row
-export function AIChipIconButton({ onClick }: AIChipIconButtonProps) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="inline-flex items-center justify-center w-5 h-5 rounded-full hover:bg-surface transition-colors"
-      aria-label="Show GoldCare AI suggestion"
-      title="Show GoldCare AI suggestion"
-    >
-      <GoldCareAIIcon className="w-4 h-4" />
-    </button>
-  );
 }
 
 // Utility to truncate text at word boundaries
@@ -43,15 +22,7 @@ function truncateAtWord(input: string, max = 140): string {
   return (lastSpace > 40 ? slice.slice(0, lastSpace) : slice).trimEnd() + "…";
 }
 
-export function AIChipClosedSmart({
-  text,
-  onInsert,
-  onGenerateInsert,
-  useCustomizable = false,
-  className,
-  renderIconInLabel = false,
-  onInsertedChange,
-}: AIChipClosedSmartProps) {
+export function AIChipClosedSmart({ text, onInsert, onGenerateInsert, useCustomizable = false, className }: AIChipClosedSmartProps) {
   const { isAIVisible } = useConsultStore();
   const previewRef = React.useRef<HTMLSpanElement>(null);
   const [isOverflowing, setIsOverflowing] = React.useState(false);
@@ -95,15 +66,9 @@ export function AIChipClosedSmart({
     onInsert();
     setIsInserted(true);
     setIsExpanded(false);
-    onInsertedChange?.(true);
   };
 
-  // If inserted and using label icon mode, don't render anything (icon is in label)
-  if (isInserted && renderIconInLabel) {
-    return null;
-  }
-
-  // If inserted and NOT using label icon mode, show icon below input
+  // If inserted, show only the icon
   if (isInserted) {
     return (
       <button
@@ -111,7 +76,6 @@ export function AIChipClosedSmart({
         onClick={() => {
           console.log('🐛 AIChipClosedSmart: Icon clicked, showing chip again');
           setIsInserted(false);
-          onInsertedChange?.(false);
         }}
         className="mt-2 inline-flex items-center justify-center w-6 h-6 rounded-full hover:bg-surface transition-colors"
         aria-label="Show GoldCare AI suggestion"
@@ -139,7 +103,6 @@ export function AIChipClosedSmart({
               onGenerateInsert(generatedText);
               setIsInserted(true);
               setIsExpanded(false);
-              onInsertedChange?.(true);
             }
           }}
           onClose={() => {

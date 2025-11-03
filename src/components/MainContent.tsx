@@ -39,8 +39,6 @@ import { GoldCareAISection } from "@/components/GoldCareAISection";
 import { copy } from "@/copy/en";
 import PageContainer from "@/components/layout/PageContainer";
 import { useConsultStore } from "@/store/useConsultStore";
-import { Field } from "@/components/forms/Field";
-import { AIChipIconButton } from "./ai/AIChipClosedSmart";
 
 interface MainContentProps {
   activeSection: string;
@@ -85,12 +83,6 @@ export function MainContent({ activeSection, onNavigateToSection }: MainContentP
 }
 
 function SOAPNoteSection() {
-  // Track AI chip insertion states
-  const [waistInserted, setWaistInserted] = useState(false);
-  const [hipInserted, setHipInserted] = useState(false);
-  const [heightInserted, setHeightInserted] = useState(false);
-  const [weightInserted, setWeightInserted] = useState(false);
-
   const {
     soapNote,
     updateSOAPField,
@@ -107,7 +99,7 @@ function SOAPNoteSection() {
     removeComorbidity
   } = useConsultStore();
 
-  // Auto-save functionality
+  // Auto-save functionality 
   const handleSave = () => {
     toast({
       title: "SOAP Note Saved",
@@ -160,10 +152,13 @@ function SOAPNoteSection() {
             </div>
             
             {/* Current Medications */}
-            <Field
-              label={copy.currentMedications}
-              tooltip="List all prescription medications with dosages and frequencies to ensure accurate EMR records and prevent drug interactions."
-            >
+            <div>
+              <Label className="text-sm font-medium text-fg mb-2 inline-flex items-center">
+                {copy.currentMedications}
+                <FieldTips
+                  tip="List all prescription medications with dosages and frequencies to ensure accurate EMR records and prevent drug interactions."
+                />
+              </Label>
               <InlineAddInput
                 placeholder={copy.currentMedsPlaceholder}
                 onAdd={(value) => addMedication(value)}
@@ -181,15 +176,17 @@ function SOAPNoteSection() {
                   const meds = ["Lisinopril 10 mg once daily", "Atorvastatin 20 mg once nightly", "Albuterol inhaler PRN"];
                   meds.forEach(med => addMedication(med));
                 }}
-                renderIconInLabel={true}
               />
-            </Field>
+            </div>
 
             {/* Supplements & OTC */}
-            <Field
-              label={copy.supplementsOtc}
-              tooltip="Include all over‑the‑counter medicines and supplements with dosages; these can interact with prescriptions and influence care plans."
-            >
+            <div>
+              <Label className="text-sm font-medium text-fg mb-2 inline-flex items-center">
+                {copy.supplementsOtc}
+                <FieldTips
+                  tip="Include all over‑the‑counter medicines and supplements with dosages; these can interact with prescriptions and influence care plans."
+                />
+              </Label>
               <InlineAddInput
                 placeholder={copy.supplementsPlaceholder}
                 onAdd={(value) => addSupplement(value)}
@@ -207,15 +204,17 @@ function SOAPNoteSection() {
                   const supps = ["Vitamin D3 2000 IU daily", "Magnesium glycinate 400 mg nightly"];
                   supps.forEach(supp => addSupplement(supp));
                 }}
-                renderIconInLabel={true}
               />
-            </Field>
+            </div>
 
             {/* Allergies */}
-            <Field
-              label={copy.allergies}
-              tooltip="Document drug, food and environmental allergies, including reaction types, or indicate 'NKDA' if none."
-            >
+            <div>
+              <Label className="text-sm font-medium text-fg mb-2 inline-flex items-center">
+                {copy.allergies}
+                <FieldTips
+                  tip="Document drug, food and environmental allergies, including reaction types, or indicate 'NKDA' if none."
+                />
+              </Label>
               <InlineAddInput
                 placeholder={copy.allergiesPlaceholder}
                 onAdd={(value) => addAllergy(value)}
@@ -233,9 +232,8 @@ function SOAPNoteSection() {
                   const allergyList = ["Penicillin — rash", "No food or environmental allergies reported"];
                   allergyList.forEach(allergy => addAllergy(allergy));
                 }}
-                renderIconInLabel={true}
               />
-            </Field>
+            </div>
           </div>
         </section>
 
@@ -256,13 +254,13 @@ function SOAPNoteSection() {
 
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Field
-                label={copy.waist}
-                tooltip="Measure waist circumference at the narrowest point after exhaling normally to monitor metabolic health trends."
-                aiAction={waistInserted ? (
-                  <AIChipIconButton onClick={() => setWaistInserted(false)} />
-                ) : undefined}
-              >
+              <div>
+                <Label className="text-sm font-medium text-fg mb-1 inline-flex items-center">
+                  {copy.waist}
+                  <FieldTips
+                    tip="Measure waist circumference at the narrowest point after exhaling normally to monitor metabolic health trends."
+                  />
+                </Label>
                 <Input 
                   type="number" 
                   value={soapNote.vitals.waist} 
@@ -271,21 +269,16 @@ function SOAPNoteSection() {
                 />
                 <AIChipClosedSmart
                   text="32"
-                  onInsert={() => {
-                    updateVitals('waist', "32");
-                  }}
-                  renderIconInLabel={true}
-                  onInsertedChange={setWaistInserted}
+                  onInsert={() => updateVitals('waist', "32")}
                 />
-              </Field>
-              
-              <Field
-                label={copy.hip}
-                tooltip="Measure the fullest part of the hips/buttocks; together with waist, this helps calculate waist–hip ratio."
-                aiAction={hipInserted ? (
-                  <AIChipIconButton onClick={() => setHipInserted(false)} />
-                ) : undefined}
-              >
+              </div>
+              <div>
+                <Label className="text-sm font-medium text-fg mb-1 inline-flex items-center">
+                  {copy.hip}
+                  <FieldTips
+                    tip="Measure the fullest part of the hips/buttocks; together with waist, this helps calculate waist–hip ratio."
+                  />
+                </Label>
                 <Input 
                   type="number" 
                   value={soapNote.vitals.hip} 
@@ -294,23 +287,19 @@ function SOAPNoteSection() {
                 />
                 <AIChipClosedSmart
                   text="38"
-                  onInsert={() => {
-                    updateVitals('hip', "38");
-                  }}
-                  renderIconInLabel={true}
-                  onInsertedChange={setHipInserted}
+                  onInsert={() => updateVitals('hip', "38")}
                 />
-              </Field>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Field
-                label={copy.height}
-                tooltip="Record height using a stadiometer if the patient can stand; otherwise measure supine with a tape measure."
-                aiAction={heightInserted ? (
-                  <AIChipIconButton onClick={() => setHeightInserted(false)} />
-                ) : undefined}
-              >
+              <div>
+                <Label className="text-sm font-medium text-fg mb-1 inline-flex items-center">
+                  {copy.height}
+                  <FieldTips
+                    tip="Record height using a stadiometer if the patient can stand; otherwise measure supine with a tape measure."
+                  />
+                </Label>
                 <HeightInput
                   feet={soapNote.vitals.heightFt}
                   inches={soapNote.vitals.heightIn}
@@ -323,33 +312,21 @@ function SOAPNoteSection() {
                     updateVitals('heightFt', "5");
                     updateVitals('heightIn', "8");
                   }}
-                  renderIconInLabel={true}
-                  onInsertedChange={setHeightInserted}
                 />
-              </Field>
-              
-              <Field
-                label={copy.weight}
-                tooltip="Enter the current weight in pounds, noting the measurement date to track changes over time."
-                aiAction={weightInserted ? (
-                  <AIChipIconButton onClick={() => setWeightInserted(false)} />
-                ) : undefined}
-              >
-                <Input 
-                  type="number" 
-                  value={soapNote.vitals.weightLbs} 
-                  onChange={e=>updateVitals('weightLbs', e.target.value)} 
-                  placeholder="178" 
-                />
+              </div>
+              <div>
+                <Label className="text-sm font-medium text-fg mb-1 inline-flex items-center">
+                  {copy.weight}
+                  <FieldTips
+                    tip="Enter the current weight in pounds, noting the measurement date to track changes over time."
+                  />
+                </Label>
+                <Input type="number" value={soapNote.vitals.weightLbs} onChange={e=>updateVitals('weightLbs', e.target.value)} placeholder="178" />
                 <AIChipClosedSmart
                   text="165"
-                  onInsert={() => {
-                    updateVitals('weightLbs', "165");
-                  }}
-                  renderIconInLabel={true}
-                  onInsertedChange={setWeightInserted}
+                  onInsert={() => updateVitals('weightLbs', "165")}
                 />
-              </Field>
+              </div>
             </div>
           </div>
           <div className="mt-6">
