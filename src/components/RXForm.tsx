@@ -9,6 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/page-header";
 import { AIChipClosedSmart } from "@/components/ai/AIChipClosedSmart";
+import { FieldTips } from "@/components/ui/field-tips";
 import PharmacyPickerModal from "@/components/modals/PharmacyPickerModal";
 import { Pill } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
@@ -269,7 +270,10 @@ export default function RXForm() {
 
             {/* Medicine name */}
             <div className="mb-3">
-              <Label htmlFor={`med-${i}`}>Medicine name</Label>
+              <Label htmlFor={`med-${i}`} className="inline-flex items-center">
+                Medicine name
+                <FieldTips tip="Enter the exact medication name (generic or brand) to avoid pharmacy confusion." />
+              </Label>
               <Input
                 id={`med-${i}`}
                 placeholder="Enter medicine name"
@@ -291,7 +295,10 @@ export default function RXForm() {
             {/* Row 2: Route, Formulation, Strength */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
               <div>
-                <Label>Route</Label>
+                <Label className="inline-flex items-center">
+                  Route
+                  <FieldTips tip="Select the correct administration route (e.g., oral, intramuscular) since it affects absorption and dosing." />
+                </Label>
                 <Select
                   value={rx.route}
                   onChange={(v) => patchItem(i, { route: v })}
@@ -300,7 +307,10 @@ export default function RXForm() {
                 />
               </div>
               <div>
-                <Label>Formulation</Label>
+                <Label className="inline-flex items-center">
+                  Formulation
+                  <FieldTips tip="Choose a formulation that suits the patient's needs (tablet, suspension, patch, etc.) to maximize adherence." />
+                </Label>
                 <Select
                   value={rx.formulation}
                   onChange={(v) => patchItem(i, { formulation: v })}
@@ -309,7 +319,10 @@ export default function RXForm() {
                 />
               </div>
               <div>
-                <Label>Strength</Label>
+                <Label className="inline-flex items-center">
+                  Strength
+                  <FieldTips tip="Pick the appropriate strength from the list to align with standard dosing guidelines and patient factors." />
+                </Label>
                 <Select
                   value={rx.strength}
                   onChange={(v) => patchItem(i, { strength: v })}
@@ -322,7 +335,10 @@ export default function RXForm() {
             {/* Row 3: Quantity, Frequency, Duration */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
               <div>
-                <Label htmlFor={`qty-${i}`}>Quantity</Label>
+                <Label htmlFor={`qty-${i}`} className="inline-flex items-center">
+                  Quantity
+                  <FieldTips tip="Specify the total amount of medication to dispense, ensuring it matches the prescribed duration and frequency." />
+                </Label>
                 <Input
                   id={`qty-${i}`}
                   type="number"
@@ -337,7 +353,10 @@ export default function RXForm() {
                 />
               </div>
               <div>
-                <Label>Frequency</Label>
+                <Label className="inline-flex items-center">
+                  Frequency
+                  <FieldTips tip="Set how often the patient should take the medication (e.g., once daily, every 8 hours) for consistent therapeutic levels." />
+                </Label>
                 <Select
                   value={rx.frequency}
                   onChange={(label) => {
@@ -359,7 +378,10 @@ export default function RXForm() {
                 )}
               </div>
               <div>
-                <Label htmlFor={`dur-${i}`}>Duration (days)</Label>
+                <Label htmlFor={`dur-${i}`} className="inline-flex items-center">
+                  Duration (days)
+                  <FieldTips tip="Indicate the number of days the medication should be taken to guide therapy length and quantity." />
+                </Label>
                 <Input
                   id={`dur-${i}`}
                   type="number"
@@ -424,7 +446,10 @@ export default function RXForm() {
             {/* Row 5: Start date, Earliest fill date */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
               <div>
-                <Label>Start date</Label>
+                <Label className="inline-flex items-center">
+                  Start date
+                  <FieldTips tip="Set the date when the patient should start the medication, aligning with other treatments or lab results." />
+                </Label>
                 <Input
                   type="date"
                   value={rx.startDate || new Date().toISOString().split('T')[0]}
@@ -432,7 +457,10 @@ export default function RXForm() {
                 />
               </div>
               <div>
-                <Label>Earliest fill date</Label>
+                <Label className="inline-flex items-center">
+                  Earliest fill date
+                  <FieldTips tip="Specify the earliest date the pharmacy can fill the prescription to prevent premature refills." />
+                </Label>
                 <Input
                   type="date"
                   value={rx.earliestFill || new Date().toISOString().split('T')[0]}
@@ -444,7 +472,10 @@ export default function RXForm() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
               <div>
-                <Label>Instructions to patient</Label>
+                <Label className="inline-flex items-center">
+                  Instructions to patient
+                  <FieldTips tip="Provide clear instructions on how to take the medication, including dosing guidance and what to do if a dose is missed." />
+                </Label>
                 <AutosizeTextarea
                   minRows={2}
                   placeholder="Additional instructions for the patient"
@@ -467,7 +498,10 @@ export default function RXForm() {
                 </div>
               </div>
               <div>
-                <Label>Notes to pharmacy</Label>
+                <Label className="inline-flex items-center">
+                  Notes to pharmacy
+                  <FieldTips tip="Add any special directions for the pharmacist (e.g., compounding, packaging, or brand requirements) to ensure accurate dispensing." />
+                </Label>
                 <AutosizeTextarea
                   minRows={2}
                   placeholder="Additional instructions for the pharmacy"

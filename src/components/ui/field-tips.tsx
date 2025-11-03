@@ -3,11 +3,10 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { useState } from "react";
 
 interface FieldTipsProps {
-  tip1: string;
-  tip2: string;
+  tip: string;
 }
 
-export function FieldTips({ tip1, tip2 }: FieldTipsProps) {
+export function FieldTips({ tip }: FieldTipsProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -27,11 +26,10 @@ export function FieldTips({ tip1, tip2 }: FieldTipsProps) {
         <TooltipContent 
           side="right" 
           align="start"
-          className="max-w-[340px] bg-black text-white border-border p-4 space-y-3"
+          className="max-w-[340px] bg-black text-white border-border p-3"
           onPointerDownOutside={(e) => e.preventDefault()}
         >
-          <p className="text-sm leading-relaxed">{tip1}</p>
-          <p className="text-sm leading-relaxed">{tip2}</p>
+          <p className="text-sm leading-relaxed">{tip}</p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
