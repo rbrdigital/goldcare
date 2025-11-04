@@ -354,7 +354,7 @@ function SOAPNoteSection() {
               </div>
             </div>
 
-            <Label className="mb-2 inline-flex items-center">
+            <Label className="mb-1 inline-flex items-center">
               {copy.clinicalObservations}
               <FieldTips
                 tip="Summarize general appearance and notable findings (e.g., distress, orientation) observed during the telehealth exam."
