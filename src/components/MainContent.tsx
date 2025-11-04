@@ -261,17 +261,14 @@ function SOAPNoteSection() {
                     tip="Measure waist circumference at the narrowest point after exhaling normally to monitor metabolic health trends."
                   />
                 </Label>
-                <div className="text-2xl font-semibold text-gray-900">{soapNote.vitals.waist || "—"}</div>
+                <input
+                  type="number"
+                  value={soapNote.vitals.waist}
+                  onChange={e=>updateVitals('waist', e.target.value)}
+                  placeholder="—"
+                  className="text-2xl font-semibold text-gray-900 bg-transparent border-none outline-none focus:outline-none focus:ring-0 w-full placeholder:text-gray-900 mb-1"
+                />
                 <div className="text-sm text-gray-600">inches</div>
-                <div className="mt-2">
-                  <Input 
-                    type="number" 
-                    value={soapNote.vitals.waist} 
-                    onChange={e=>updateVitals('waist', e.target.value)}
-                    placeholder="34" 
-                    className="text-sm"
-                  />
-                </div>
                 <AIChipClosedSmart
                   text="32"
                   onInsert={() => updateVitals('waist', "32")}
@@ -284,17 +281,14 @@ function SOAPNoteSection() {
                     tip="Measure the fullest part of the hips/buttocks; together with waist, this helps calculate waist–hip ratio."
                   />
                 </Label>
-                <div className="text-2xl font-semibold text-gray-900">{soapNote.vitals.hip || "—"}</div>
+                <input
+                  type="number"
+                  value={soapNote.vitals.hip}
+                  onChange={e=>updateVitals('hip', e.target.value)}
+                  placeholder="—"
+                  className="text-2xl font-semibold text-gray-900 bg-transparent border-none outline-none focus:outline-none focus:ring-0 w-full placeholder:text-gray-900 mb-1"
+                />
                 <div className="text-sm text-gray-600">inches</div>
-                <div className="mt-2">
-                  <Input 
-                    type="number" 
-                    value={soapNote.vitals.hip} 
-                    onChange={e=>updateVitals('hip', e.target.value)}
-                    placeholder="40" 
-                    className="text-sm"
-                  />
-                </div>
                 <AIChipClosedSmart
                   text="38"
                   onInsert={() => updateVitals('hip', "38")}
@@ -307,20 +301,29 @@ function SOAPNoteSection() {
                     tip="Record height using a stadiometer if the patient can stand; otherwise measure supine with a tape measure."
                   />
                 </Label>
-                <div className="text-2xl font-semibold text-gray-900">
-                  {soapNote.vitals.heightFt && soapNote.vitals.heightIn 
-                    ? `${soapNote.vitals.heightFt}'${soapNote.vitals.heightIn}"` 
-                    : "—"}
+                <div className="flex items-baseline gap-1 mb-1">
+                  <input
+                    type="number"
+                    value={soapNote.vitals.heightFt}
+                    onChange={(e) => updateVitals('heightFt', e.target.value)}
+                    placeholder="—"
+                    min="0"
+                    max="8"
+                    className="text-2xl font-semibold text-gray-900 bg-transparent border-none outline-none focus:outline-none focus:ring-0 w-12 placeholder:text-gray-900"
+                  />
+                  <span className="text-2xl font-semibold text-gray-900">'</span>
+                  <input
+                    type="number"
+                    value={soapNote.vitals.heightIn}
+                    onChange={(e) => updateVitals('heightIn', e.target.value)}
+                    placeholder="—"
+                    min="0"
+                    max="11"
+                    className="text-2xl font-semibold text-gray-900 bg-transparent border-none outline-none focus:outline-none focus:ring-0 w-12 placeholder:text-gray-900"
+                  />
+                  <span className="text-2xl font-semibold text-gray-900">"</span>
                 </div>
                 <div className="text-sm text-gray-600">feet, inches</div>
-                <div className="mt-2">
-                  <HeightInput
-                    feet={soapNote.vitals.heightFt}
-                    inches={soapNote.vitals.heightIn}
-                    onFeetChange={(value) => updateVitals('heightFt', value)}
-                    onInchesChange={(value) => updateVitals('heightIn', value)}
-                  />
-                </div>
                 <AIChipClosedSmart
                   text="5 feet 8 inches"
                   onInsert={() => {
@@ -336,17 +339,14 @@ function SOAPNoteSection() {
                     tip="Enter the current weight in pounds, noting the measurement date to track changes over time."
                   />
                 </Label>
-                <div className="text-2xl font-semibold text-gray-900">{soapNote.vitals.weightLbs || "—"}</div>
+                <input
+                  type="number"
+                  value={soapNote.vitals.weightLbs}
+                  onChange={e=>updateVitals('weightLbs', e.target.value)}
+                  placeholder="—"
+                  className="text-2xl font-semibold text-gray-900 bg-transparent border-none outline-none focus:outline-none focus:ring-0 w-full placeholder:text-gray-900 mb-1"
+                />
                 <div className="text-sm text-gray-600">lbs</div>
-                <div className="mt-2">
-                  <Input 
-                    type="number" 
-                    value={soapNote.vitals.weightLbs} 
-                    onChange={e=>updateVitals('weightLbs', e.target.value)} 
-                    placeholder="178" 
-                    className="text-sm"
-                  />
-                </div>
                 <AIChipClosedSmart
                   text="165"
                   onInsert={() => updateVitals('weightLbs', "165")}
