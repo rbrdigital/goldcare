@@ -125,10 +125,9 @@ function SOAPNoteSection() {
 
       <div>
         {/* ========== Subjective ========== */}
-        <section className="border border-gray-200 rounded-xl mb-8">
-          <div className="bg-gray-50 border-b border-gray-200 px-6 py-4">
-            <h3 className="text-lg font-semibold text-gray-900">Subjective</h3>
-            <p className="text-sm text-gray-600 mt-0.5">Patient-reported symptoms and history</p>
+        <section className="border border-gray-200 rounded-xl mb-4">
+          <div className="bg-gray-50 border-b border-gray-200 px-6 py-4 rounded-t-xl">
+            <h3 className="text-lg font-semibold text-gray-900 leading-7">Subjective</h3>
           </div>
           <div className="p-6 space-y-6">
             {/* CC/HPI */}
@@ -246,13 +245,10 @@ function SOAPNoteSection() {
           </div>
         </section>
 
-        <Separator />
-
         {/* ========== Objective ========== */}
-        <section className="border border-gray-200 rounded-xl mb-8">
-          <div className="bg-gray-50 border-b border-gray-200 px-6 py-4">
-            <h3 className="text-lg font-semibold text-gray-900">Objective</h3>
-            <p className="text-sm text-gray-600 mt-0.5">Clinical measurements and observations</p>
+        <section className="border border-gray-200 rounded-xl mb-4">
+          <div className="bg-gray-50 border-b border-gray-200 px-6 py-4 rounded-t-xl">
+            <h3 className="text-lg font-semibold text-gray-900 leading-7">Objective</h3>
           </div>
           <div className="p-6 space-y-6">
           <div className="flex items-center justify-between mb-6">
@@ -390,13 +386,10 @@ function SOAPNoteSection() {
           </div>
         </section>
 
-        <Separator />
-
         {/* ========== Assessment / Plan ========== */}
-        <section className="border border-gray-200 rounded-xl mb-8">
-          <div className="bg-gray-50 border-b border-gray-200 px-6 py-4">
-            <h3 className="text-lg font-semibold text-gray-900">Assessment & Plan</h3>
-            <p className="text-sm text-gray-600 mt-0.5">Clinical assessment and treatment plan</p>
+        <section className="border border-gray-200 rounded-xl mb-4">
+          <div className="bg-gray-50 border-b border-gray-200 px-6 py-4 rounded-t-xl">
+            <h3 className="text-lg font-semibold text-gray-900 leading-7">Assessment & Plan</h3>
           </div>
           <div className="p-6 space-y-6">
             <div>
