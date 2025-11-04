@@ -383,7 +383,7 @@ function SOAPNoteSection() {
           </div>
           <div className="p-6 space-y-8">
             <div>
-              <Label className="mb-1 inline-flex items-center">
+              <Label className="mb-2 inline-flex items-center">
                 Assessment
                 <FieldTips
                   tip="Outline key clinical issues and provisional diagnoses, prioritizing conditions for follow‑up and treatment."
