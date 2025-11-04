@@ -354,25 +354,27 @@ function SOAPNoteSection() {
               </div>
             </div>
 
-            <Label className="mb-1 inline-flex items-center">
-              {copy.clinicalObservations}
-              <FieldTips
-                tip="Summarize general appearance and notable findings (e.g., distress, orientation) observed during the telehealth exam."
+            <div>
+              <Label className="mb-1 inline-flex items-center">
+                {copy.clinicalObservations}
+                <FieldTips
+                  tip="Summarize general appearance and notable findings (e.g., distress, orientation) observed during the telehealth exam."
+                />
+              </Label>
+              <AutosizeTextarea
+                value={soapNote.observations}
+                onChange={(e) => updateSOAPField('observations', e.target.value)}
+                placeholder={copy.observationsPlaceholder}
+                minRows={3}
+                maxRows={6}
               />
-            </Label>
-            <AutosizeTextarea
-              value={soapNote.observations}
-              onChange={(e) => updateSOAPField('observations', e.target.value)}
-              placeholder={copy.observationsPlaceholder}
-              minRows={3}
-              maxRows={6}
-            />
-            <AIChipClosedSmart
-              text="Patient appears alert and oriented, in no acute distress. Lungs clear to auscultation, regular heart rhythm, no murmurs. Mildly elevated blood pressure noted."
-              onInsert={() => insertSuggestion("Patient appears alert and oriented, in no acute distress. Lungs clear to auscultation, regular heart rhythm, no murmurs. Mildly elevated blood pressure noted.", 'observations')}
-              onGenerateInsert={(text) => insertSuggestion(text, 'observations')}
-              useCustomizable={true}
-            />
+              <AIChipClosedSmart
+                text="Patient appears alert and oriented, in no acute distress. Lungs clear to auscultation, regular heart rhythm, no murmurs. Mildly elevated blood pressure noted."
+                onInsert={() => insertSuggestion("Patient appears alert and oriented, in no acute distress. Lungs clear to auscultation, regular heart rhythm, no murmurs. Mildly elevated blood pressure noted.", 'observations')}
+                onGenerateInsert={(text) => insertSuggestion(text, 'observations')}
+                useCustomizable={true}
+              />
+            </div>
           </div>
         </section>
 
