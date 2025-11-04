@@ -9,19 +9,22 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { icd10Diagnoses, getCategories, type ICD10Diagnosis } from "@/data/icd10Data";
+import { FieldTips } from "@/components/ui/field-tips";
 
 interface DiagnosisSelectorProps {
   onSelect: (diagnosis: ICD10Diagnosis) => void;
   label?: string;
   showAdvancedSearch?: boolean;
   placeholder?: string;
+  tooltip?: string;
 }
 
 export function DiagnosisSelector({
   onSelect,
   label = "Search diagnosis",
   showAdvancedSearch = true,
-  placeholder = "Type to search ICD-10 codes or diagnoses..."
+  placeholder = "Type to search ICD-10 codes or diagnoses...",
+  tooltip
 }: DiagnosisSelectorProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
@@ -151,7 +154,12 @@ export function DiagnosisSelector({
     <div className="space-y-2">
       {/* Label and Advanced Search on same line */}
       <div className="flex items-center justify-between">
-        {label && <Label>{label}</Label>}
+        {label && (
+          <div className="inline-flex items-center">
+            <Label>{label}</Label>
+            {tooltip && <FieldTips tip={tooltip} />}
+          </div>
+        )}
         
         {/* Advanced Search Button */}
         {showAdvancedSearch && (

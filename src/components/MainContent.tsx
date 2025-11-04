@@ -404,19 +404,13 @@ function SOAPNoteSection() {
               />
             </div>
 
-            <div>
-              <Label className="mb-2 inline-flex items-center">
-                Diagnosis
-                <FieldTips
-                  tip="Use ICD‑10 search to choose accurate codes; proper coding ensures correct billing and data reporting."
-                />
-              </Label>
-              <p className="text-xs text-gray-600 mb-2">Search ICD-10 codes by diagnosis name or code</p>
-              <DiagnosisSelector
-                label=""
-                placeholder="Search for diagnosis..."
-                showAdvancedSearch={true}
-                onSelect={(diagnosis) => {
+        <div>
+          <DiagnosisSelector
+            label="Diagnosis"
+            tooltip="Use ICD‑10 search to choose accurate codes; proper coding ensures correct billing and data reporting."
+            placeholder="Search for diagnosis..."
+            showAdvancedSearch={true}
+            onSelect={(diagnosis) => {
                   // Format as "CODE - Description"
                   const formatted = `${diagnosis.code} — ${diagnosis.diagnosis}`;
                   addDiagnosis(formatted);
