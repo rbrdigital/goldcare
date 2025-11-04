@@ -125,7 +125,7 @@ function SOAPNoteSection() {
 
       <div>
         {/* ========== Subjective ========== */}
-        <section className="border border-gray-200 rounded-xl mb-4">
+        <section className="border border-gray-200 rounded-xl mb-8">
           <div className="bg-gray-50 border-b border-gray-200 px-6 py-4 rounded-t-xl">
             <h3 className="text-lg font-semibold text-gray-900 leading-7">Subjective</h3>
           </div>
@@ -152,9 +152,7 @@ function SOAPNoteSection() {
                 useCustomizable={true}
               />
             </div>
-            
-            <div className="h-px bg-gray-200"></div>
-            
+
             {/* Current Medications */}
             <div>
               <Label className="mb-2 inline-flex items-center">
@@ -183,8 +181,6 @@ function SOAPNoteSection() {
               />
             </div>
 
-            <div className="h-px bg-gray-200"></div>
-
             {/* Supplements & OTC */}
             <div>
               <Label className="mb-2 inline-flex items-center">
@@ -212,8 +208,6 @@ function SOAPNoteSection() {
                 }}
               />
             </div>
-
-            <div className="h-px bg-gray-200"></div>
 
             {/* Allergies */}
             <div>
@@ -246,12 +240,9 @@ function SOAPNoteSection() {
         </section>
 
         {/* ========== Objective ========== */}
-        <section className="border border-gray-200 rounded-xl mb-4">
-          <div className="bg-gray-50 border-b border-gray-200 px-6 py-4 rounded-t-xl">
+        <section className="border border-gray-200 rounded-xl mb-8">
+          <div className="bg-gray-50 border-b border-gray-200 px-6 py-4 rounded-t-xl flex items-center justify-between">
             <h3 className="text-lg font-semibold text-gray-900 leading-7">Objective</h3>
-          </div>
-          <div className="p-6 space-y-6">
-          <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-2">
               <span className="text-sm text-gray-600">BMI:</span>
               <span className="text-2xl font-semibold text-gray-900">{soapNote.vitals.bmi || "—"}</span>
@@ -260,6 +251,7 @@ function SOAPNoteSection() {
               />
             </div>
           </div>
+          <div className="p-6 space-y-6">
             {/* Measurement Grid */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
               <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
@@ -362,8 +354,6 @@ function SOAPNoteSection() {
               </div>
             </div>
 
-            <div className="h-px bg-gray-200"></div>
-
             <Label className="mb-2 inline-flex items-center">
               {copy.clinicalObservations}
               <FieldTips
@@ -387,7 +377,7 @@ function SOAPNoteSection() {
         </section>
 
         {/* ========== Assessment / Plan ========== */}
-        <section className="border border-gray-200 rounded-xl mb-4">
+        <section className="border border-gray-200 rounded-xl mb-8">
           <div className="bg-gray-50 border-b border-gray-200 px-6 py-4 rounded-t-xl">
             <h3 className="text-lg font-semibold text-gray-900 leading-7">Assessment & Plan</h3>
           </div>
@@ -413,8 +403,6 @@ function SOAPNoteSection() {
                 useCustomizable={true}
               />
             </div>
-
-            <div className="h-px bg-gray-200"></div>
 
             <div>
               <Label className="mb-2 inline-flex items-center">
@@ -449,8 +437,6 @@ function SOAPNoteSection() {
                 }}
               />
             </div>
-
-            <div className="h-px bg-gray-200"></div>
 
             <div>
               <Label className="mb-2 inline-flex items-center">
