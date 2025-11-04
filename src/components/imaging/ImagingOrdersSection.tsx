@@ -355,7 +355,7 @@ export default function ImagingOrdersSection() {
               <div className="flex justify-center pt-2">
                 <button
                   onClick={handleManualEntry}
-                  className="text-sm text-fg-muted hover:text-fg transition-colors duration-200 relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:bg-fg after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-200"
+                  className="text-sm text-gray-600 hover:text-gray-900 transition-colors duration-200 relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:bg-gray-900 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-200"
                 >
                   Or fill the form manually
                 </button>
@@ -368,7 +368,7 @@ export default function ImagingOrdersSection() {
             <div className="flex justify-end">
               <button
                 onClick={handleResetToAI}
-                className="text-sm text-fg-muted hover:text-fg transition-colors duration-200 relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:bg-fg after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-200"
+                className="text-sm text-gray-600 hover:text-gray-900 transition-colors duration-200 relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:bg-gray-900 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-200"
               >
                 ← Restart with AI
               </button>
@@ -396,7 +396,7 @@ export default function ImagingOrdersSection() {
 
               {/* Imaging order section header */}
               <div className="flex items-center justify-between">
-                <h2 className="text-lg font-semibold">Order #{orderIndex + 1}</h2>
+                <h2 className="text-lg font-semibold text-gray-900">Order #{orderIndex + 1}</h2>
                 <div className="flex items-center gap-2">
                   <Button 
                     variant="outline" 

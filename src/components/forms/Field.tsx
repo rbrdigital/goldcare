@@ -14,14 +14,14 @@ export function Field({ label, children, helper, className, required }: FieldPro
   return (
     <div className={cn("space-y-2", className)}>
       {label && (
-        <Label className="text-fg-muted">
+        <Label>
           {label}
-          {required && <span className="text-medical-red ml-1">*</span>}
+          {required && <span className="text-red-600 ml-1">*</span>}
         </Label>
       )}
       {children}
       {helper && (
-        <p className="text-xs text-fg-muted">{helper}</p>
+        <p className="text-xs text-gray-600">{helper}</p>
       )}
     </div>
   );

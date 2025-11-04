@@ -125,12 +125,15 @@ function SOAPNoteSection() {
 
       <div>
         {/* ========== Subjective ========== */}
-        <section>
-          <h3 className="text-lg font-semibold text-fg mb-4">{copy.subjective.toUpperCase()}</h3>
-          <div className="space-y-6">
+        <section className="border border-gray-200 rounded-xl mb-8">
+          <div className="bg-gray-50 border-b border-gray-200 px-6 py-4">
+            <h3 className="text-lg font-semibold text-gray-900">Subjective</h3>
+            <p className="text-sm text-gray-600 mt-0.5">Patient-reported symptoms and history</p>
+          </div>
+          <div className="p-6 space-y-6">
             {/* CC/HPI */}
             <div>
-              <Label className="text-fg mb-2 inline-flex items-center">
+              <Label className="mb-2 inline-flex items-center">
                 {copy.chiefComplaint}
                 <FieldTips
                   tip="Summarize the patient's main concern (onset, duration, triggers) along with any relevant context to help the provider focus the telehealth consultation."
@@ -151,9 +154,11 @@ function SOAPNoteSection() {
               />
             </div>
             
+            <div className="h-px bg-gray-200"></div>
+            
             {/* Current Medications */}
             <div>
-              <Label className="text-fg mb-2 inline-flex items-center">
+              <Label className="mb-2 inline-flex items-center">
                 {copy.currentMedications}
                 <FieldTips
                   tip="List all prescription medications with dosages and frequencies to ensure accurate EMR records and prevent drug interactions."
@@ -179,9 +184,11 @@ function SOAPNoteSection() {
               />
             </div>
 
+            <div className="h-px bg-gray-200"></div>
+
             {/* Supplements & OTC */}
             <div>
-              <Label className="text-fg mb-2 inline-flex items-center">
+              <Label className="mb-2 inline-flex items-center">
                 {copy.supplementsOtc}
                 <FieldTips
                   tip="Include all over‑the‑counter medicines and supplements with dosages; these can interact with prescriptions and influence care plans."
@@ -207,9 +214,11 @@ function SOAPNoteSection() {
               />
             </div>
 
+            <div className="h-px bg-gray-200"></div>
+
             {/* Allergies */}
             <div>
-              <Label className="text-fg mb-2 inline-flex items-center">
+              <Label className="mb-2 inline-flex items-center">
                 {copy.allergies}
                 <FieldTips
                   tip="Document drug, food and environmental allergies, including reaction types, or indicate 'NKDA' if none."
@@ -240,72 +249,90 @@ function SOAPNoteSection() {
         <Separator />
 
         {/* ========== Objective ========== */}
-        <section>
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-fg">{copy.objective.toUpperCase()}</h3>
+        <section className="border border-gray-200 rounded-xl mb-8">
+          <div className="bg-gray-50 border-b border-gray-200 px-6 py-4">
+            <h3 className="text-lg font-semibold text-gray-900">Objective</h3>
+            <p className="text-sm text-gray-600 mt-0.5">Clinical measurements and observations</p>
+          </div>
+          <div className="p-6 space-y-6">
+          <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-2">
-              <span className="text-sm text-fg-muted">BMI:</span>
-              <span className="text-base font-medium text-fg">{soapNote.vitals.bmi || "—"}</span>
+              <span className="text-sm text-gray-600">BMI:</span>
+              <span className="text-2xl font-semibold text-gray-900">{soapNote.vitals.bmi || "—"}</span>
               <FieldTips
                 tip="Ensure height and weight entries are accurate; BMI will auto‑calculate from these values."
               />
             </div>
           </div>
-
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label className="text-fg mb-1 inline-flex items-center">
+            {/* Measurement Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                <Label className="text-xs font-medium text-gray-600 mb-2 inline-flex items-center">
                   {copy.waist}
                   <FieldTips
                     tip="Measure waist circumference at the narrowest point after exhaling normally to monitor metabolic health trends."
                   />
                 </Label>
-                <Input 
-                  type="number" 
-                  value={soapNote.vitals.waist} 
-                  onChange={e=>updateVitals('waist', e.target.value)}
-                  placeholder="34" 
-                />
+                <div className="text-2xl font-semibold text-gray-900">{soapNote.vitals.waist || "—"}</div>
+                <div className="text-sm text-gray-600">inches</div>
+                <div className="mt-2">
+                  <Input 
+                    type="number" 
+                    value={soapNote.vitals.waist} 
+                    onChange={e=>updateVitals('waist', e.target.value)}
+                    placeholder="34" 
+                    className="text-sm"
+                  />
+                </div>
                 <AIChipClosedSmart
                   text="32"
                   onInsert={() => updateVitals('waist', "32")}
                 />
               </div>
-              <div>
-                <Label className="text-fg mb-1 inline-flex items-center">
+              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                <Label className="text-xs font-medium text-gray-600 mb-2 inline-flex items-center">
                   {copy.hip}
                   <FieldTips
                     tip="Measure the fullest part of the hips/buttocks; together with waist, this helps calculate waist–hip ratio."
                   />
                 </Label>
-                <Input 
-                  type="number" 
-                  value={soapNote.vitals.hip} 
-                  onChange={e=>updateVitals('hip', e.target.value)}
-                  placeholder="40" 
-                />
+                <div className="text-2xl font-semibold text-gray-900">{soapNote.vitals.hip || "—"}</div>
+                <div className="text-sm text-gray-600">inches</div>
+                <div className="mt-2">
+                  <Input 
+                    type="number" 
+                    value={soapNote.vitals.hip} 
+                    onChange={e=>updateVitals('hip', e.target.value)}
+                    placeholder="40" 
+                    className="text-sm"
+                  />
+                </div>
                 <AIChipClosedSmart
                   text="38"
                   onInsert={() => updateVitals('hip', "38")}
                 />
               </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label className="text-fg mb-1 inline-flex items-center">
+              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                <Label className="text-xs font-medium text-gray-600 mb-2 inline-flex items-center">
                   {copy.height}
                   <FieldTips
                     tip="Record height using a stadiometer if the patient can stand; otherwise measure supine with a tape measure."
                   />
                 </Label>
-                <HeightInput
-                  feet={soapNote.vitals.heightFt}
-                  inches={soapNote.vitals.heightIn}
-                  onFeetChange={(value) => updateVitals('heightFt', value)}
-                  onInchesChange={(value) => updateVitals('heightIn', value)}
-                />
+                <div className="text-2xl font-semibold text-gray-900">
+                  {soapNote.vitals.heightFt && soapNote.vitals.heightIn 
+                    ? `${soapNote.vitals.heightFt}'${soapNote.vitals.heightIn}"` 
+                    : "—"}
+                </div>
+                <div className="text-sm text-gray-600">feet, inches</div>
+                <div className="mt-2">
+                  <HeightInput
+                    feet={soapNote.vitals.heightFt}
+                    inches={soapNote.vitals.heightIn}
+                    onFeetChange={(value) => updateVitals('heightFt', value)}
+                    onInchesChange={(value) => updateVitals('heightIn', value)}
+                  />
+                </div>
                 <AIChipClosedSmart
                   text="5 feet 8 inches"
                   onInsert={() => {
@@ -314,23 +341,34 @@ function SOAPNoteSection() {
                   }}
                 />
               </div>
-              <div>
-                <Label className="text-fg mb-1 inline-flex items-center">
+              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                <Label className="text-xs font-medium text-gray-600 mb-2 inline-flex items-center">
                   {copy.weight}
                   <FieldTips
                     tip="Enter the current weight in pounds, noting the measurement date to track changes over time."
                   />
                 </Label>
-                <Input type="number" value={soapNote.vitals.weightLbs} onChange={e=>updateVitals('weightLbs', e.target.value)} placeholder="178" />
+                <div className="text-2xl font-semibold text-gray-900">{soapNote.vitals.weightLbs || "—"}</div>
+                <div className="text-sm text-gray-600">lbs</div>
+                <div className="mt-2">
+                  <Input 
+                    type="number" 
+                    value={soapNote.vitals.weightLbs} 
+                    onChange={e=>updateVitals('weightLbs', e.target.value)} 
+                    placeholder="178" 
+                    className="text-sm"
+                  />
+                </div>
                 <AIChipClosedSmart
                   text="165"
                   onInsert={() => updateVitals('weightLbs', "165")}
                 />
               </div>
             </div>
-          </div>
-          <div className="mt-6">
-            <Label className="text-fg mb-2 inline-flex items-center">
+
+            <div className="h-px bg-gray-200"></div>
+
+            <Label className="mb-2 inline-flex items-center">
               {copy.clinicalObservations}
               <FieldTips
                 tip="Summarize general appearance and notable findings (e.g., distress, orientation) observed during the telehealth exam."
@@ -355,11 +393,14 @@ function SOAPNoteSection() {
         <Separator />
 
         {/* ========== Assessment / Plan ========== */}
-        <section>
-          <h3 className="text-lg font-semibold text-fg mb-4">ASSESSMENT / PLAN</h3>
-          <div className="space-y-6">
+        <section className="border border-gray-200 rounded-xl mb-8">
+          <div className="bg-gray-50 border-b border-gray-200 px-6 py-4">
+            <h3 className="text-lg font-semibold text-gray-900">Assessment & Plan</h3>
+            <p className="text-sm text-gray-600 mt-0.5">Clinical assessment and treatment plan</p>
+          </div>
+          <div className="p-6 space-y-6">
             <div>
-              <Label className="text-fg mb-2 inline-flex items-center">
+              <Label className="mb-2 inline-flex items-center">
                 Assessment
                 <FieldTips
                   tip="Outline key clinical issues and provisional diagnoses, prioritizing conditions for follow‑up and treatment."
@@ -380,14 +421,16 @@ function SOAPNoteSection() {
               />
             </div>
 
+            <div className="h-px bg-gray-200"></div>
+
             <div>
-              <Label className="text-fg mb-2 inline-flex items-center">
+              <Label className="mb-2 inline-flex items-center">
                 Diagnosis
                 <FieldTips
                   tip="Use ICD‑10 search to choose accurate codes; proper coding ensures correct billing and data reporting."
                 />
               </Label>
-              <p className="text-xs text-fg-muted mb-2">Search ICD-10 codes by diagnosis name or code</p>
+              <p className="text-xs text-gray-600 mb-2">Search ICD-10 codes by diagnosis name or code</p>
               <DiagnosisSelector
                 label=""
                 placeholder="Search for diagnosis..."
@@ -414,8 +457,10 @@ function SOAPNoteSection() {
               />
             </div>
 
+            <div className="h-px bg-gray-200"></div>
+
             <div>
-              <Label className="text-fg mb-2 inline-flex items-center">
+              <Label className="mb-2 inline-flex items-center">
                 Patient Education and Discharge Instructions
                 <FieldTips
                   tip="Provide clear, jargon‑free instructions and lifestyle recommendations; refer patients to trusted resources like GoldCare's WellnessU."
@@ -436,8 +481,10 @@ function SOAPNoteSection() {
               />
             </div>
 
+            <div className="h-px bg-gray-200"></div>
+
             <div>
-              <Label className="text-fg mb-2 inline-flex items-center">
+              <Label className="mb-2 inline-flex items-center">
                 Follow-up Appointment
                 <FieldTips
                   tip="Specify the timing and modality (virtual vs in‑person) of the next appointment based on clinical need."
@@ -478,7 +525,7 @@ function SOAPNoteSection() {
                 </div>
               </div>
               {soapNote.followUpValue && soapNote.followUpUnit && (
-                <p className="text-sm text-fg-muted mt-2">
+                <p className="text-sm text-gray-600 mt-2">
                   Follow-up in {soapNote.followUpValue} {soapNote.followUpUnit.toLowerCase()}{soapNote.followUpLength && ` for ${soapNote.followUpLength} minutes`}
                 </p>
               )}
@@ -493,6 +540,12 @@ function SOAPNoteSection() {
             </div>
           </div>
         </section>
+
+        {/* Action Buttons */}
+        <div className="flex justify-end gap-3 mt-8">
+          <Button variant="outline">Save draft</Button>
+          <Button className="px-8">Complete note</Button>
+        </div>
       </div>
     </div>
   );
@@ -501,10 +554,10 @@ function SOAPNoteSection() {
 /* ---------- Helper Components ---------- */
 function Tag({ text, onRemove }: { text: string; onRemove: () => void }) {
   return (
-    <span className="px-3 py-1 text-xs bg-surface text-fg border border-border rounded-full inline-flex items-center gap-2">
+    <Badge variant="calcom" className="flex items-center gap-1">
       {text}
-      <button onClick={onRemove} className="text-fg-muted hover:text-fg focus-visible:outline-none">×</button>
-    </span>
+      <button onClick={onRemove} className="ml-1 text-gray-600 hover:text-gray-900 focus-visible:outline-none">×</button>
+    </Badge>
   );
 }
 

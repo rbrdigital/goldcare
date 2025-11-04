@@ -17,7 +17,7 @@ export function HeightInput({
   className,
 }: HeightInputProps) {
   return (
-    <div className={cn("flex items-stretch rounded-md border border-border bg-surface focus-within:ring-2 focus-within:ring-primary/30 focus-within:border-primary overflow-hidden", className)}>
+    <div className={cn("flex items-stretch rounded-lg border border-gray-300 bg-white focus-within:ring-2 focus-within:ring-black focus-within:border-transparent overflow-hidden", className)}>
       <div className="flex-1 flex items-center">
         <input
           type="number"
@@ -26,11 +26,11 @@ export function HeightInput({
           placeholder="5"
           min="0"
           max="8"
-          className="w-full bg-transparent px-3 py-2.5 text-base md:text-sm placeholder:text-fg-muted focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
+          className="w-full bg-transparent px-3 py-2.5 text-base md:text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
         />
-        <span className="text-sm text-fg-muted pr-2">ft</span>
+        <span className="text-sm text-gray-600 pr-2">ft</span>
       </div>
-      <div className="w-px bg-border"></div>
+      <div className="w-px bg-gray-200"></div>
       <div className="flex-1 flex items-center">
         <input
           type="number"
@@ -39,9 +39,9 @@ export function HeightInput({
           placeholder="7"
           min="0"
           max="11"
-          className="w-full bg-transparent px-3 py-2.5 text-base md:text-sm placeholder:text-fg-muted focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
+          className="w-full bg-transparent px-3 py-2.5 text-base md:text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
         />
-        <span className="text-sm text-fg-muted pr-2">in</span>
+        <span className="text-sm text-gray-600 pr-2">in</span>
       </div>
     </div>
   );

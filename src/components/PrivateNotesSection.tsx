@@ -25,17 +25,17 @@ export function PrivateNotesSection() {
           onSave={handleSave}
         />
 
-        <div className="space-y-4">
+        <div className="border border-gray-200 rounded-xl p-6">
           <AutosizeTextarea
             value={privateNotes}
             onChange={(e) => updatePrivateNotes(e.target.value)}
             placeholder="Add private notes about the patient, your observations, follow-up reminders, or any other information you want to remember..."
-            minRows={8}
-            maxRows={20}
+            minRows={12}
+            maxRows={24}
             className="text-sm"
           />
           
-          <div className="text-xs text-fg-muted">
+          <div className="text-xs text-gray-600 mt-4">
             These notes are private and will not be visible to the patient or included in official documentation.
           </div>
         </div>

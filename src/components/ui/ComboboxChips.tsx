@@ -94,12 +94,12 @@ export default function ComboboxChips({
       {selected.length > 0 && (
         <div className="flex flex-wrap gap-2 mb-2">
           {selected.map((item) => (
-            <Badge key={item} variant="outline" className="flex items-center gap-1">
+            <Badge key={item} variant="calcom" className="flex items-center gap-1">
               {item}
               <button
                 type="button"
                 onClick={() => removeItem(item)}
-                className="ml-1 text-fg-muted hover:text-fg focus-visible:outline-none"
+                className="ml-1 text-gray-600 hover:text-gray-900 focus-visible:outline-none"
                 aria-label={`Remove ${item}`}
               >
                 ×
@@ -124,15 +124,15 @@ export default function ComboboxChips({
       
       {/* Dropdown */}
       {isOpen && (
-        <div className="absolute z-50 w-full mt-1 bg-surface border border-border rounded-md shadow-lg max-h-60 overflow-auto">
+        <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-auto">
           {filteredOptions.length > 0 ? (
             filteredOptions.map((option) => (
               <button
                 key={option.value}
                 type="button"
                 className={cn(
-                  "w-full text-left px-3 py-2 text-sm hover:bg-surface-muted focus:bg-surface-muted focus-visible:outline-none",
-                  selected.includes(option.value) && "bg-surface-muted"
+                  "w-full text-left px-3 py-2 text-sm text-gray-900 hover:bg-gray-50 focus:bg-gray-50 focus-visible:outline-none",
+                  selected.includes(option.value) && "bg-gray-100"
                 )}
                 onClick={() => handleOptionClick(option.value)}
                 disabled={selected.includes(option.value)}
@@ -141,11 +141,11 @@ export default function ComboboxChips({
               </button>
             ))
           ) : inputValue.trim() ? (
-            <div className="px-3 py-2 text-sm text-fg-muted">
+            <div className="px-3 py-2 text-sm text-gray-600">
               Press Enter to add "{inputValue.trim()}" as custom text
             </div>
           ) : (
-            <div className="px-3 py-2 text-sm text-fg-muted">
+            <div className="px-3 py-2 text-sm text-gray-600">
               No options found
             </div>
           )}

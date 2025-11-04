@@ -24,33 +24,40 @@ export default function OutsideOrdersSection() {
   };
 
   return (
-    <div className="h-full bg-bg flex flex-col">
+    <div className="h-full bg-white flex flex-col">
       {/* Header */}
-      <div className="sticky top-0 z-10 bg-bg border-b border-border px-6 py-4">
+      <div className="sticky top-0 z-10 bg-white border-b border-gray-200 px-8 py-6">
         <div className="flex items-center gap-3">
-          <Upload className="h-5 w-5" />
-          <h1 className="text-lg font-semibold">Outside Orders</h1>
+          <div className="w-10 h-10 bg-black rounded-md flex items-center justify-center flex-shrink-0">
+            <Upload className="h-5 w-5 text-white" />
+          </div>
+          <div>
+            <h1 className="text-xl font-semibold text-gray-900">Outside Orders</h1>
+            <p className="text-sm text-gray-600 mt-0.5">Create referrals and external consultations</p>
+          </div>
         </div>
       </div>
 
       <div className="flex-1 p-6 space-y-6 overflow-y-auto">
         {orders.map((order, index) => (
-          <Card key={order.id} className="p-4 space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-base font-medium">Order #{index + 1}</h3>
-              {orders.length > 1 && (
-                <Button 
-                  variant="ghost" 
-                  size="sm"
-                  onClick={() => removeOrder(order.id)}
-                  className="text-fg-muted hover:text-fg"
-                >
-                  Remove
-                </Button>
-              )}
+          <div key={order.id} className="border border-gray-200 rounded-xl">
+            <div className="bg-gray-50 border-b border-gray-200 px-6 py-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold text-gray-900">Order #{index + 1}</h3>
+                {orders.length > 1 && (
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    onClick={() => removeOrder(order.id)}
+                    className="text-gray-600 hover:text-gray-900"
+                  >
+                    Remove
+                  </Button>
+                )}
+              </div>
             </div>
-
-            <div className="space-y-4">
+            
+            <div className="p-6 space-y-6">
               <div>
                 <Label htmlFor={`type-${order.id}`}>Referral Type</Label>
                 <AutosizeTextarea
@@ -84,7 +91,7 @@ export default function OutsideOrdersSection() {
                 />
               </div>
             </div>
-          </Card>
+          </div>
         ))}
 
         <Button variant="outline" onClick={addOrder}>

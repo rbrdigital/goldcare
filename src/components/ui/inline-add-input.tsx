@@ -35,7 +35,7 @@ export function InlineAddInput({ placeholder, onAdd, className }: InlineAddInput
         onChange={(e) => setValue(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
-        className="flex-1 h-10 pl-3 pr-12 rounded-md bg-surface text-fg placeholder:text-fg-muted border border-border focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
+        className="flex-1 h-10 pl-3 pr-12 rounded-lg bg-white text-gray-900 placeholder:text-gray-400 border border-gray-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:border-transparent text-sm"
       />
       <Button
         type="button"

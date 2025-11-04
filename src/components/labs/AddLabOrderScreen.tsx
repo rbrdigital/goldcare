@@ -384,7 +384,7 @@ export default function AddLabOrderScreen() {
             <div className="flex justify-center pt-2">
               <button
                 onClick={handleManualEntry}
-                className="text-sm text-fg-muted hover:text-fg transition-colors duration-200 relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:bg-fg after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-200"
+                className="text-sm text-gray-600 hover:text-gray-900 transition-colors duration-200 relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:bg-gray-900 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-200"
               >
                 Or fill the form manually
               </button>
@@ -397,7 +397,7 @@ export default function AddLabOrderScreen() {
           <div className="flex justify-end">
             <button
               onClick={handleResetToAI}
-              className="text-sm text-fg-muted hover:text-fg transition-colors duration-200 relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:bg-fg after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-200"
+              className="text-sm text-gray-600 hover:text-gray-900 transition-colors duration-200 relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:bg-gray-900 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-200"
             >
               ← Restart with AI
             </button>
@@ -425,7 +425,7 @@ export default function AddLabOrderScreen() {
 
             {/* Lab order section header */}
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold">Lab order #{orderIndex + 1}</h2>
+              <h2 className="text-lg font-semibold text-gray-900">Lab order #{orderIndex + 1}</h2>
               <div className="flex items-center gap-2">
                 <Button 
                   variant="outline" 
@@ -460,7 +460,7 @@ export default function AddLabOrderScreen() {
 
             {/* Clinical diagnosis */}
             <section>
-              <h3 className="text-base font-medium mb-3">Clinical diagnosis</h3>
+              <h3 className="text-base font-medium text-gray-900 mb-3">Clinical diagnosis</h3>
               <div className="space-y-4">
                 <div>
                   <Label>ICD-10 Diagnosis</Label>
@@ -484,7 +484,7 @@ export default function AddLabOrderScreen() {
                       {order.diagnoses.map((diagnosis, idx) => (
                         <Badge
                           key={idx}
-                          variant="outline"
+                          variant="calcom"
                           className="gap-1.5"
                         >
                           {diagnosis}
