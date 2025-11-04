@@ -149,7 +149,117 @@ export function DiagnosisSelector({
 
   return (
     <div className="space-y-2">
-      {label && <Label>{label}</Label>}
+      {/* Label and Advanced Search on same line */}
+      <div className="flex items-center justify-between">
+        {label && <Label>{label}</Label>}
+        
+        {/* Advanced Search Button */}
+        {showAdvancedSearch && (
+          <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+            <DialogTrigger asChild>
+              <Button variant="ghost" size="sm" className="h-8 text-xs">
+                <Filter className="h-3 w-3 mr-1.5" />
+                Advanced Search
+              </Button>
+            </DialogTrigger>
+            
+            <DialogContent className="max-w-3xl max-h-[80vh] flex flex-col">
+              <DialogHeader>
+                <DialogTitle>Advanced ICD-10 Search</DialogTitle>
+              </DialogHeader>
+
+              <div className="space-y-4 flex-shrink-0">
+                {/* Modal Search */}
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-fg-muted" />
+                  <Input
+                    type="text"
+                    placeholder="Search all diagnoses..."
+                    value={modalSearchQuery}
+                    onChange={(e) => setModalSearchQuery(e.target.value)}
+                    className="pl-9"
+                  />
+                </div>
+
+                {/* Filters */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Category</Label>
+                    <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Categories</SelectItem>
+                        {getCategories().map(cat => (
+                          <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>Auto-Resolve</Label>
+                    <Select value={autoResolveFilter} onValueChange={setAutoResolveFilter}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All</SelectItem>
+                        <SelectItem value="true">Auto-resolve only</SelectItem>
+                        <SelectItem value="false">No auto-resolve</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div className="text-xs text-fg-muted">
+                  Showing {modalResults.length} result{modalResults.length !== 1 ? 's' : ''}
+                </div>
+              </div>
+
+              {/* Results List */}
+              <ScrollArea className="flex-1 -mx-6 px-6">
+                <div className="space-y-1 pr-4">
+                  {modalResults.length === 0 ? (
+                    <div className="py-12 text-center text-fg-muted">
+                      No results found
+                    </div>
+                  ) : (
+                    modalResults.map((diagnosis) => (
+                      <button
+                        key={diagnosis.code}
+                        onClick={() => handleSelect(diagnosis)}
+                        className="w-full px-4 py-3 text-left hover:bg-muted/50 rounded-md transition-colors border border-transparent hover:border-border"
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="flex-1 min-w-0">
+                            <div className="font-medium text-fg mb-1">
+                              {diagnosis.diagnosis}
+                            </div>
+                            <div className="text-xs text-fg-muted space-y-0.5">
+                              <div>Code: {diagnosis.code}</div>
+                              <div>Category: {diagnosis.category}</div>
+                              {diagnosis.notes && (
+                                <div className="text-medical-amber">Note: {diagnosis.notes}</div>
+                              )}
+                            </div>
+                          </div>
+                          {diagnosis.autoResolve && (
+                            <Badge variant="outline" className="shrink-0">
+                              Auto-resolve
+                            </Badge>
+                          )}
+                        </div>
+                      </button>
+                    ))
+                  )}
+                </div>
+              </ScrollArea>
+            </DialogContent>
+          </Dialog>
+        )}
+      </div>
       
       <div className="relative">
         <div className="relative">
@@ -203,113 +313,6 @@ export function DiagnosisSelector({
           </div>
         )}
       </div>
-
-      {/* Advanced Search Link */}
-      {showAdvancedSearch && (
-        <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-          <DialogTrigger asChild>
-            <Button variant="ghost" size="sm" className="h-8 text-xs">
-              <Filter className="h-3 w-3 mr-1.5" />
-              Advanced Search
-            </Button>
-          </DialogTrigger>
-          
-          <DialogContent className="max-w-3xl max-h-[80vh] flex flex-col">
-            <DialogHeader>
-              <DialogTitle>Advanced ICD-10 Search</DialogTitle>
-            </DialogHeader>
-
-            <div className="space-y-4 flex-shrink-0">
-              {/* Modal Search */}
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-fg-muted" />
-                <Input
-                  type="text"
-                  placeholder="Search all diagnoses..."
-                  value={modalSearchQuery}
-                  onChange={(e) => setModalSearchQuery(e.target.value)}
-                  className="pl-9"
-                />
-              </div>
-
-              {/* Filters */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>Category</Label>
-                  <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Categories</SelectItem>
-                      {getCategories().map(cat => (
-                        <SelectItem key={cat} value={cat}>{cat}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <Label>Auto-Resolve</Label>
-                  <Select value={autoResolveFilter} onValueChange={setAutoResolveFilter}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All</SelectItem>
-                      <SelectItem value="true">Auto-resolve only</SelectItem>
-                      <SelectItem value="false">No auto-resolve</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              <div className="text-xs text-fg-muted">
-                Showing {modalResults.length} result{modalResults.length !== 1 ? 's' : ''}
-              </div>
-            </div>
-
-            {/* Results List */}
-            <ScrollArea className="flex-1 -mx-6 px-6">
-              <div className="space-y-1 pr-4">
-                {modalResults.length === 0 ? (
-                  <div className="py-12 text-center text-fg-muted">
-                    No results found
-                  </div>
-                ) : (
-                  modalResults.map((diagnosis) => (
-                    <button
-                      key={diagnosis.code}
-                      onClick={() => handleSelect(diagnosis)}
-                      className="w-full px-4 py-3 text-left hover:bg-muted/50 rounded-md transition-colors border border-transparent hover:border-border"
-                    >
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="flex-1 min-w-0">
-                          <div className="font-medium text-fg mb-1">
-                            {diagnosis.diagnosis}
-                          </div>
-                          <div className="text-xs text-fg-muted space-y-0.5">
-                            <div>Code: {diagnosis.code}</div>
-                            <div>Category: {diagnosis.category}</div>
-                            {diagnosis.notes && (
-                              <div className="text-medical-amber">Note: {diagnosis.notes}</div>
-                            )}
-                          </div>
-                        </div>
-                        {diagnosis.autoResolve && (
-                          <Badge variant="outline" className="shrink-0">
-                            Auto-resolve
-                          </Badge>
-                        )}
-                      </div>
-                    </button>
-                  ))
-                )}
-              </div>
-            </ScrollArea>
-          </DialogContent>
-        </Dialog>
-      )}
     </div>
   );
 }
