@@ -381,7 +381,7 @@ function SOAPNoteSection() {
           <div className="bg-gray-50 border-b border-gray-200 px-6 py-4 rounded-t-xl">
             <h3 className="text-lg font-semibold text-gray-900 leading-7">Assessment & Plan</h3>
           </div>
-          <div className="p-6 space-y-6">
+          <div className="p-6 space-y-8">
             <div>
               <Label className="mb-2 inline-flex items-center">
                 Assessment
