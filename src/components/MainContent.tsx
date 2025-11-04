@@ -123,7 +123,7 @@ function SOAPNoteSection() {
         onSave={handleSave}
       />
 
-      <div className="space-y-8">
+      <div>
         {/* ========== Subjective ========== */}
         <section>
           <h3 className="text-lg font-semibold text-fg mb-4">{copy.subjective.toUpperCase()}</h3>
