@@ -11,6 +11,7 @@ import { DiagnosisSelector } from "@/components/diagnosis/DiagnosisSelector";
 import { FieldTips } from "@/components/ui/field-tips";
 import { NumberWithUnitInput } from "@/components/ui/number-with-unit-input";
 import { HeightInput } from "@/components/ui/height-input";
+import { SoapNoteIcon } from "@/components/icons/SoapNoteIcon";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import AddLabOrderScreen from "@/components/labs/AddLabOrderScreen";
 import ImagingOrdersSection from "./imaging/ImagingOrdersSection";
@@ -23,7 +24,6 @@ import {
   AlertTriangle, 
   Calendar, 
   Clock, 
-  FileText, 
   Pill, 
   FlaskConical, 
   Activity,
@@ -119,7 +119,7 @@ function SOAPNoteSection() {
       <PageHeader
         title={copy.soapNote}
         description={copy.soapNoteDesc}
-        icon={FileText}
+        icon={SoapNoteIcon}
         onSave={handleSave}
       />
 
